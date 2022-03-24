@@ -161,7 +161,7 @@ void handle_events(SDL_Event *event,world_t *world){
               if(event->key.keysym.sym== SDLK_DOWN){
                   world->sprite_y+=MOVING_STEP;
               }
-              if(event->key.keysym.sym== SDLK_ESCAPE){
+              if(event->key.keysym.sym== SDLK_ESCAPE){ // si on appuie sur la touche échap on ferme le jeu
                 world->gameover =1;
               }
 
