@@ -162,6 +162,7 @@ void handle_events(SDL_Event *event,world_t *world){
               if(event->key.keysym.sym== SDLK_DOWN){
                   world->sprite_y+=MOVING_STEP;
               }
+              //grenouille de la honte
               if(event->key.keysym.sym== SDLK_ESCAPE){
                 world->gameover =1;
               }
