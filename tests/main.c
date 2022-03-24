@@ -85,6 +85,7 @@ void init_data(world_t * world){
     //on n'est pas à la fin du jeu
     world->gameover = 0;
 
+    //placement du sprite au centre de l'écran
     world->sprite_x=SCREEN_WIDTH/2-SPRITE_SIZE/2;
     world->sprite_y=SCREEN_HEIGHT/2-SPRITE_SIZE/2;
     
