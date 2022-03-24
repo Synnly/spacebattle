@@ -57,11 +57,8 @@ typedef struct textures_s textures_t;
 */
 
 struct world_s{
-    /*
-      A COMPLETER
-     */
-    int sprite_x;
-    int sprite_y;
+    int sprite_x;   // Coordonnée x du sprite
+    int sprite_y;   // Coordonnée y du sprite
     
     int gameover; /*!< Champ indiquant si l'on est à la fin du jeu */
 
