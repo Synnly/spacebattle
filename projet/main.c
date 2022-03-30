@@ -23,21 +23,23 @@
 /**
  * \brief Taille d'un vaisseau
  */
-
 #define SHIP_SIZE 32
 
 
 /**
  * \brief Taille du missile
 */
-
 #define MISSILE_SIZE 8
+
+/**
+ * \brief Vitesse du missile
+*/
+#define MISSILE_SPEED 10
 
 
 /**
  * \brief Vitesse du vaisseau
 */
-
 #define MOVING_STEP 5
 
 
@@ -45,17 +47,16 @@
 /**
  * \brief Représentation pour stocker les textures nécessaires à l'affichage graphique
 */
-
 struct textures_s{
     SDL_Texture* background; /*!< Texture liée à l'image du fond de l'écran. */
-    SDL_Texture* vaisseau_texture;
+    SDL_Texture* vaisseau_texture;  /*!< Texture liée à l'image du vaisseau. */
+    SDL_Texture* missile_texture;   /*!< Texture liée à l'image du missile. */
 };
 
 
 /**
  * \brief Type qui correspond aux textures du jeu
 */
-
 typedef struct textures_s textures_t;
 
 
@@ -68,12 +69,35 @@ struct sprite_s {
     unsigned int h; /*!< Hauteur du sprite */
     unsigned int w; /*!< Largeur du sprite */
     unsigned int v; /*!< Vitesse du sprite */
+    int is_visible; /*!< Champ lié à la visibilité du sprite */
 };
+
 
 /**
  * \brief Type qui correspond aux sprites
  */
 typedef struct sprite_s sprite_t;
+
+
+/**
+ * \brief initialisation d'un sprite
+ * \param sprite Le sprite à initialiser
+ * \param x Coordonnee x
+ * \param y Coordonnee y
+ * \param w Largeur du sprite
+ * \param h Hauteur du sprite
+ * \param v Vitesse du sprite
+ */
+void init_sprite(sprite_t* sprite, int x, int y, int w, int h, int v){
+    sprite->x = x;
+    sprite->y = y;
+    sprite->h = h;
+    sprite->w = w;
+    sprite->v = v;
+    sprite->is_visible = 0; // Sprite de base visible
+}
+
+
 /**
  * \brief Affiche les informations d'un sprite
  * \param sprite Le sprite
@@ -81,6 +105,8 @@ typedef struct sprite_s sprite_t;
 void print_sprite(sprite_t *sprite){
     printf("Sprite :\nx,y = %d,%d\nh,w = %d, %d\nv = %d\n", sprite->x, sprite->y, sprite->h, sprite->w, sprite->v);
 }
+
+
 /**
  * \brief Applique la texture dans un sprite
  * \param renderer Le renderer
@@ -88,26 +114,44 @@ void print_sprite(sprite_t *sprite){
  * \param sprite Le sprite
  */
 void apply_sprite (SDL_Renderer *renderer, SDL_Texture *textures, sprite_t *sprite){
-    if(textures != NULL){
+    if(textures != NULL && !(sprite->is_visible)){
       apply_texture(textures, renderer, sprite->x, sprite->y);
     }
 }
 
 
 /**
+ * \brief Rends un sprite visible
+ * \param sprite Le sprite
+ */
+void set_visible(sprite_t *sprite){
+    sprite->is_visible = 0;
+}
+
+
+/**
+ * \brief Rends un sprite invisible
+ * \param sprite Le sprite
+ */
+void set_invisible(sprite_t *sprite){
+    sprite->is_visible = 1;
+}
+
+
+/**
  * \brief Représentation du monde du jeu
 */
-
 struct world_s{
     sprite_t vaisseau;     
+    sprite_t missile;
     int gameover; /*!< Champ indiquant si l'on est à la fin du jeu */
 
 };
 
+
 /**
  * \brief Type qui correspond aux données du monde
  */
-
 typedef struct world_s world_t;
 
 
@@ -115,32 +159,34 @@ typedef struct world_s world_t;
  * \brief La fonction initialise les données du monde du jeu
  * \param world les données du monde
  */
-
-
 void init_data(world_t * world){
     /**
      * on n'est pas à la fin du jeu
      */
     world->gameover = 0;
-    world->vaisseau.y = SCREEN_HEIGHT - 2 * SHIP_SIZE;
-    world->vaisseau.x = SCREEN_WIDTH/2 - SHIP_SIZE/2;
-    world->vaisseau.h = SHIP_SIZE;
-    world->vaisseau.w = SHIP_SIZE;
-    world->vaisseau.v = 0;
+
+    /**
+     * Initialisation du vaisseau
+     */
+    init_sprite(&(world->vaisseau), SCREEN_WIDTH/2, SCREEN_HEIGHT - SHIP_SIZE, SHIP_SIZE, SHIP_SIZE, 0);
+    /**
+     * Initialisation du missile
+     */
+    init_sprite(&(world->missile), SCREEN_WIDTH/2, world->vaisseau.y, MISSILE_SIZE, MISSILE_SIZE, MISSILE_SPEED);
+    set_invisible(&(world->missile));
+
     print_sprite(&(world->vaisseau));
 }
+
 
 /**
  * \brief La fonction nettoie les données du monde
  * \param world les données du monde
  */
-
-
 void clean_data(world_t *world){
     /* utile uniquement si vous avez fait de l'allocation dynamique (malloc); la fonction ici doit permettre de libérer la mémoire (free) */
     
 }
-
 
 
 /**
@@ -148,22 +194,18 @@ void clean_data(world_t *world){
  * \param world les données du monde
  * \return 1 si le jeu est fini, 0 sinon
  */
-
 int is_game_over(world_t *world){
     return world->gameover;
 }
-
 
 
 /**
  * \brief La fonction met à jour les données en tenant compte de la physique du monde
  * \param les données du monde
  */
-
 void update_data(world_t *world){
     /* A COMPLETER */
 }
-
 
 
 /**
@@ -171,7 +213,6 @@ void update_data(world_t *world){
  * \param event paramètre qui contient les événements
  * \param world les données du monde
  */
-
 void handle_events(SDL_Event *event,world_t *world){
     Uint8 *keystates;
     while( SDL_PollEvent( event ) ) {
@@ -189,14 +230,23 @@ void handle_events(SDL_Event *event,world_t *world){
                  printf("La touche D est appuyée\n");
               }
 
+            //si la touche appuyée est fleche gauche
             if(event->key.keysym.sym == SDLK_LEFT){
                 world->vaisseau.x -= MOVING_STEP;
+                world->missile.x -= MOVING_STEP;
             }
 
+            //si la touche appuyée est fleche droite
             if(event->key.keysym.sym == SDLK_RIGHT){
                 world->vaisseau.x += MOVING_STEP;
-            } 
-         }
+                world->missile.x += MOVING_STEP;
+            }
+
+            //si la touche appuyée est espace
+            if(event->key.keysym.sym == SDLK_SPACE){
+                set_visible(&(world->missile));
+            }  
+        }
     }
 }
 
@@ -205,12 +255,11 @@ void handle_events(SDL_Event *event,world_t *world){
  * \brief La fonction nettoie les textures
  * \param textures les textures
 */
-
 void clean_textures(textures_t *textures){
     clean_texture(textures->background);
     clean_texture(textures->vaisseau_texture);
+    clean_texture(textures->missile_texture);
 }
-
 
 
 /**
@@ -218,10 +267,10 @@ void clean_textures(textures_t *textures){
  * \param screen la surface correspondant à l'écran de jeu
  * \param textures les textures du jeu
 */
-
 void  init_textures(SDL_Renderer *renderer, textures_t *textures){
     textures->background = load_image( "ressources/space-background.bmp",renderer);
     textures->vaisseau_texture = load_image("ressources/spaceship.bmp", renderer);
+    textures->missile_texture = load_image("ressources/missile.bmp", renderer);
 }
 
 
@@ -230,15 +279,11 @@ void  init_textures(SDL_Renderer *renderer, textures_t *textures){
  * \param renderer le renderer
  * \param textures les textures du jeu
 */
-
 void apply_background(SDL_Renderer *renderer, textures_t *textures){
     if(textures->background != NULL){
       apply_texture(textures->background, renderer, 0, 0);
     }
 }
-
-
-
 
 
 /**
@@ -247,7 +292,6 @@ void apply_background(SDL_Renderer *renderer, textures_t *textures){
  * \param world les données du monde
  * \param textures les textures
  */
-
 void refresh_graphics(SDL_Renderer *renderer, world_t *world,textures_t *textures){
     
     //on vide le renderer
@@ -256,11 +300,10 @@ void refresh_graphics(SDL_Renderer *renderer, world_t *world,textures_t *texture
     //application des textures dans le renderer
     apply_background(renderer, textures);
     apply_sprite(renderer, textures->vaisseau_texture, &(world->vaisseau));
-    
+    apply_sprite(renderer, textures->missile_texture, &(world->missile));
     // on met à jour l'écran
     update_screen(renderer);
 }
-
 
 
 /**
@@ -270,13 +313,11 @@ void refresh_graphics(SDL_Renderer *renderer, world_t *world,textures_t *texture
 * \param textures les textures
 * \param world le monde
 */
-
 void clean(SDL_Window *window, SDL_Renderer * renderer, textures_t *textures, world_t * world){
     clean_data(world);
     clean_textures(textures);
     clean_sdl(renderer,window);
 }
-
 
 
 /**
@@ -286,36 +327,16 @@ void clean(SDL_Window *window, SDL_Renderer * renderer, textures_t *textures, wo
  * \param textures les textures
  * \param wordl le monde
  */
-
 void init(SDL_Window **window, SDL_Renderer ** renderer, textures_t *textures, world_t * world){
     init_sdl(window,renderer,SCREEN_WIDTH, SCREEN_HEIGHT);
     init_data(world);
     init_textures(*renderer,textures);
 }
 
-/**
- * \brief initialisation d'un sprite
- * \param sprite Le sprite à initialiser
- * \param x Coordonnee x
- * \param y Coordonnee y
- * \param w Largeur du sprite
- * \param h Hauteur du sprite
- * \param v Vitesse du sprite
- */
-void init_sprite(sprite_t* sprite, int x, int y, int w, int h, int v){
-    sprite->x = x;
-    sprite->y = y;
-    sprite->h = h;
-    sprite->w = w;
-    sprite->v = v;
-}
-
 
 /**
  *  \brief programme principal qui implémente la boucle du jeu
  */
-
-
 int main( int argc, char* args[] )
 {
     SDL_Event event;
