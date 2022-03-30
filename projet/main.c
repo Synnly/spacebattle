@@ -34,6 +34,13 @@
 #define MISSILE_SIZE 8
 
 
+/**
+ * \brief Vitesse du vaisseau
+*/
+
+#define MOVING_STEP 5
+
+
 
 /**
  * \brief Représentation pour stocker les textures nécessaires à l'affichage graphique
@@ -41,7 +48,7 @@
 
 struct textures_s{
     SDL_Texture* background; /*!< Texture liée à l'image du fond de l'écran. */
-    /* A COMPLETER */
+    SDL_Texture* vaisseau_texture;
 };
 
 
@@ -53,14 +60,46 @@ typedef struct textures_s textures_t;
 
 
 /**
+ * \brief Représentation d'un sprite
+ */
+struct sprite_s {
+    int x;  /*!< Coordonee x */
+    int y;  /*!< Coordonee y */
+    unsigned int h; /*!< Hauteur du sprite */
+    unsigned int w; /*!< Largeur du sprite */
+    unsigned int v; /*!< Vitesse du sprite */
+};
+
+/**
+ * \brief Type qui correspond aux sprites
+ */
+typedef struct sprite_s sprite_t;
+/**
+ * \brief Affiche les informations d'un sprite
+ * \param sprite Le sprite
+ */
+void print_sprite(sprite_t *sprite){
+    printf("Sprite :\nx,y = %d,%d\nh,w = %d, %d\nv = %d\n", sprite->x, sprite->y, sprite->h, sprite->w, sprite->v);
+}
+/**
+ * \brief Applique la texture dans un sprite
+ * \param renderer Le renderer
+ * \param textures La textue à appliquer
+ * \param sprite Le sprite
+ */
+void apply_sprite (SDL_Renderer *renderer, SDL_Texture *textures, sprite_t *sprite){
+    if(textures != NULL){
+      apply_texture(textures, renderer, sprite->x, sprite->y);
+    }
+}
+
+
+/**
  * \brief Représentation du monde du jeu
 */
 
 struct world_s{
-    /*
-      A COMPLETER
-     */
-    
+    sprite_t vaisseau;     
     int gameover; /*!< Champ indiquant si l'on est à la fin du jeu */
 
 };
@@ -72,9 +111,6 @@ struct world_s{
 typedef struct world_s world_t;
 
 
-
-
-
 /**
  * \brief La fonction initialise les données du monde du jeu
  * \param world les données du monde
@@ -82,12 +118,17 @@ typedef struct world_s world_t;
 
 
 void init_data(world_t * world){
-    
-    //on n'est pas à la fin du jeu
+    /**
+     * on n'est pas à la fin du jeu
+     */
     world->gameover = 0;
-    
+    world->vaisseau.y = SCREEN_HEIGHT - 2 * SHIP_SIZE;
+    world->vaisseau.x = SCREEN_WIDTH/2 - SHIP_SIZE/2;
+    world->vaisseau.h = SHIP_SIZE;
+    world->vaisseau.w = SHIP_SIZE;
+    world->vaisseau.v = 0;
+    print_sprite(&(world->vaisseau));
 }
-
 
 /**
  * \brief La fonction nettoie les données du monde
@@ -147,6 +188,14 @@ void handle_events(SDL_Event *event,world_t *world){
              if(event->key.keysym.sym == SDLK_d){
                  printf("La touche D est appuyée\n");
               }
+
+            if(event->key.keysym.sym == SDLK_LEFT){
+                world->vaisseau.x -= MOVING_STEP;
+            }
+
+            if(event->key.keysym.sym == SDLK_RIGHT){
+                world->vaisseau.x += MOVING_STEP;
+            } 
          }
     }
 }
@@ -159,7 +208,7 @@ void handle_events(SDL_Event *event,world_t *world){
 
 void clean_textures(textures_t *textures){
     clean_texture(textures->background);
-    /* A COMPLETER */
+    clean_texture(textures->vaisseau_texture);
 }
 
 
@@ -172,10 +221,7 @@ void clean_textures(textures_t *textures){
 
 void  init_textures(SDL_Renderer *renderer, textures_t *textures){
     textures->background = load_image( "ressources/space-background.bmp",renderer);
-    
-    /* A COMPLETER */
-
-    
+    textures->vaisseau_texture = load_image("ressources/spaceship.bmp", renderer);
 }
 
 
@@ -209,7 +255,7 @@ void refresh_graphics(SDL_Renderer *renderer, world_t *world,textures_t *texture
     
     //application des textures dans le renderer
     apply_background(renderer, textures);
-    /* A COMPLETER */
+    apply_sprite(renderer, textures->vaisseau_texture, &(world->vaisseau));
     
     // on met à jour l'écran
     update_screen(renderer);
@@ -245,6 +291,23 @@ void init(SDL_Window **window, SDL_Renderer ** renderer, textures_t *textures, w
     init_sdl(window,renderer,SCREEN_WIDTH, SCREEN_HEIGHT);
     init_data(world);
     init_textures(*renderer,textures);
+}
+
+/**
+ * \brief initialisation d'un sprite
+ * \param sprite Le sprite à initialiser
+ * \param x Coordonnee x
+ * \param y Coordonnee y
+ * \param w Largeur du sprite
+ * \param h Hauteur du sprite
+ * \param v Vitesse du sprite
+ */
+void init_sprite(sprite_t* sprite, int x, int y, int w, int h, int v){
+    sprite->x = x;
+    sprite->y = y;
+    sprite->h = h;
+    sprite->w = w;
+    sprite->v = v;
 }
 
 
