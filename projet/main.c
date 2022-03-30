@@ -40,6 +40,11 @@
 
 #define MOVING_STEP 5
 
+/**
+ * \brief Vitesse verticale de l'ennemi
+ */
+
+#define ENEMY_SPEED 2
 
 
 /**
@@ -49,6 +54,7 @@
 struct textures_s{
     SDL_Texture* background; /*!< Texture liée à l'image du fond de l'écran. */
     SDL_Texture* vaisseau_texture;
+    SDL_Texture* ennemi_texture;
 };
 
 
@@ -89,7 +95,7 @@ void print_sprite(sprite_t *sprite){
  */
 void apply_sprite (SDL_Renderer *renderer, SDL_Texture *textures, sprite_t *sprite){
     if(textures != NULL){
-      apply_texture(textures, renderer, sprite->x, sprite->y);
+      apply_texture(textures, renderer, (sprite->x)-(SHIP_SIZE/2), sprite->y);
     }
 }
 
@@ -99,7 +105,8 @@ void apply_sprite (SDL_Renderer *renderer, SDL_Texture *textures, sprite_t *spri
 */
 
 struct world_s{
-    sprite_t vaisseau;     
+    sprite_t vaisseau;
+    sprite_t ennemi;     
     int gameover; /*!< Champ indiquant si l'on est à la fin du jeu */
 
 };
@@ -110,6 +117,22 @@ struct world_s{
 
 typedef struct world_s world_t;
 
+/**
+ * \brief initialisation d'un sprite
+ * \param sprite Le sprite à initialiser
+ * \param x Coordonnee x
+ * \param y Coordonnee y
+ * \param w Largeur du sprite
+ * \param h Hauteur du sprite
+ * \param v Vitesse du sprite
+ */
+void init_sprite(sprite_t* sprite, int x, int y, int w, int h, int v){
+    sprite->x = x;
+    sprite->y = y;
+    sprite->h = h;
+    sprite->w = w;
+    sprite->v = v;
+}
 
 /**
  * \brief La fonction initialise les données du monde du jeu
@@ -118,16 +141,17 @@ typedef struct world_s world_t;
 
 
 void init_data(world_t * world){
+
+    world->gameover=0;
+    init_sprite(&(world->vaisseau),SCREEN_WIDTH/2,SCREEN_HEIGHT-2*SHIP_SIZE,SHIP_SIZE,SHIP_SIZE,0);
+
     /**
-     * on n'est pas à la fin du jeu
+     * initialisation de l'ennemi
      */
-    world->gameover = 0;
-    world->vaisseau.y = SCREEN_HEIGHT - 2 * SHIP_SIZE;
-    world->vaisseau.x = SCREEN_WIDTH/2 - SHIP_SIZE/2;
-    world->vaisseau.h = SHIP_SIZE;
-    world->vaisseau.w = SHIP_SIZE;
-    world->vaisseau.v = 0;
+    init_sprite(&(world->ennemi),SCREEN_WIDTH/2,2*SHIP_SIZE,SHIP_SIZE,SHIP_SIZE,ENEMY_SPEED);
+
     print_sprite(&(world->vaisseau));
+    print_sprite(&(world->ennemi));
 }
 
 /**
@@ -161,7 +185,7 @@ int is_game_over(world_t *world){
  */
 
 void update_data(world_t *world){
-    /* A COMPLETER */
+    world->ennemi.y+=ENEMY_SPEED;
 }
 
 
@@ -209,6 +233,7 @@ void handle_events(SDL_Event *event,world_t *world){
 void clean_textures(textures_t *textures){
     clean_texture(textures->background);
     clean_texture(textures->vaisseau_texture);
+    clean_texture(textures->ennemi_texture);
 }
 
 
@@ -222,6 +247,7 @@ void clean_textures(textures_t *textures){
 void  init_textures(SDL_Renderer *renderer, textures_t *textures){
     textures->background = load_image( "ressources/space-background.bmp",renderer);
     textures->vaisseau_texture = load_image("ressources/spaceship.bmp", renderer);
+    textures->ennemi_texture = load_image("ressources/enemy.bmp", renderer);
 }
 
 
@@ -256,6 +282,7 @@ void refresh_graphics(SDL_Renderer *renderer, world_t *world,textures_t *texture
     //application des textures dans le renderer
     apply_background(renderer, textures);
     apply_sprite(renderer, textures->vaisseau_texture, &(world->vaisseau));
+    apply_sprite(renderer, textures->ennemi_texture, &(world->ennemi));
     
     // on met à jour l'écran
     update_screen(renderer);
@@ -293,22 +320,7 @@ void init(SDL_Window **window, SDL_Renderer ** renderer, textures_t *textures, w
     init_textures(*renderer,textures);
 }
 
-/**
- * \brief initialisation d'un sprite
- * \param sprite Le sprite à initialiser
- * \param x Coordonnee x
- * \param y Coordonnee y
- * \param w Largeur du sprite
- * \param h Hauteur du sprite
- * \param v Vitesse du sprite
- */
-void init_sprite(sprite_t* sprite, int x, int y, int w, int h, int v){
-    sprite->x = x;
-    sprite->y = y;
-    sprite->h = h;
-    sprite->w = w;
-    sprite->v = v;
-}
+
 
 
 /**
