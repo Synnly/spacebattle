@@ -162,38 +162,23 @@ struct world_s{
 typedef struct world_s world_t;
 
 /**
- * \brief initialisation d'un sprite
- * \param sprite Le sprite à initialiser
- * \param x Coordonnee x
- * \param y Coordonnee y
- * \param w Largeur du sprite
- * \param h Hauteur du sprite
- * \param v Vitesse du sprite
- */
-void init_sprite(sprite_t* sprite, int x, int y, int w, int h, int v){
-    sprite->x = x;
-    sprite->y = y;
-    sprite->h = h;
-    sprite->w = w;
-    sprite->v = v;
-}
-
-/**
  * \brief La fonction initialise les données du monde du jeu
  * \param world les données du monde
  */
 void init_data(world_t * world){
 
-
-    /**
-     * initialisation de l'ennemi
-     */
     world->gameover = 0;
 
     /**
      * Initialisation du vaisseau
      */
     init_sprite(&(world->vaisseau), SCREEN_WIDTH/2, SCREEN_HEIGHT - SHIP_SIZE, SHIP_SIZE, SHIP_SIZE, 0);
+
+    /**
+     * initialisation de l'ennemi
+     */
+    init_sprite(&(world->ennemi), SCREEN_WIDTH/2, SCREEN_HEIGHT - SHIP_SIZE, SHIP_SIZE, SHIP_SIZE, 0);
+
     /**
      * Initialisation du missile
      */
@@ -285,7 +270,7 @@ void clean_textures(textures_t *textures){
     clean_texture(textures->background);
     clean_texture(textures->vaisseau_texture);
     clean_texture(textures->missile_texture);
-     clean_texture(textures->ennemi_texture);
+    clean_texture(textures->ennemi_texture);
 }
 
 
@@ -329,8 +314,8 @@ void refresh_graphics(SDL_Renderer *renderer, world_t *world,textures_t *texture
     apply_background(renderer, textures);
     apply_sprite(renderer, textures->vaisseau_texture, &(world->vaisseau));
     apply_sprite(renderer, textures->ennemi_texture, &(world->ennemi));
-    
     apply_sprite(renderer, textures->missile_texture, &(world->missile));
+
     // on met à jour l'écran
     update_screen(renderer);
 }
@@ -362,8 +347,6 @@ void init(SDL_Window **window, SDL_Renderer ** renderer, textures_t *textures, w
     init_data(world);
     init_textures(*renderer,textures);
 }
-
-
 
 
 /**
