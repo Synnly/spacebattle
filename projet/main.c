@@ -14,6 +14,7 @@
  */
 #define SCREEN_WIDTH 300
 
+
 /**
  * \brief Hauteur de l'écran de jeu
  */
@@ -31,6 +32,7 @@
 */
 #define MISSILE_SIZE 8
 
+
 /**
  * \brief Vitesse du missile
 */
@@ -42,10 +44,10 @@
 */
 #define MOVING_STEP 5
 
+
 /**
  * \brief Vitesse verticale de l'ennemi
  */
-
 #define ENEMY_SPEED 2
 
 
@@ -54,7 +56,7 @@
 */
 struct textures_s{
     SDL_Texture* background; /*!< Texture liée à l'image du fond de l'écran. */
-    SDL_Texture* ennemi_texture;
+    SDL_Texture* ennemi_texture;    /*!< Texture liée à l'image de l'ennemi. */
     SDL_Texture* vaisseau_texture;  /*!< Texture liée à l'image du vaisseau. */
     SDL_Texture* missile_texture;   /*!< Texture liée à l'image du missile. */
 };
@@ -152,7 +154,6 @@ struct world_s{
     sprite_t ennemi;         
     sprite_t missile;
     int gameover; /*!< Champ indiquant si l'on est à la fin du jeu */
-
 };
 
 
@@ -160,6 +161,7 @@ struct world_s{
  * \brief Type qui correspond aux données du monde
  */
 typedef struct world_s world_t;
+
 
 /**
  * \brief La fonction initialise les données du monde du jeu
@@ -184,9 +186,6 @@ void init_data(world_t * world){
      */
     init_sprite(&(world->missile), SCREEN_WIDTH/2, world->vaisseau.y, MISSILE_SIZE, MISSILE_SIZE, MISSILE_SPEED);
     set_invisible(&(world->missile));
-
-    print_sprite(&(world->vaisseau));
-    print_sprite(&(world->ennemi));
 }
 
 
@@ -216,6 +215,10 @@ int is_game_over(world_t *world){
  */
 void update_data(world_t *world){
     world->ennemi.y+=ENEMY_SPEED;
+
+    if(!world->missile.is_visible){
+        world->missile.y-=MISSILE_SPEED;
+    }
 }
 
 
@@ -244,19 +247,24 @@ void handle_events(SDL_Event *event,world_t *world){
             //si la touche appuyée est fleche gauche
             if(event->key.keysym.sym == SDLK_LEFT){
                 world->vaisseau.x -= MOVING_STEP;
-                world->missile.x -= MOVING_STEP;
             }
 
             //si la touche appuyée est fleche droite
             if(event->key.keysym.sym == SDLK_RIGHT){
                 world->vaisseau.x += MOVING_STEP;
-                world->missile.x += MOVING_STEP;
             }
 
             //si la touche appuyée est espace
             if(event->key.keysym.sym == SDLK_SPACE){
                 set_visible(&(world->missile));
-            }  
+                world->missile.x = world->vaisseau.x;
+                world->missile.y = world->vaisseau.y;
+            } 
+
+            //si la touche appuyée est echap
+            if(event->key.keysym.sym == SDLK_ESCAPE){
+                world->gameover = 1;
+            }
         }
     }
 }
@@ -352,8 +360,7 @@ void init(SDL_Window **window, SDL_Renderer ** renderer, textures_t *textures, w
 /**
  *  \brief programme principal qui implémente la boucle du jeu
  */
-int main( int argc, char* args[] )
-{
+int main(int argc, char* args[]){
     SDL_Event event;
     world_t world;
     textures_t textures;
