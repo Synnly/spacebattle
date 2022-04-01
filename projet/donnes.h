@@ -139,6 +139,22 @@ void depasse_droite(sprite_t *sprite);
  */
 void ennemi_depasse_bas(sprite_t *sprite);
 
+/**
+ * \brief Verifie si deux sprites entrent en collision
+ * \param sp2 Deuxième sprite
+ * \param sp1 Premier sprite
+ * \return 1 en cas de collision, 0 sinon
+ */
+int sprites_collide(sprite_t *sp2, sprite_t *sp1);
+
+
+/**
+ * \brief Gere les collisions entre deux sprites
+ * \param sp2 Deuxième sprite
+ * \param sp1 Premier sprite
+ */
+void handle_sprites_collide(sprite_t *sp2, sprite_t *sp1);
+
 
 /**
  * \brief La fonction initialise les données du monde du jeu
