@@ -59,9 +59,29 @@ void test_depasse_droite(){
 }
 
 
+void test_ennemi_depasse_bas_param(sprite_t *sprite){
+    printf("----------Avant----------\n");
+    print_sprite(sprite);
+    ennemi_depasse_bas(sprite);
+    printf("----------Apres--------\n");
+    print_sprite(sprite);
+    printf("\n");
+}
+
+
+void test_ennemi_depasse_bas(){
+    sprite_t sprite;
+    for(int i = 64; i<800; i+=200){
+        init_sprite(&sprite, 50, i, 32, 32, 0);
+        test_ennemi_depasse_bas_param(&sprite);
+    }
+}
+
+
 int main(int argc, char* argv[]){
     /* test_init_sprite(); */
     /* test_depasse_gauche(); */
-    test_depasse_droite();
+    /* test_depasse_droite(); */
+    test_ennemi_depasse_bas();
     return EXIT_SUCCESS;
 }

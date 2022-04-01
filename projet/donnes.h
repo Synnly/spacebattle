@@ -134,6 +134,13 @@ void depasse_droite(sprite_t *sprite);
 
 
 /**
+ * \brief Verifie que l'ennemi n'est pas trop bas
+ * \param sprite Le sprite
+ */
+void ennemi_depasse_bas(sprite_t *sprite);
+
+
+/**
  * \brief La fonction initialise les données du monde du jeu
  * \param world les données du monde
  */

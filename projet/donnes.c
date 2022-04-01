@@ -56,7 +56,7 @@ void set_invisible(sprite_t *sprite){
 
 
 /**
- * \brief Verifie que le sprtie n'est pas trop à gauche
+ * \brief Verifie que le sprite n'est pas trop à gauche
  * \param sprite Le sprite
  */
 void depasse_gauche(sprite_t *sprite){
@@ -67,12 +67,23 @@ void depasse_gauche(sprite_t *sprite){
 
 
 /**
- * \brief Verifie que le sprtie n'est pas trop à droite
+ * \brief Verifie que le sprite n'est pas trop à droite
  * \param sprite Le sprite
  */
 void depasse_droite(sprite_t *sprite){
     if(sprite->x>SCREEN_WIDTH-SHIP_SIZE){
         sprite->x = SCREEN_WIDTH-SHIP_SIZE;
+    }
+}
+
+
+/**
+ * \brief Verifie que le l'ennemi n'est pas trop à droite
+ * \param sprite Le sprite
+ */
+void ennemi_depasse_bas(sprite_t *sprite){
+    if(sprite->y>SCREEN_HEIGHT){
+        sprite->y = 2 * SHIP_SIZE;
     }
 }
 
@@ -136,6 +147,8 @@ void update_data(world_t *world){
     }
     depasse_gauche(&(world->vaisseau));
     depasse_droite(&(world->vaisseau));
+
+    ennemi_depasse_bas(&(world->ennemi));
 }
 
 
