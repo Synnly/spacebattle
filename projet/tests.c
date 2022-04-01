@@ -20,7 +20,48 @@ void test_init_sprite(){
     }
 }
 
+
+void test_depasse_gauche_param(sprite_t *sprite){
+    printf("----------Avant----------\n");
+    print_sprite(sprite);
+    depasse_gauche(sprite);
+    printf("----------Apres--------\n");
+    print_sprite(sprite);
+    printf("\n");
+}
+
+
+void test_depasse_gauche(){
+    sprite_t sprite;
+    for(int i = 0; i>-13; i-=3){
+        init_sprite(&sprite, i, 50, 32, 32, 0);
+        test_depasse_gauche_param(&sprite);
+    }
+}
+
+
+void test_depasse_droite_param(sprite_t *sprite){
+    printf("----------Avant----------\n");
+    print_sprite(sprite);
+    depasse_droite(sprite);
+    printf("----------Apres--------\n");
+    print_sprite(sprite);
+    printf("\n");
+}
+
+
+void test_depasse_droite(){
+    sprite_t sprite;
+    for(int i = 262; i<=310; i+=10){
+        init_sprite(&sprite, i, 50, 32, 32, 0);
+        test_depasse_droite_param(&sprite);
+    }
+}
+
+
 int main(int argc, char* argv[]){
-    test_init_sprite();
+    /* test_init_sprite(); */
+    /* test_depasse_gauche(); */
+    test_depasse_droite();
     return EXIT_SUCCESS;
 }

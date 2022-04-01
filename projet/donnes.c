@@ -56,6 +56,28 @@ void set_invisible(sprite_t *sprite){
 
 
 /**
+ * \brief Verifie que le sprtie n'est pas trop à gauche
+ * \param sprite Le sprite
+ */
+void depasse_gauche(sprite_t *sprite){
+    if(sprite->x<0){
+        sprite->x = 0;
+    }
+}
+
+
+/**
+ * \brief Verifie que le sprtie n'est pas trop à droite
+ * \param sprite Le sprite
+ */
+void depasse_droite(sprite_t *sprite){
+    if(sprite->x>SCREEN_WIDTH-SHIP_SIZE){
+        sprite->x = SCREEN_WIDTH-SHIP_SIZE;
+    }
+}
+
+
+/**
  * \brief La fonction initialise les données du monde du jeu
  * \param world les données du monde
  */
@@ -112,6 +134,8 @@ void update_data(world_t *world){
     if(!world->missile.is_visible){
         world->missile.y-=MISSILE_SPEED;
     }
+    depasse_gauche(&(world->vaisseau));
+    depasse_droite(&(world->vaisseau));
 }
 
 

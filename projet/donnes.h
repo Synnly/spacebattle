@@ -120,6 +120,20 @@ void set_invisible(sprite_t *sprite);
 
 
 /**
+ * \brief Verifie que le sprite n'est pas trop à gauche
+ * \param sprite Le sprite
+ */
+void depasse_gauche(sprite_t *sprite);
+
+
+/**
+ * \brief Verifie que le sprite n'est pas trop à droite
+ * \param sprite Le sprite
+ */
+void depasse_droite(sprite_t *sprite);
+
+
+/**
  * \brief La fonction initialise les données du monde du jeu
  * \param world les données du monde
  */
