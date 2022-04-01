@@ -68,6 +68,8 @@ void handle_sprites_collide(sprite_t *sp2, sprite_t *sp1){
     if(sprites_collide(sp2, sp1) && !sp2->is_visible && !sp1->is_visible){
         sp2->v = 0;
         sp1->v = 0;
+        set_invisible(sp2);
+        set_invisible(sp1);
     }
 }
 
@@ -83,7 +85,7 @@ void init_data(world_t * world){
     /**
      * initialisation de l'ennemi
      */
-    init_sprite(&(world->ennemi), SCREEN_WIDTH/2, 2 * SHIP_SIZE, SHIP_SIZE, SHIP_SIZE, 0);
+    init_sprite(&(world->ennemi), SCREEN_WIDTH/2, 2 * SHIP_SIZE, SHIP_SIZE, SHIP_SIZE, ENEMY_SPEED);
 
     /**
      * Initialisation du missile
@@ -106,10 +108,16 @@ int is_game_over(world_t *world){
 
 
 void update_data(world_t *world){
-    world->ennemi.y+=ENEMY_SPEED;
-
+    //L'ennemi entre en contact avec le vaisseau
+    handle_sprites_collide(&(world->ennemi),&(world->vaisseau));
+    // Test de collision entre le missile et l'ennemi
+    handle_sprites_collide(&(world->ennemi),&(world->missile));
+    
+    //L'ennemi se déplace
+    world->ennemi.y+=world->ennemi.v;
+    // Si le missile est visible alors il avance.
     if(!world->missile.is_visible){
-        world->missile.y-=MISSILE_SPEED;
+        world->missile.y-=world->missile.v;
     }
 
     // Le vaisseau reste sur l'ecran
@@ -118,6 +126,11 @@ void update_data(world_t *world){
 
     // L'ennemi boucle sur l'ecran
     ennemi_depasse_bas(&(world->ennemi));
+
+    
+
+    
+    
 }
 
 
@@ -148,11 +161,12 @@ void handle_events(SDL_Event *event,world_t *world){
                 world->vaisseau.x += MOVING_STEP;
             }
 
-            //si la touche appuyée est espace
-            if(event->key.keysym.sym == SDLK_SPACE){
+            //si la touche appuyée est espace et que le vaisseau est visible
+            if(event->key.keysym.sym == SDLK_SPACE && world->vaisseau.is_visible==0){
                 set_visible(&(world->missile));
                 world->missile.x = world->vaisseau.x;
                 world->missile.y = world->vaisseau.y;
+                world->missile.v=MISSILE_SPEED;
             } 
 
             //si la touche appuyée est echap
