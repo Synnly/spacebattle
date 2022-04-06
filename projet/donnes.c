@@ -57,9 +57,13 @@ void depasse_droite(sprite_t *sprite){
 }
 
 
-void ennemi_depasse_bas(sprite_t *sprite){
-    if(sprite->y>SCREEN_HEIGHT){
-        sprite->y = 2 * SHIP_SIZE;
+void ennemi_depasse_bas(world_t *world){
+    for(int i=0; i<NB_ENEMIES; i++){
+        if(world->sprite.y>SCREEN_HEIGHT){
+            world->sprite.y = 2 * SHIP_SIZE;
+            world->nb_ennemis_sortis ++;
+            printf("Nb ennemis sortis : %d\n", nb_ennemis_sortis);
+        }
     }
 }
 
@@ -153,6 +157,8 @@ void update_data(world_t *world){
     depasse_gauche(&(world->vaisseau));
     depasse_droite(&(world->vaisseau));
     /* ennemi_depasse_bas(&(world->ennemi)); */
+
+    ennemi_depasse_bas(world);
 
     // L'ennemi boucle sur l'ecran
     /* ennemi_depasse_bas(&(world->ennemi));  */

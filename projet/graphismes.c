@@ -54,7 +54,7 @@ void refresh_graphics(SDL_Renderer *renderer, world_t *world,textures_t *texture
     //application des textures dans le renderer
     apply_background(renderer, textures);
     apply_sprite(renderer, textures->vaisseau_texture, &(world->vaisseau));
-    apply_sprite(renderer, textures->ennemi_texture, &(world->ennemi));
+    /* apply_sprite(renderer, textures->ennemi_texture, &(world->ennemi)); */
     apply_enemies(renderer, textures->ennemi_texture, (world->enemies));
     apply_sprite(renderer, textures->missile_texture, &(world->missile));
 

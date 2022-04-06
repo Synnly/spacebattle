@@ -90,6 +90,7 @@ struct world_s{
     sprite_t missile;
     int gameover; /*!< Champ indiquant si l'on est à la fin du jeu */
     sprite_t enemies[NB_ENEMIES];
+    int nb_ennemis_sortis;
 };
 
 /**
