@@ -52,6 +52,16 @@
  */
 #define ENEMY_SPEED 2
 
+/**
+ * \brief Nombre d'ennemis
+ */
+#define NB_ENEMIES 5
+
+/**
+ * \brief Distance en ordonnée entre chaque ennemis
+ */
+#define VERTICAL_DIST 2*SHIP_SIZE
+
 
 /**
  * \brief Représentation d'un sprite
@@ -79,6 +89,7 @@ struct world_s{
     sprite_t ennemi;         
     sprite_t missile;
     int gameover; /*!< Champ indiquant si l'on est à la fin du jeu */
+    sprite_t enemies[NB_ENEMIES];
 };
 
 /**
@@ -86,6 +97,13 @@ struct world_s{
  */
 typedef struct world_s world_t;
 
+/**
+ * \brief Fonction qui génère un nombre aléatoire entre a et b(non compris)
+ * \param a borne a
+ * \param b borne b
+ * \return un nombre aléatoire entre a et b
+ */
+int generate_number(int a, int b);
 
 /**
  * \brief initialisation d'un sprite
@@ -161,6 +179,12 @@ void handle_sprites_collide(sprite_t *sp2, sprite_t *sp1);
  * \param world les données du monde
  */
 void init_data(world_t * world);
+
+/**
+ * \brief La fonction qui initialise le tableau contenant les ennemis
+ * \param world les données du monde
+ */
+void init_enemies(world_t* world);
 
 
 /**

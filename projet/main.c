@@ -21,6 +21,8 @@ int main(int argc, char* args[]){
     SDL_Renderer *renderer;
     SDL_Window *window;
 
+    srand(time(NULL));
+
     //initialisation du jeu
     init(&window,&renderer,&textures,&world);
     

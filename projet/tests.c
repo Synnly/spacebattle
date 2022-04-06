@@ -119,13 +119,25 @@ void test_handle_sprites_collide(){
     }
 }
 
-
+void test_init_enemies_param(world_t* world){
+    for(int i=0;i<NB_ENEMIES;i++){
+        print_sprite(&(world->enemies[i]));
+        printf("\n");
+    }
+    fflush(stdout);
+}
+void test_init_enemies(){
+    world_t world;
+    init_enemies(&world); 
+    test_init_enemies_param(&world);
+}
 int main(int argc, char* argv[]){
     /* test_init_sprite(); */
     /* test_depasse_gauche(); */
     /* test_depasse_droite(); */
     /* test_ennemi_depasse_bas(); */
     /* test_sprites_collide(); */
-    test_handle_sprites_collide();
+    //test_handle_sprites_collide();
+    test_init_enemies();
     return EXIT_SUCCESS;
 }

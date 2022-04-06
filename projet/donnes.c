@@ -8,7 +8,15 @@
 #include "sdl2-light.h"
 #include "donnes.h"
 #include <math.h>
+#include <time.h>
+#include <stdio.h>
+#include <stdlib.h>
 
+/* Generation d'un nombre entier compris entre a et b
+*/
+int generate_number(int a, int b){
+    return rand()%(b-a)+a;
+}
 
 void init_sprite(sprite_t* sprite, int x, int y, int w, int h, int v){
     sprite->x = x;
@@ -86,6 +94,11 @@ void init_data(world_t * world){
      * initialisation de l'ennemi
      */
     init_sprite(&(world->ennemi), SCREEN_WIDTH/2, 2 * SHIP_SIZE, SHIP_SIZE, SHIP_SIZE, ENEMY_SPEED);
+    
+    /**
+     * initialisation du tableau des ennemis
+     */
+    init_enemies(world);
 
     /**
      * Initialisation du missile
@@ -94,6 +107,14 @@ void init_data(world_t * world){
     set_invisible(&(world->missile));
     print_sprite(&(world->vaisseau));
     print_sprite(&(world->ennemi));
+    
+    
+}
+
+void init_enemies(world_t* world){
+    for(int i=0;i<NB_ENEMIES;i++){
+        init_sprite(&(world->enemies[i]),generate_number(0,SCREEN_WIDTH),-SHIP_SIZE-i*VERTICAL_DIST,SHIP_SIZE,SHIP_SIZE,ENEMY_SPEED);
+    }
 }
 
 
