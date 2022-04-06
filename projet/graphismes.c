@@ -8,12 +8,7 @@
 #include "sdl2-light.h"
 #include "graphismes.h"
 
-/**
- * \brief Applique la texture dans un sprite
- * \param renderer Le renderer
- * \param textures La textue à appliquer
- * \param sprite Le sprite
- */
+
 void apply_sprite (SDL_Renderer *renderer, SDL_Texture *textures, sprite_t *sprite){
     if(textures != NULL && !(sprite->is_visible)){
       apply_texture(textures, renderer, sprite->x, sprite->y);
@@ -21,10 +16,13 @@ void apply_sprite (SDL_Renderer *renderer, SDL_Texture *textures, sprite_t *spri
 }
 
 
-/**
- * \brief La fonction nettoie les textures
- * \param textures les textures
-*/
+void apply_enemies(SDL_Renderer *renderer, SDL_Texture *textures, sprite_t *enemies){
+    for(int i=0; i<NB_ENEMIES; i++){
+        apply_sprite(renderer, textures, &enemies[i]);
+    }
+}
+
+
 void clean_textures(textures_t *textures){
     clean_texture(textures->background);
     clean_texture(textures->vaisseau_texture);
@@ -33,11 +31,6 @@ void clean_textures(textures_t *textures){
 }
 
 
-/**
- * \brief La fonction initialise les texures
- * \param screen la surface correspondant à l'écran de jeu
- * \param textures les textures du jeu
-*/
 void init_textures(SDL_Renderer *renderer, textures_t *textures){
     textures->background = load_image( "ressources/space-background.bmp",renderer);
     textures->vaisseau_texture = load_image("ressources/spaceship.bmp", renderer);
@@ -46,11 +39,6 @@ void init_textures(SDL_Renderer *renderer, textures_t *textures){
 }
 
 
-/**
- * \brief La fonction applique la texture du fond sur le renderer lié à l'écran de jeu
- * \param renderer le renderer
- * \param textures les textures du jeu
-*/
 void apply_background(SDL_Renderer *renderer, textures_t *textures){
     if(textures->background != NULL){
       apply_texture(textures->background, renderer, 0, 0);
@@ -58,12 +46,6 @@ void apply_background(SDL_Renderer *renderer, textures_t *textures){
 }
 
 
-/**
- * \brief La fonction rafraichit l'écran en fonction de l'état des données du monde
- * \param renderer la surface de l'écran de jeu
- * \param world les données du monde
- * \param textures les textures
- */
 void refresh_graphics(SDL_Renderer *renderer, world_t *world,textures_t *textures){
     
     //on vide le renderer
@@ -73,6 +55,7 @@ void refresh_graphics(SDL_Renderer *renderer, world_t *world,textures_t *texture
     apply_background(renderer, textures);
     apply_sprite(renderer, textures->vaisseau_texture, &(world->vaisseau));
     apply_sprite(renderer, textures->ennemi_texture, &(world->ennemi));
+    apply_enemies(renderer, textures->ennemi_texture, (world->enemies));
     apply_sprite(renderer, textures->missile_texture, &(world->missile));
 
     // on met à jour l'écran

@@ -29,7 +29,7 @@ void init_sprite(sprite_t* sprite, int x, int y, int w, int h, int v){
 
 
 void print_sprite(sprite_t *sprite){
-    printf("Sprite :\nx,y = %d,%d\nh,w = %d,%d\nv = %d\nis_visible = %s\n", sprite->x, sprite->y, sprite->h, sprite->w, sprite->v, (!sprite->is_visible?"oui":"non"));
+    printf("Sprite : x,y = %d,%d | h,w = %d,%d\nv = %d\nis_visible = %s\n", sprite->x, sprite->y, sprite->h, sprite->w, sprite->v, (!sprite->is_visible?"oui":"non"));
 }
 
 
@@ -93,7 +93,7 @@ void init_data(world_t * world){
     /**
      * initialisation de l'ennemi
      */
-    init_sprite(&(world->ennemi), SCREEN_WIDTH/2, 2 * SHIP_SIZE, SHIP_SIZE, SHIP_SIZE, ENEMY_SPEED);
+    /* init_sprite(&(world->ennemi), SCREEN_WIDTH/2, 2 * SHIP_SIZE, SHIP_SIZE, SHIP_SIZE, ENEMY_SPEED); */
     
     /**
      * initialisation du tableau des ennemis
@@ -104,16 +104,12 @@ void init_data(world_t * world){
      * Initialisation du missile
      */
     init_sprite(&(world->missile), SCREEN_WIDTH/2, world->vaisseau.y, MISSILE_SIZE, MISSILE_SIZE, MISSILE_SPEED);
-    set_invisible(&(world->missile));
-    print_sprite(&(world->vaisseau));
-    print_sprite(&(world->ennemi));
-    
-    
+    set_invisible(&(world->missile));   
 }
 
 void init_enemies(world_t* world){
     for(int i=0;i<NB_ENEMIES;i++){
-        init_sprite(&(world->enemies[i]),generate_number(0,SCREEN_WIDTH),-SHIP_SIZE-i*VERTICAL_DIST,SHIP_SIZE,SHIP_SIZE,ENEMY_SPEED);
+        init_sprite(&(world->enemies[i]),generate_number(0,SCREEN_WIDTH-SHIP_SIZE),-SHIP_SIZE-i*VERTICAL_DIST,SHIP_SIZE,SHIP_SIZE,ENEMY_SPEED);
     }
 }
 
@@ -128,14 +124,26 @@ int is_game_over(world_t *world){
 }
 
 
+void update_enemies(world_t *world){
+    for(int i = 0; i<NB_ENEMIES; i++){
+        world->enemies[i].y+=world->enemies[i].v;
+    }
+}
+
+
 void update_data(world_t *world){
     //L'ennemi entre en contact avec le vaisseau
-    handle_sprites_collide(&(world->ennemi),&(world->vaisseau));
+    /* handle_sprites_collide(&(world->ennemi),&(world->vaisseau)); */
+
     // Test de collision entre le missile et l'ennemi
-    handle_sprites_collide(&(world->ennemi),&(world->missile));
+    /* handle_sprites_collide(&(world->ennemi),&(world->missile)); */
     
     //L'ennemi se déplace
-    world->ennemi.y+=world->ennemi.v;
+    /* world->ennemi.y+=world->ennemi.v; */
+
+    //LES ennemiS se delpacENT
+    update_enemies(world);
+
     // Si le missile est visible alors il avance.
     if(!world->missile.is_visible){
         world->missile.y-=world->missile.v;
@@ -144,14 +152,10 @@ void update_data(world_t *world){
     // Le vaisseau reste sur l'ecran
     depasse_gauche(&(world->vaisseau));
     depasse_droite(&(world->vaisseau));
+    /* ennemi_depasse_bas(&(world->ennemi)); */
 
     // L'ennemi boucle sur l'ecran
-    ennemi_depasse_bas(&(world->ennemi));
-
-    
-
-    
-    
+    /* ennemi_depasse_bas(&(world->ennemi));  */
 }
 
 

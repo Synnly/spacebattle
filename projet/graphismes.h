@@ -37,6 +37,15 @@ void apply_sprite (SDL_Renderer *renderer, SDL_Texture *textures, sprite_t *spri
 
 
 /**
+ * \brief Applique les textures des ennemis
+ * \param renderer Le renderer
+ * \param textures La texture à appliquer
+ * \param enemies Le tableau d'ennemis
+ */
+void apply_enemies(SDL_Renderer *renderer, SDL_Texture *textures, sprite_t *enemies);
+
+
+/**
  * \brief La fonction nettoie les textures
  * \param textures les textures
 */

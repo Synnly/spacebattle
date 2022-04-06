@@ -86,7 +86,7 @@ typedef struct sprite_s sprite_t;
 */
 struct world_s{
     sprite_t vaisseau;
-    sprite_t ennemi;         
+    /* sprite_t ennemi; */         
     sprite_t missile;
     int gameover; /*!< Champ indiquant si l'on est à la fin du jeu */
     sprite_t enemies[NB_ENEMIES];
@@ -207,6 +207,13 @@ int is_game_over(world_t *world);
  * \param les données du monde
  */
 void update_data(world_t *world);
+
+
+/**
+ * \brief La fonction met à jour la positions de tous les ennemis
+ * \param world les données du monde
+ */
+void update_enemies(world_t *world);
 
 
 /**
