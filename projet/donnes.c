@@ -59,12 +59,13 @@ void depasse_droite(sprite_t *sprite){
 
 void ennemi_depasse_bas(world_t *world){
     for(int i=0; i<NB_ENEMIES; i++){
-        if(world->sprite.y>SCREEN_HEIGHT){
-            world->sprite.y = 2 * SHIP_SIZE;
+        if(world->enemies[i].y>SCREEN_HEIGHT){
+            world->enemies[i].y = 2 * SHIP_SIZE;
             world->nb_ennemis_sortis ++;
-            printf("Nb ennemis sortis : %d\n", nb_ennemis_sortis);
+            printf("Nb ennemis sortis : %d\n", world->nb_ennemis_sortis);
         }
     }
+    printf("nb ennemis sortis = %d\n",world->nb_ennemis_sortis);
 }
 
 
@@ -88,6 +89,7 @@ void handle_sprites_collide(sprite_t *sp2, sprite_t *sp1){
 
 void init_data(world_t * world){
     world->gameover = 0;
+    world->nb_ennemis_sortis = 0;
 
     /**
      * Initialisation du vaisseau
@@ -139,9 +141,18 @@ void update_data(world_t *world){
     //L'ennemi entre en contact avec le vaisseau
     /* handle_sprites_collide(&(world->ennemi),&(world->vaisseau)); */
 
+    //L'ennemi entre en contact avec le vaisseau
+    for(int i=0;i<NB_ENEMIES;i++){
+        handle_sprites_collide(&(world->enemies[i]),&(world->vaisseau));
+    }
+
     // Test de collision entre le missile et l'ennemi
     /* handle_sprites_collide(&(world->ennemi),&(world->missile)); */
-    
+
+    //Test de collision entre le missile et les ennemis
+    for(int i=0;i<NB_ENEMIES;i++){
+     handle_sprites_collide(&(world->enemies[i]),&(world->missile));
+    }
     //L'ennemi se déplace
     /* world->ennemi.y+=world->ennemi.v; */
 

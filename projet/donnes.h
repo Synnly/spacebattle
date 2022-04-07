@@ -154,9 +154,9 @@ void depasse_droite(sprite_t *sprite);
 
 /**
  * \brief Verifie que l'ennemi n'est pas trop bas
- * \param sprite Le sprite
+ * \param world Le monde
  */
-void ennemi_depasse_bas(sprite_t *sprite);
+void ennemi_depasse_bas(world_t* world);
 
 /**
  * \brief Verifie si deux sprites entrent en collision
