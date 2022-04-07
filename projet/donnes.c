@@ -59,9 +59,9 @@ void depasse_droite(sprite_t *sprite){
 
 void ennemi_depasse_bas(world_t *world){
     for(int i=0; i<NB_ENEMIES; i++){
-        if(world->enemies[i].y>SCREEN_HEIGHT){
-            world->enemies[i].y = 2 * SHIP_SIZE;
+        if(world->enemies[i].y>SCREEN_HEIGHT && !world->enemies[i].is_visible){
             world->nb_ennemis_sortis ++;
+            set_invisible(&(world->enemies[i]));
             printf("Nb ennemis sortis : %d\n", world->nb_ennemis_sortis);
         }
     }
@@ -75,6 +75,16 @@ int sprites_collide(sprite_t *sp2, sprite_t *sp1){
     return SHIP_SIZE>dist;
 }
 
+void score(world_t* world){
+    for(int i=0; i<NB_ENEMIES; i++){
+        if(sprites_collide(&(world->missile),&(world->enemies[i])) && !world->missile.is_visible && !world->enemies[i].is_visible){
+            world->score++;
+        }
+    }
+    if(world->score==NB_ENEMIES){
+        world->score*=2;
+    }
+}
 
 void handle_sprites_collide(sprite_t *sp2, sprite_t *sp1){
     // Si les deux sprites entrent en collision ET sont visibles
@@ -90,6 +100,8 @@ void handle_sprites_collide(sprite_t *sp2, sprite_t *sp1){
 void init_data(world_t * world){
     world->gameover = 0;
     world->nb_ennemis_sortis = 0;
+    world->score = 0;
+    world->frame_count = 0;
 
     /**
      * Initialisation du vaisseau
@@ -136,6 +148,38 @@ void update_enemies(world_t *world){
     }
 }
 
+int all_enemies_visible(world_t* world){
+    int all_visible = 0;
+    for(int i = 0; i<NB_ENEMIES; i ++){
+        if(!world->enemies[i].is_visible){
+            all_visible = 1;
+        }
+    }
+    return all_visible;
+}
+
+void compute_game(world_t* world){
+    world->etat=3;
+    if(world->vaisseau.is_visible){
+        world->etat=0;
+        //world->gameover=1
+        world->frame_count++;
+    }
+    if(!world->vaisseau.is_visible && world->score==NB_ENEMIES*2){
+        world->etat=1;
+        //world->gameover=1
+        world->frame_count++;
+    }
+    if(!world->vaisseau.is_visible && !all_enemies_visible(world)){
+        world->etat=2;
+        //world->gameover=1
+        world->frame_count++;
+    }
+    if(world->frame_count>=FRAME_CLOSURE){
+        world->gameover=1;
+    }
+
+}
 
 void update_data(world_t *world){
     //L'ennemi entre en contact avec le vaisseau
@@ -171,8 +215,15 @@ void update_data(world_t *world){
 
     ennemi_depasse_bas(world);
 
-    // L'ennemi boucle sur l'ecran
+    // L'ennemi dépasse de l'ecran
     /* ennemi_depasse_bas(&(world->ennemi));  */
+
+    //Gestion de l'état du jeu
+    compute_game(world);
+
+    //Gestion des collisions entre missile et ennemis
+    score(world);
+    printf("%d",world->frame_count);
 }
 
 

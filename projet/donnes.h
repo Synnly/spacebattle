@@ -44,13 +44,13 @@
 /**
  * \brief Vitesse du vaisseau
 */
-#define MOVING_STEP 5
+#define MOVING_STEP 6
 
 
 /**
  * \brief Vitesse verticale de l'ennemi
  */
-#define ENEMY_SPEED 2
+#define ENEMY_SPEED 1
 
 /**
  * \brief Nombre d'ennemis
@@ -62,6 +62,10 @@
  */
 #define VERTICAL_DIST 2*SHIP_SIZE
 
+/**
+ * \brief Nombre d'images avant la fermeture du jeu
+ */
+#define FRAME_CLOSURE 250
 
 /**
  * \brief Représentation d'un sprite
@@ -91,6 +95,13 @@ struct world_s{
     int gameover; /*!< Champ indiquant si l'on est à la fin du jeu */
     sprite_t enemies[NB_ENEMIES];
     int nb_ennemis_sortis;
+    unsigned int score;
+    unsigned int etat;
+    //si etat=0 le joueur a perdu
+    //si etat=1 le joueur a gagné et a tué tous les ennemis
+    //si etat=2 le joueur a gagné mais n'a pas tué tous les ennemis
+    //si etat=3 le jeu est en cours
+    unsigned int frame_count;
 };
 
 /**
@@ -165,6 +176,12 @@ void ennemi_depasse_bas(world_t* world);
  * \return 1 en cas de collision, 0 sinon
  */
 int sprites_collide(sprite_t *sp2, sprite_t *sp1);
+
+/**
+ * \brief Fonction qui gère le score
+ * \param world Le monde du jeu
+ */
+void score(world_t* world);
 
 
 /**
