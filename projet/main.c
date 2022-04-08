@@ -17,14 +17,14 @@
 int main(int argc, char* args[]){
     SDL_Event event;
     world_t world;
-    textures_t textures;
+    ressources_t ressources;
     SDL_Renderer *renderer;
     SDL_Window *window;
 
     srand(time(NULL));
 
     //initialisation du jeu
-    init(&window,&renderer,&textures,&world);
+    init(&window,&renderer,&ressources,&world);
     
     while(!is_game_over(&world)){ //tant que le jeu n'est pas fini
         
@@ -35,14 +35,14 @@ int main(int argc, char* args[]){
         update_data(&world);
         
         //rafraichissement de l'écran
-        refresh_graphics(renderer,&world,&textures);
+        refresh_graphics(renderer,&world,&ressources);
         
         // pause de 10 ms pour controler la vitesse de rafraichissement
         pause(10);
     }
     
     //nettoyage final
-    clean(window,renderer,&textures,&world);
+    clean(window,renderer,&ressources,&world);
     
     
     return 0;

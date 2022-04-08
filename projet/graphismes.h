@@ -9,22 +9,24 @@
  */
 
 #include "sdl2-light.h"
+#include "sdl2-ttf-light.h"
 #include "donnes.h"
 
 /**
  * \brief Représentation pour stocker les textures nécessaires à l'affichage graphique
 */
-struct textures_s{
+struct ressources_s{
     SDL_Texture* background; /*!< Texture liée à l'image du fond de l'écran. */
     SDL_Texture* ennemi_texture;    /*!< Texture liée à l'image de l'ennemi. */
     SDL_Texture* vaisseau_texture;  /*!< Texture liée à l'image du vaisseau. */
     SDL_Texture* missile_texture;   /*!< Texture liée à l'image du missile. */
+    TTF_Font* font; /*!< Police d'ecriture. */
 };
 
 /**
  * \brief Type qui correspond aux textures du jeu
 */
-typedef struct textures_s textures_t;
+typedef struct ressources_s ressources_t;
 
 
 /**
@@ -49,7 +51,7 @@ void apply_enemies(SDL_Renderer *renderer, SDL_Texture *textures, sprite_t *enem
  * \brief La fonction nettoie les textures
  * \param textures les textures
 */
-void clean_textures(textures_t *textures);
+void clean_textures(ressources_t *textures);
 
 
 /**
@@ -57,7 +59,7 @@ void clean_textures(textures_t *textures);
  * \param screen la surface correspondant à l'écran de jeu
  * \param textures les textures du jeu
 */
-void init_textures(SDL_Renderer *renderer, textures_t *textures);
+void init_textures(SDL_Renderer *renderer, ressources_t *textures);
 
 
 /**
@@ -65,7 +67,7 @@ void init_textures(SDL_Renderer *renderer, textures_t *textures);
  * \param renderer le renderer
  * \param textures les textures du jeu
 */
-void apply_background(SDL_Renderer *renderer, textures_t *textures);
+void apply_background(SDL_Renderer *renderer, ressources_t *textures);
 
 /**
  * \brief La fonction rafraichit l'écran en fonction de l'état des données du monde
@@ -73,6 +75,6 @@ void apply_background(SDL_Renderer *renderer, textures_t *textures);
  * \param world les données du monde
  * \param textures les textures
  */
-void refresh_graphics(SDL_Renderer *renderer, world_t *world,textures_t *textures);
+void refresh_graphics(SDL_Renderer *renderer, world_t *world,ressources_t *textures);
 
 #endif

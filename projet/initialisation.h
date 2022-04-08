@@ -19,7 +19,7 @@
  * \param textures les textures
  * \param wordl le monde
  */
-void init(SDL_Window **window, SDL_Renderer ** renderer, textures_t *textures, world_t * world);
+void init(SDL_Window **window, SDL_Renderer ** renderer, ressources_t *textures, world_t * world);
 
 /**
 * \brief fonction qui nettoie le jeu: nettoyage de la partie graphique (SDL), nettoyage des textures, nettoyage des données
@@ -28,6 +28,6 @@ void init(SDL_Window **window, SDL_Renderer ** renderer, textures_t *textures, w
 * \param textures les textures
 * \param world le monde
 */
-void clean(SDL_Window *window, SDL_Renderer * renderer, textures_t *textures, world_t * world);
+void clean(SDL_Window *window, SDL_Renderer * renderer, ressources_t *textures, world_t * world);
 
 #endif

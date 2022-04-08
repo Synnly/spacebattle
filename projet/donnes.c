@@ -6,6 +6,7 @@
  */
 
 #include "sdl2-light.h"
+#include "sdl2-ttf-light.h"
 #include "donnes.h"
 #include <math.h>
 #include <time.h>
