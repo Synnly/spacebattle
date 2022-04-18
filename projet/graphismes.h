@@ -13,7 +13,7 @@
 #include "donnes.h"
 
 /**
- * \brief Représentation pour stocker les textures nécessaires à l'affichage graphique
+ * \brief Représentation pour stocker les ressources nécessaires à l'affichage graphique
 */
 struct ressources_s{
     SDL_Texture* background; /*!< Texture liée à l'image du fond de l'écran. */
@@ -24,7 +24,7 @@ struct ressources_s{
 };
 
 /**
- * \brief Type qui correspond aux textures du jeu
+ * \brief Type qui correspond aux ressources du jeu
 */
 typedef struct ressources_s ressources_t;
 
@@ -48,24 +48,24 @@ void apply_enemies(SDL_Renderer *renderer, SDL_Texture *textures, sprite_t *enem
 
 
 /**
- * \brief La fonction nettoie les textures
- * \param textures les textures
+ * \brief La fonction nettoie les ressources
+ * \param ressources les ressources
 */
-void clean_textures(ressources_t *textures);
+void clean_ressources(ressources_t *ressources);
 
 
 /**
- * \brief La fonction initialise les texures
+ * \brief La fonction initialise les ressources
  * \param screen la surface correspondant à l'écran de jeu
- * \param textures les textures du jeu
+ * \param ressources les ressources du jeu
 */
-void init_textures(SDL_Renderer *renderer, ressources_t *textures);
+void init_ressources(SDL_Renderer *renderer, ressources_t *ressources);
 
 
 /**
  * \brief La fonction applique la texture du fond sur le renderer lié à l'écran de jeu
  * \param renderer le renderer
- * \param textures les textures du jeu
+ * \param textures la textures du fond d'ecran
 */
 void apply_background(SDL_Renderer *renderer, ressources_t *textures);
 
@@ -73,8 +73,8 @@ void apply_background(SDL_Renderer *renderer, ressources_t *textures);
  * \brief La fonction rafraichit l'écran en fonction de l'état des données du monde
  * \param renderer la surface de l'écran de jeu
  * \param world les données du monde
- * \param textures les textures
+ * \param ressources les ressources
  */
-void refresh_graphics(SDL_Renderer *renderer, world_t *world,ressources_t *textures);
+void refresh_graphics(SDL_Renderer *renderer, world_t *world,ressources_t *ressources);
 
 #endif

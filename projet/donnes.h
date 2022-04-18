@@ -38,13 +38,13 @@
 /**
  * \brief Vitesse du missile
 */
-#define MISSILE_SPEED 10
+#define MISSILE_SPEED 15
 
 
 /**
  * \brief Vitesse du vaisseau
 */
-#define MOVING_STEP 6
+#define MOVING_STEP 10
 
 
 /**
@@ -148,20 +148,11 @@ void set_visible(sprite_t *sprite);
  */
 void set_invisible(sprite_t *sprite);
 
-
 /**
- * \brief Verifie que le sprite n'est pas trop à gauche
+ * \brief Verifie que le vaisseau ne dépasse pas les bords de l'ecran
  * \param sprite Le sprite
  */
-void depasse_gauche(sprite_t *sprite);
-
-
-/**
- * \brief Verifie que le sprite n'est pas trop à droite
- * \param sprite Le sprite
- */
-void depasse_droite(sprite_t *sprite);
-
+void vaisseau_depasse_bords(sprite_t *sprite);
 
 /**
  * \brief Verifie que l'ennemi n'est pas trop bas

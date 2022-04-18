@@ -24,7 +24,7 @@ void apply_enemies(SDL_Renderer *renderer, SDL_Texture *ressources, sprite_t *en
 }
 
 
-void clean_textures(ressources_t *ressources){
+void clean_ressources(ressources_t *ressources){
     clean_texture(ressources->background);
     clean_texture(ressources->vaisseau_texture);
     clean_texture(ressources->missile_texture);
@@ -33,12 +33,12 @@ void clean_textures(ressources_t *ressources){
 }
 
 
-void init_textures(SDL_Renderer *renderer, ressources_t *ressources){
-    ressources->background = load_image( "ressources/space-background.bmp",renderer);
-    ressources->vaisseau_texture = load_image("ressources/vaisseau.bmp", renderer);
-    ressources->ennemi_texture = load_image("ressources/enemy.bmp", renderer);
-    ressources->missile_texture = load_image("ressources/missile.bmp", renderer);
-    ressources->font = load_font("arial.ttf", 14);
+void init_ressources(SDL_Renderer *renderer, ressources_t *ressources){
+    ressources->background = load_image( "ressources/space-background_skin_1.bmp",renderer);
+    ressources->vaisseau_texture = load_image("ressources/spaceship_skin_1.bmp", renderer);
+    ressources->ennemi_texture = load_image("ressources/enemy_skin_1.bmp", renderer);
+    ressources->missile_texture = load_image("ressources/missile_skin_2.bmp", renderer);
+    ressources->font = load_font("ressources/arial.ttf", 14);
 }
 
 
@@ -60,10 +60,10 @@ void refresh_graphics(SDL_Renderer *renderer, world_t *world,ressources_t *resso
     /* apply_sprite(renderer, textures->ennemi_texture, &(world->ennemi)); */
     apply_enemies(renderer, ressources->ennemi_texture, (world->enemies));
     apply_sprite(renderer, ressources->missile_texture, &(world->missile));
-    // Ne marche pas : demander comment cast un int en const char *
-    /* const char *text = 
-    apply_text(renderer, 20, 20, 50, 50, text, ressources->font); */
 
-    // on met à jour l'écran
+    /* Ne marche pas : demander comment cast un int en const char * */
+    apply_text(renderer, 20, 20, 50, 50, "text", ressources->font);
+
+    // on met à jour l'écran    
     update_screen(renderer);
 }
