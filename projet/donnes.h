@@ -68,6 +68,11 @@
 #define FRAME_CLOSURE 250
 
 /**
+ * \brief Taille de la police d'ecriture des textes
+ */
+#define FONT_SIZE 14
+
+/**
  * \brief Représentation d'un sprite
  */
 struct sprite_s {
@@ -96,11 +101,7 @@ struct world_s{
     sprite_t enemies[NB_ENEMIES];
     int nb_ennemis_sortis;
     unsigned int score;
-    unsigned int etat;
-    //si etat=0 le joueur a perdu
-    //si etat=1 le joueur a gagné et a tué tous les ennemis
-    //si etat=2 le joueur a gagné mais n'a pas tué tous les ennemis
-    //si etat=3 le jeu est en cours
+    unsigned int etat;/*!< 0 : le joueur a perdu, 1 : le joueur a gagné et a tué tous les ennemis, 2 : le joueur a gagné mais n'a pas tué tous les ennemis, 3 : le jeu est en cours */
     unsigned int frame_count;
 };
 
@@ -223,6 +224,13 @@ void update_data(world_t *world);
  * \param world les données du monde
  */
 void update_enemies(world_t *world);
+
+
+/**
+ * \brief Fait avancer le missile
+ * \param world Les données du jeu
+ */
+void avance_missile(world_t *world);
 
 
 /**

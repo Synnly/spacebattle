@@ -13,8 +13,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-/* Generation d'un nombre entier compris entre a et b
-*/
+/* Generation d'un nombre entier compris entre a et b */
 int generate_number(int a, int b){
     return rand()%(b-a)+a;
 }
@@ -62,10 +61,8 @@ void ennemi_depasse_bas(world_t *world){
         if(world->enemies[i].y>SCREEN_HEIGHT && !world->enemies[i].is_visible){
             world->nb_ennemis_sortis ++;
             set_invisible(&(world->enemies[i]));
-            printf("Nb ennemis sortis : %d\n", world->nb_ennemis_sortis);
         }
     }
-    printf("nb ennemis sortis = %d\n",world->nb_ennemis_sortis);
 }
 
 
@@ -103,24 +100,13 @@ void init_data(world_t * world){
     world->score = 0;
     world->frame_count = 0;
 
-    /**
-     * Initialisation du vaisseau
-     */
+    //Initialisation du vaisseau
     init_sprite(&(world->vaisseau), SCREEN_WIDTH/2 - SHIP_SIZE/2, SCREEN_HEIGHT - (int)(1.5*SHIP_SIZE), SHIP_SIZE, SHIP_SIZE, 0);
-
-    /**
-     * initialisation de l'ennemi
-     */
-    /* init_sprite(&(world->ennemi), SCREEN_WIDTH/2, 2 * SHIP_SIZE, SHIP_SIZE, SHIP_SIZE, ENEMY_SPEED); */
     
-    /**
-     * initialisation du tableau des ennemis
-     */
+    //initialisation du tableau des ennemis
     init_enemies(world);
 
-    /**
-     * Initialisation du missile
-     */
+    //Initialisation du missile
     init_sprite(&(world->missile), SCREEN_WIDTH/2, world->vaisseau.y, MISSILE_SIZE, MISSILE_SIZE, MISSILE_SPEED);
     set_invisible(&(world->missile));   
 }
@@ -187,24 +173,16 @@ void compute_game(world_t* world){
 }
 
 void update_data(world_t *world){
-    //L'ennemi entre en contact avec le vaisseau
-    /* handle_sprites_collide(&(world->ennemi),&(world->vaisseau)); */
 
     //Les ennemis entrent en contact avec le vaisseau
     for(int i=0;i<NB_ENEMIES;i++){
         handle_sprites_collide(&(world->enemies[i]),&(world->vaisseau));
     }
 
-    // Test de collision entre le missile et l'ennemi
-    /* handle_sprites_collide(&(world->ennemi),&(world->missile)); */
-
     //Test de collision entre le missile et les ennemis
     for(int i=0;i<NB_ENEMIES;i++){
      handle_sprites_collide(&(world->enemies[i]),&(world->missile));
     }
-
-    //L'ennemi se déplace
-    /* world->ennemi.y+=world->ennemi.v; */
 
     //LES ennemiS se delpacENT
     update_enemies(world);
@@ -218,7 +196,6 @@ void update_data(world_t *world){
     vaisseau_depasse_bords(&(world->vaisseau));
 
     /* Detection du depassement du bord bas par les ennemis */
-    /* ennemi_depasse_bas(&(world->ennemi)); */
     ennemi_depasse_bas(world);
 
     /*Gestion de l'état du jeu*/
@@ -226,6 +203,17 @@ void update_data(world_t *world){
 
     /*Gestion des collisions entre missile et ennemis*/
     score(world);
+}
+
+
+void avance_missile(world_t *world){
+    set_visible(&(world->missile));
+
+    /* On place le missile au milieu au dessus du sprite du vaisseau */
+    world->missile.x = world->vaisseau.x + SHIP_SIZE/2 - MISSILE_SIZE/2;
+    world->missile.y = world->vaisseau.y;
+
+    world->missile.v=MISSILE_SPEED;
 }
 
 
@@ -258,13 +246,7 @@ void handle_events(SDL_Event *event,world_t *world){
 
             //si la touche appuyée est espace et que le vaisseau est visible
             if(event->key.keysym.sym == SDLK_SPACE && world->vaisseau.is_visible==0){
-                set_visible(&(world->missile));
-
-                /* On place le missile au milieu au dessus du sprite du vaisseau */
-                world->missile.x = world->vaisseau.x + SHIP_SIZE/2 - MISSILE_SIZE/2;
-                world->missile.y = world->vaisseau.y;
-
-                world->missile.v=MISSILE_SPEED;
+                avance_missile(world);
             } 
 
             //si la touche appuyée est echap

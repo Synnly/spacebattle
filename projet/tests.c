@@ -6,6 +6,7 @@
  */
 
 #include "donnes.h"
+#include <stdio.h>
 
 void test_init_sprite_param(int x, int y, int w, int h, int v){
     sprite_t sprite1;
@@ -21,60 +22,40 @@ void test_init_sprite(){
 }
 
 
-void test_depasse_gauche_param(sprite_t *sprite){
-    printf("----------Avant----------\n");
-    print_sprite(sprite);
-    depasse_gauche(sprite);
-    printf("----------Apres--------\n");
-    print_sprite(sprite);
-    printf("\n");
+void test_vaisseau_depasse_bords_param(sprite_t *sprite){
+    printf("Avant : x, y = %d, %d | Apres : x, y = ", sprite->x, sprite->y);
+    vaisseau_depasse_bords(sprite);
+    printf("%d, %d\n", sprite->x, sprite->y); 
 }
 
-
-void test_depasse_gauche(){
+void test_vaisseau_depasse_bords(){
     sprite_t sprite;
-    for(int i = 0; i>-13; i-=3){
+
+    // Bord gauche
+    for(int i = -100; i<401; i+=100){
         init_sprite(&sprite, i, 50, 32, 32, 0);
-        test_depasse_gauche_param(&sprite);
+        test_vaisseau_depasse_bords_param(&sprite);
     }
 }
 
 
-void test_depasse_droite_param(sprite_t *sprite){
-    printf("----------Avant----------\n");
-    print_sprite(sprite);
-    depasse_droite(sprite);
-    printf("----------Apres--------\n");
-    print_sprite(sprite);
-    printf("\n");
-}
-
-
-void test_depasse_droite(){
-    sprite_t sprite;
-    for(int i = 262; i<=310; i+=10){
-        init_sprite(&sprite, i, 50, 32, 32, 0);
-        test_depasse_droite_param(&sprite);
+void test_ennemi_depasse_bas_param(world_t *world){
+    ennemi_depasse_bas(world);
+    for(int i = 0; i<5; i++){
+        printf("Ennemi %d x, y = %d, %d est visible : %s\n", i+1, world->enemies[i].x, world->enemies[i].y, (world->enemies[i].is_visible?"faux":"vrai"));
     }
 }
-
-
-void test_ennemi_depasse_bas_param(sprite_t *sprite){
-    printf("----------Avant----------\n");
-    print_sprite(sprite);
-    ennemi_depasse_bas(sprite);
-    printf("----------Apres--------\n");
-    print_sprite(sprite);
-    printf("\n");
-}
-
 
 void test_ennemi_depasse_bas(){
-    sprite_t sprite;
-    for(int i = 64; i<800; i+=200){
-        init_sprite(&sprite, 50, i, 32, 32, 0);
-        test_ennemi_depasse_bas_param(&sprite);
-    }
+    world_t world;
+    init_data(&world);
+    world.enemies[0].y = -200;
+    world.enemies[1].y = 0;
+    world.enemies[2].y = 100;
+    world.enemies[3].y = 300;
+    world.enemies[4].y = 600;
+    ennemi_depasse_bas(&world);
+    test_ennemi_depasse_bas_param(&world); 
 }
 
 
@@ -155,13 +136,34 @@ void test_update_enemies(){
 }
 
 int main(int argc, char* argv[]){
-    /* test_init_sprite(); */
-    /* test_depasse_gauche(); */
-    /* test_depasse_droite(); */
-    /* test_ennemi_depasse_bas(); */
-    /* test_sprites_collide(); */
-    //test_handle_sprites_collide();
-    /* test_init_enemies(); */
-    test_update_enemies();
+    int choix;
+    printf("Choisir le test :\n1. test_init_sprite\n2. test_vaisseau_depasse_bords\n3. test_ennemi_depasse_bas\n4. test_sprites_collide\n5. test_handle_sprites_collide\n6. test_init_enemies\n7. test_update_enemies\n> ");
+    scanf("%d", &choix);
+
+    switch (choix){
+    case 1:
+        test_init_sprite();
+        break;
+    case 2:
+        test_vaisseau_depasse_bords();
+        break;
+    case 3:
+        test_ennemi_depasse_bas();
+        break; 
+    case 4:
+        test_sprites_collide();
+        break;  
+    case 5:
+        test_handle_sprites_collide();
+        break; 
+    case 6:
+        test_init_enemies();
+        break;
+    case 7:
+        test_update_enemies();
+        break;
+    default:
+        break;
+    }
     return EXIT_SUCCESS;
 }

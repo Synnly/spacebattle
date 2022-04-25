@@ -33,6 +33,6 @@ void clean(SDL_Window *window, SDL_Renderer * renderer, ressources_t *ressources
 void init(SDL_Window **window, SDL_Renderer ** renderer, ressources_t *ressources, world_t * world){
     init_sdl(window,renderer,SCREEN_WIDTH, SCREEN_HEIGHT);
     init_data(world);
-    init_ressources(*renderer, ressources);
     init_ttf();
+    init_ressources(*renderer, ressources);
 }

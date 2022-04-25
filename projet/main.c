@@ -44,6 +44,5 @@ int main(int argc, char* args[]){
     //nettoyage final
     clean(window,renderer,&ressources,&world);
     
-    
     return 0;
 }

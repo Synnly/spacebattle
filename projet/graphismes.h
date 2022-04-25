@@ -69,6 +69,25 @@ void init_ressources(SDL_Renderer *renderer, ressources_t *ressources);
 */
 void apply_background(SDL_Renderer *renderer, ressources_t *textures);
 
+
+/**
+ * \brief Affiche le score sur l'ecran
+ * \param renderer Le renderer
+ * \param world Les donnees du monde
+ * \param ressources Les ressources du jeu
+ */
+void afficher_score(SDL_Renderer *renderer, world_t *world, ressources_t *ressources);
+
+
+/**
+ * \brief Affiche un message en fonction de l'etat du jeu et le score
+ * \param renderer Le renderer
+ * \param world Les données du monde
+ * \param ressources Les ressources du jeu
+ */
+void afficher_etat_jeu(SDL_Renderer *renderer, world_t *world, ressources_t *ressources);
+
+
 /**
  * \brief La fonction rafraichit l'écran en fonction de l'état des données du monde
  * \param renderer la surface de l'écran de jeu
