@@ -67,6 +67,7 @@
  */
 #define FRAME_CLOSURE 250
 
+
 /**
  * \brief Taille de la police d'ecriture des textes
  */

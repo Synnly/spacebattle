@@ -102,7 +102,11 @@ void init_data(world_t * world){
 
     //Initialisation du vaisseau
     init_sprite(&(world->vaisseau), SCREEN_WIDTH/2 - SHIP_SIZE/2, SCREEN_HEIGHT - (int)(1.5*SHIP_SIZE), SHIP_SIZE, SHIP_SIZE, 0);
+<<<<<<< HEAD
     
+=======
+
+>>>>>>> e596624d1d17668ce2937729cfff38d18e08fb6f
     //initialisation du tableau des ennemis
     init_enemies(world);
 

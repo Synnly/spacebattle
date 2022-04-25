@@ -9,7 +9,6 @@
 #include "sdl2-ttf-light.h"
 #include "graphismes.h"
 #include <string.h>
-#include <stdio.h>
 
 
 void apply_sprite (SDL_Renderer *renderer, SDL_Texture *ressources, sprite_t *sprite){
