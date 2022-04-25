@@ -103,24 +103,13 @@ void init_data(world_t * world){
     world->score = 0;
     world->frame_count = 0;
 
-    /**
-     * Initialisation du vaisseau
-     */
+    //Initialisation du vaisseau
     init_sprite(&(world->vaisseau), SCREEN_WIDTH/2 - SHIP_SIZE/2, SCREEN_HEIGHT - (int)(1.5*SHIP_SIZE), SHIP_SIZE, SHIP_SIZE, 0);
 
-    /**
-     * initialisation de l'ennemi
-     */
-    /* init_sprite(&(world->ennemi), SCREEN_WIDTH/2, 2 * SHIP_SIZE, SHIP_SIZE, SHIP_SIZE, ENEMY_SPEED); */
-    
-    /**
-     * initialisation du tableau des ennemis
-     */
+    //initialisation du tableau des ennemis
     init_enemies(world);
 
-    /**
-     * Initialisation du missile
-     */
+    //Initialisation du missile
     init_sprite(&(world->missile), SCREEN_WIDTH/2, world->vaisseau.y, MISSILE_SIZE, MISSILE_SIZE, MISSILE_SPEED);
     set_invisible(&(world->missile));   
 }
@@ -187,24 +176,16 @@ void compute_game(world_t* world){
 }
 
 void update_data(world_t *world){
-    //L'ennemi entre en contact avec le vaisseau
-    /* handle_sprites_collide(&(world->ennemi),&(world->vaisseau)); */
 
     //Les ennemis entrent en contact avec le vaisseau
     for(int i=0;i<NB_ENEMIES;i++){
         handle_sprites_collide(&(world->enemies[i]),&(world->vaisseau));
     }
 
-    // Test de collision entre le missile et l'ennemi
-    /* handle_sprites_collide(&(world->ennemi),&(world->missile)); */
-
     //Test de collision entre le missile et les ennemis
     for(int i=0;i<NB_ENEMIES;i++){
      handle_sprites_collide(&(world->enemies[i]),&(world->missile));
     }
-
-    //L'ennemi se déplace
-    /* world->ennemi.y+=world->ennemi.v; */
 
     //LES ennemiS se delpacENT
     update_enemies(world);
@@ -218,7 +199,6 @@ void update_data(world_t *world){
     vaisseau_depasse_bords(&(world->vaisseau));
 
     /* Detection du depassement du bord bas par les ennemis */
-    /* ennemi_depasse_bas(&(world->ennemi)); */
     ennemi_depasse_bas(world);
 
     /*Gestion de l'état du jeu*/

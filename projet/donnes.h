@@ -67,6 +67,7 @@
  */
 #define FRAME_CLOSURE 250
 
+
 /**
  * \brief Représentation d'un sprite
  */

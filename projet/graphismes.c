@@ -8,6 +8,7 @@
 #include "sdl2-light.h"
 #include "sdl2-ttf-light.h"
 #include "graphismes.h"
+#include <stdlib.h>
 
 
 void apply_sprite (SDL_Renderer *renderer, SDL_Texture *ressources, sprite_t *sprite){
@@ -38,7 +39,8 @@ void init_ressources(SDL_Renderer *renderer, ressources_t *ressources){
     ressources->vaisseau_texture = load_image("ressources/spaceship_skin_1.bmp", renderer);
     ressources->ennemi_texture = load_image("ressources/enemy_skin_1.bmp", renderer);
     ressources->missile_texture = load_image("ressources/missile_skin_2.bmp", renderer);
-    ressources->font = load_font("ressources/arial.ttf", 14);
+    const char *path = "ressources/arial.ttf";
+    ressources->font = load_font(path, 14);
 }
 
 
@@ -60,9 +62,11 @@ void refresh_graphics(SDL_Renderer *renderer, world_t *world,ressources_t *resso
     /* apply_sprite(renderer, textures->ennemi_texture, &(world->ennemi)); */
     apply_enemies(renderer, ressources->ennemi_texture, (world->enemies));
     apply_sprite(renderer, ressources->missile_texture, &(world->missile));
-
+    char *score_char = "Score = ";
+    char *nb_score_char = (world->score);
+    strcat(score_char, nb_score_char);
     /* Ne marche pas : demander comment cast un int en const char * */
-    apply_text(renderer, 20, 20, 50, 50, "text", ressources->font);
+    apply_text(renderer, 20, 20, 50, 50, score_char, ressources->font);
 
     // on met à jour l'écran    
     update_screen(renderer);
