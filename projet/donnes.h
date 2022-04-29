@@ -157,6 +157,13 @@ void set_invisible(sprite_t *sprite);
 void vaisseau_depasse_bords(sprite_t *sprite);
 
 /**
+ * \brief Replace l'ennemi au dessus de l'ecran
+ * \param wolrd Le monde
+ * \param i L'indice du ieme enemi
+ */ 
+void reset_enemi(world_t *world, int i);
+
+/**
  * \brief Verifie que l'ennemi n'est pas trop bas
  * \param world Le monde
  */
