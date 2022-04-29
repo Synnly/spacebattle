@@ -10,6 +10,7 @@
 #include "donnes.h"
 #include "graphismes.h"
 #include "initialisation.h"
+#include <time.h>
 
 /**
  *  \brief programme principal qui implémente la boucle du jeu

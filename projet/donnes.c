@@ -55,14 +55,19 @@ void vaisseau_depasse_bords(sprite_t *sprite){
     }
 }
 
+void reset_enemi(world_t *world, int i){
+    init_sprite(&(world->enemies[i]),generate_number(0,SCREEN_WIDTH-SHIP_SIZE),-SHIP_SIZE-i*VERTICAL_DIST,SHIP_SIZE,SHIP_SIZE,ENEMY_SPEED);
+}
 
 void ennemi_depasse_bas(world_t *world){
     for(int i=0; i<NB_ENEMIES; i++){
-        if(world->enemies[i].y>SCREEN_HEIGHT && !world->enemies[i].is_visible){
+        if(world->enemies[i].y>SCREEN_HEIGHT){
             world->nb_ennemis_sortis ++;
-            set_invisible(&(world->enemies[i]));
+            reset_enemi(world, i);
+            set_visible(&(world->enemies[i]));
         }
     }
+    world->nb_ennemis_sortis %= 5;
 }
 
 
@@ -109,6 +114,7 @@ void handle_vaisseau_collide(world_t* world){
 
 void init_data(world_t * world){
     world->gameover = 0;
+    world->etat = 3;
     world->nb_ennemis_sortis = 0;
     world->score = 0;
     world->frame_count = 0;
@@ -125,7 +131,7 @@ void init_data(world_t * world){
 
 void init_enemies(world_t* world){
     for(int i=0;i<NB_ENEMIES;i++){
-        init_sprite(&(world->enemies[i]),generate_number(0,SCREEN_WIDTH-SHIP_SIZE),-SHIP_SIZE-i*VERTICAL_DIST,SHIP_SIZE,SHIP_SIZE,ENEMY_SPEED);
+        reset_enemi(world, i);
     }
 }
 
@@ -143,6 +149,7 @@ int is_game_over(world_t *world){
 void update_enemies(world_t *world){
     for(int i = 0; i<NB_ENEMIES; i++){
         world->enemies[i].y+=world->enemies[i].v;
+        print_sprite(&(world->enemies[i]));
     }
 }
 
@@ -157,30 +164,21 @@ int all_enemies_visible(world_t* world){
 }
 
 void compute_game(world_t* world){
-    /*Jeu de base en cours*/
-    world->etat=3;
-
     /*Le joueur a perdu*/
     if(world->vaisseau.is_visible || world->lives == 0){
         world->etat=0;
         world->frame_count++;
     }
 
-    /*Tous les ennemis ont été tués*/
-    if(!world->vaisseau.is_visible && world->score==NB_ENEMIES*2){
-        world->etat=1;
-        world->frame_count++;
-    }
-
-    /*Tous les ennemis n'ont pas été tués*/
-    if(!world->vaisseau.is_visible && !all_enemies_visible(world)){
-        world->etat=2;
-        world->frame_count++;
-    }
-
     /*Temps de latence avant la fermeture du jeu*/
     if(world->frame_count>=FRAME_CLOSURE){
         world->gameover=1;
+    }
+
+    /*Jeu de base en cours*/
+    if(world->etat == 3){
+        /* Detection du depassement du bord bas par les ennemis */
+        ennemi_depasse_bas(world);
     }
 }
 
@@ -196,6 +194,7 @@ void update_data(world_t *world){
 
     //LES ennemiS se delpacENT
     update_enemies(world);
+    printf("Ennemis sortis : %d\n", world->nb_ennemis_sortis);
 
     // Si le missile est visible alors il avance.
     if(!world->missile.is_visible){
@@ -204,9 +203,6 @@ void update_data(world_t *world){
 
     /* Le vaisseau reste sur l'ecran */
     vaisseau_depasse_bords(&(world->vaisseau));
-
-    /* Detection du depassement du bord bas par les ennemis */
-    ennemi_depasse_bas(world);
 
     /*Gestion de l'état du jeu*/
     compute_game(world);

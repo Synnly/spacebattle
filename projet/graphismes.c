@@ -84,7 +84,7 @@ void afficher_etat_jeu(SDL_Renderer *renderer, world_t *world, ressources_t *res
             apply_text(renderer, posx, posy, FONT_SIZE*3*strlen("PERDU"), FONT_SIZE*6, "PERDU", ressources->font);
         }
 
-        case 1: {   //Victoire
+        /* case 1: {   //Victoire
             int posx = SCREEN_WIDTH/2 - (FONT_SIZE*3*strlen("VICTOIRE"))/2;
             apply_text(renderer, posx, posy, FONT_SIZE*3*strlen("VICTOIRE"), FONT_SIZE*6, "VICTOIRE", ressources->font);
         }
@@ -94,7 +94,7 @@ void afficher_etat_jeu(SDL_Renderer *renderer, world_t *world, ressources_t *res
             int posx2 = SCREEN_WIDTH/2 - (FONT_SIZE*strlen("N'ONT PAS ETE TUE"))/2;
             apply_text(renderer, posx1, posy, FONT_SIZE*strlen("TOUS LES ENEMIS"), FONT_SIZE*2, "TOUS LES ENEMIS", ressources->font);
             apply_text(renderer, posx2, posy + FONT_SIZE*2, FONT_SIZE*strlen("N'ONT PAS ETE TUE"), FONT_SIZE*2, "N'ONT PAS ETE TUE", ressources->font);
-        }
+        } */
 
         default :
             afficher_score(renderer, world, ressources);
