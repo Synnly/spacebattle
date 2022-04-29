@@ -62,6 +62,19 @@ void afficher_score(SDL_Renderer *renderer, world_t *world, ressources_t *ressou
     free(score_str);
 }
 
+void afficher_vies(SDL_Renderer *renderer, world_t *world, ressources_t *ressources){
+    char *lives_str = malloc(sizeof(char)*3);     //Vies
+    SDL_itoa(world->lives, lives_str, 10);      //Conversion des vies en texte
+
+    int taille_txt = strlen("Vies : ");
+
+    //Affichage
+    apply_text(renderer, 20, 40, taille_txt*(FONT_SIZE), FONT_SIZE*2, "Vies : ", ressources->font);
+    apply_text(renderer, 20 + taille_txt*(FONT_SIZE), 40, (FONT_SIZE)*strlen(lives_str), FONT_SIZE*2, lives_str, ressources->font);
+
+    free(lives_str);
+}
+
 
 void afficher_etat_jeu(SDL_Renderer *renderer, world_t *world, ressources_t *ressources){
     int posy = SCREEN_HEIGHT/2 - (FONT_SIZE*6)/2;
@@ -85,6 +98,7 @@ void afficher_etat_jeu(SDL_Renderer *renderer, world_t *world, ressources_t *res
 
         default :
             afficher_score(renderer, world, ressources);
+            afficher_vies(renderer, world, ressources);
     }
 }
 

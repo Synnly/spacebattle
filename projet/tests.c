@@ -77,17 +77,17 @@ void test_sprites_collide(){
 }
 
 
-void test_handle_sprites_collide_param(sprite_t *sprite1, sprite_t *sprite2){
+void test_handle_missiles_collide_param(sprite_t *sprite1, sprite_t *sprite2){
     printf("----------Avant----------\n");
     printf("Le sprite 1 (%d, %d, v = %d) et sprite 2 (%d, %d, v = %d) %s en collision\n", sprite1->x, sprite1->y, sprite1->v, sprite2->x, sprite2->y, sprite2->v, sprites_collide(sprite2, sprite1)?"sont":"ne sont pas");
-    handle_sprites_collide(sprite1, sprite2);
+    handle_missiles_collide(sprite1, sprite2);
     printf("----------Apres----------\n");
     printf("Le sprite 1 (%d, %d, v = %d) et sprite 2 (%d, %d, v = %d) %s en collision\n", sprite1->x, sprite1->y, sprite1->v, sprite2->x, sprite2->y, sprite2->v, sprites_collide(sprite2, sprite1)?"sont":"ne sont pas");
     printf("\n");
 }
 
 
-void test_handle_sprites_collide(){
+void test_handle_missiles_collide(){
     sprite_t sprite1;
     sprite_t sprite2;
     for(int i = 20; i<62; i+=30){
@@ -95,11 +95,18 @@ void test_handle_sprites_collide(){
             init_sprite(&sprite1, i, 50, 32, 32, 5);
             if(visible){set_invisible(&sprite1);};
             init_sprite(&sprite2, 62, 50, 32, 32, 5);
-            test_handle_sprites_collide_param(&sprite1, &sprite2);
+            test_handle_missiles_collide_param(&sprite1, &sprite2);
         }
     }
 }
 
+void test_handle_vaisseau_collide_param(world_t* world){
+
+}
+
+void test_handle_vaisseau_collide(){
+    world_t world
+}
 
 void test_init_enemies_param(world_t* world){
     for(int i=0;i<NB_ENEMIES;i++){

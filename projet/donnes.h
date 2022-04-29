@@ -102,8 +102,9 @@ struct world_s{
     sprite_t enemies[NB_ENEMIES];
     int nb_ennemis_sortis;
     unsigned int score;
-    unsigned int etat;/*!< 0 : le joueur a perdu, 1 : le joueur a gagné et a tué tous les ennemis, 2 : le joueur a gagné mais n'a pas tué tous les ennemis, 3 : le jeu est en cours */
+    unsigned int etat;/*!< 0 : le joueur a perdu, 1 : le joueur a gagné et a tué tous les ennemis, 2 : le joueur a gagné mais n'a pas tué tous les ennemis, 3 : le jeu est en cours, */
     unsigned int frame_count;
+    unsigned int lives;/*!< Nombre de vie(s) du joueur*/
 };
 
 /**
@@ -178,12 +179,17 @@ void score(world_t* world);
 
 
 /**
- * \brief Gere les collisions entre deux sprites
+ * \brief Gere les collisions entre les missiles et les ennemis
  * \param sp2 Deuxième sprite
  * \param sp1 Premier sprite
  */
-void handle_sprites_collide(sprite_t *sp2, sprite_t *sp1);
+void handle_missiles_collide(sprite_t *sp2, sprite_t *sp1);
 
+/**
+ * \brief Gere les collisions entre le vaisseau et les ennemis
+ * \param world Le monde du jeu
+ */
+void handle_vaisseau_collide(world_t* world);
 
 /**
  * \brief La fonction initialise les données du monde du jeu

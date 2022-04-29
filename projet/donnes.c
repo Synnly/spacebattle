@@ -83,7 +83,7 @@ void score(world_t* world){
     }
 }
 
-void handle_sprites_collide(sprite_t *sp2, sprite_t *sp1){
+void handle_missiles_collide(sprite_t *sp2, sprite_t *sp1){
     // Si les deux sprites entrent en collision ET sont visibles
     if(sprites_collide(sp2, sp1) && !sp2->is_visible && !sp1->is_visible){
         sp2->v = 0;
@@ -93,20 +93,28 @@ void handle_sprites_collide(sprite_t *sp2, sprite_t *sp1){
     }
 }
 
+void handle_vaisseau_collide(world_t* world){
+    for(int i=0; i<NB_ENEMIES; i++){
+        if(sprites_collide(&(world->vaisseau),&(world->enemies[i])) && !world->vaisseau.is_visible && !world->enemies[i].is_visible){
+            (&(world->enemies[i]))->v=0;
+            set_invisible(&(world->enemies[i]));
+            world->lives--;
+            if(world->lives==0){
+                set_invisible(&(world->vaisseau));
+            }
+        }
+    }
+}
+
 
 void init_data(world_t * world){
     world->gameover = 0;
     world->nb_ennemis_sortis = 0;
     world->score = 0;
     world->frame_count = 0;
-
+    world->lives = 3;
     //Initialisation du vaisseau
     init_sprite(&(world->vaisseau), SCREEN_WIDTH/2 - SHIP_SIZE/2, SCREEN_HEIGHT - (int)(1.5*SHIP_SIZE), SHIP_SIZE, SHIP_SIZE, 0);
-<<<<<<< HEAD
-    
-=======
-
->>>>>>> e596624d1d17668ce2937729cfff38d18e08fb6f
     //initialisation du tableau des ennemis
     init_enemies(world);
 
@@ -153,7 +161,7 @@ void compute_game(world_t* world){
     world->etat=3;
 
     /*Le joueur a perdu*/
-    if(world->vaisseau.is_visible){
+    if(world->vaisseau.is_visible || world->lives == 0){
         world->etat=0;
         world->frame_count++;
     }
@@ -178,14 +186,12 @@ void compute_game(world_t* world){
 
 void update_data(world_t *world){
 
-    //Les ennemis entrent en contact avec le vaisseau
-    for(int i=0;i<NB_ENEMIES;i++){
-        handle_sprites_collide(&(world->enemies[i]),&(world->vaisseau));
-    }
+    //Gestion des collisions entre vaisseau et ennemis
+    handle_vaisseau_collide(world);
 
     //Test de collision entre le missile et les ennemis
     for(int i=0;i<NB_ENEMIES;i++){
-     handle_sprites_collide(&(world->enemies[i]),&(world->missile));
+     handle_missiles_collide(&(world->enemies[i]),&(world->missile));
     }
 
     //LES ennemiS se delpacENT
@@ -233,11 +239,6 @@ void handle_events(SDL_Event *event,world_t *world){
        
          //si une touche est appuyée
          if(event->type == SDL_KEYDOWN){
-             //si la touche appuyée est 'D'
-             if(event->key.keysym.sym == SDLK_d){
-                 printf("La touche D est appuyée\n");
-              }
-
             //si la touche appuyée est fleche gauche
             if(event->key.keysym.sym == SDLK_LEFT){
                 world->vaisseau.x -= MOVING_STEP;
