@@ -79,7 +79,7 @@ void apply_background(SDL_Renderer *renderer, ressources_t *textures);
 void afficher_score(SDL_Renderer *renderer, world_t *world, ressources_t *ressources);
 
 /**
- * \brief Affiche le score sur l'ecran
+ * \brief Affiche les vies sur l'ecran
  * \param renderer Le renderer
  * \param world Les donnees du monde
  * \param ressources Les ressources du jeu

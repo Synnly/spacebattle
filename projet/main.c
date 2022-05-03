@@ -31,10 +31,12 @@ int main(int argc, char* args[]){
         
         //gestion des évènements
         handle_events(&event,&world);
-        
-        //mise à jour des données liée à la physique du monde
-        update_data(&world);
-        
+
+        if(!world.pause){
+            //mise à jour des données liée à la physique du monde
+            update_data(&world);
+        }
+
         //rafraichissement de l'écran
         refresh_graphics(renderer,&world,&ressources);
         

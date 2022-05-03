@@ -65,7 +65,7 @@
 /**
  * \brief Nombre d'images avant la fermeture du jeu
  */
-#define FRAME_CLOSURE 250
+#define FRAME_CLOSURE 300
 
 
 /**
@@ -82,7 +82,8 @@ struct sprite_s {
     unsigned int h; /*!< Hauteur du sprite */
     unsigned int w; /*!< Largeur du sprite */
     unsigned int v; /*!< Vitesse du sprite */
-    int is_visible; /*!< Champ lié à la visibilité du sprite */
+    unsigned int is_visible; /*!< Champ lié à la visibilité du sprite */
+    unsigned int type; /*< Champ lié au type de sprite ; 0: vaisseau, 1: missile du vaisseau, 2: ennemi classique */
 };
 
 /**
@@ -95,16 +96,16 @@ typedef struct sprite_s sprite_t;
  * \brief Représentation du monde du jeu
 */
 struct world_s{
-    sprite_t vaisseau;
-    /* sprite_t ennemi; */         
-    sprite_t missile;
+    sprite_t vaisseau;  /*!< Champ lié au vaisseau */
+    sprite_t missile;   /*!< Champ lié au missile du vaisseau */
     int gameover; /*!< Champ indiquant si l'on est à la fin du jeu */
-    sprite_t enemies[NB_ENEMIES];
-    int nb_ennemis_sortis;
-    unsigned int score;
-    unsigned int etat;/*!< 0 : le joueur a perdu, 1 : le joueur a gagné et a tué tous les ennemis, 2 : le joueur a gagné mais n'a pas tué tous les ennemis, 3 : le jeu est en cours, */
-    unsigned int frame_count;
-    unsigned int lives;/*!< Nombre de vie(s) du joueur*/
+    sprite_t enemies[NB_ENEMIES];   /*!< Champ lié au tableau contenant tous les ennemis */
+    int nb_ennemis_sortis;  /*!< Champ qui compte le nombre d'ennemis qui sont sortis de l'ecran par la bordure du bas */
+    unsigned int score;     /*!< Champ qui compte le score */
+    unsigned int pause;     /*!< Champ indiquant si le jeu est en pause */
+    unsigned int etat;      /*!< 0 : le joueur a perdu, 1 : le joueur a gagné et a tué tous les ennemis, 2 : le joueur a gagné mais n'a pas tué tous les ennemis, 3 : le jeu est en cours, */
+    unsigned int frame_count;   /*!< Champ qui compte le nombre d'images avant la fermeture du jeu */
+    unsigned int lives;     /*!< Champ qui compte le nombre de vie(s) du joueur */
 };
 
 /**
@@ -129,7 +130,7 @@ int generate_number(int a, int b);
  * \param h Hauteur du sprite
  * \param v Vitesse du sprite
  */
-void init_sprite(sprite_t* sprite, int x, int y, int w, int h, int v);
+void init_sprite(sprite_t* sprite, int x, int y, unsigned int w, unsigned int h, int v, unsigned int type);
 
 
 /**
@@ -162,7 +163,7 @@ void vaisseau_depasse_bords(sprite_t *sprite);
  * \param wolrd Le monde
  * \param i L'indice du ieme enemi
  */ 
-void reset_enemi(world_t *world, int i);
+void reset_enemi(world_t *world, unsigned int i, unsigned int type);
 
 /**
  * \brief Verifie que l'ennemi n'est pas trop bas

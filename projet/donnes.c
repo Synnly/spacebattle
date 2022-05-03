@@ -18,13 +18,14 @@ int generate_number(int a, int b){
     return rand()%(b-a)+a;
 }
 
-void init_sprite(sprite_t* sprite, int x, int y, int w, int h, int v){
+void init_sprite(sprite_t* sprite, int x, int y, unsigned int w, unsigned int h, int v, unsigned int type){
     sprite->x = x;
     sprite->y = y;
     sprite->h = h;
     sprite->w = w;
     sprite->v = v;
     sprite->is_visible = 0; // Sprite de base visible
+    sprite->type = type;
 }
 
 
@@ -49,25 +50,25 @@ void vaisseau_depasse_bords(sprite_t *sprite){
         sprite->x = 0;
     }
 
-    /*Bord droite*/
+    /*Bord droit*/
     if(sprite->x>SCREEN_WIDTH-SHIP_SIZE){
         sprite->x = SCREEN_WIDTH-SHIP_SIZE;
     }
 }
 
-void reset_enemi(world_t *world, int i){
-    init_sprite(&(world->enemies[i]),generate_number(0,SCREEN_WIDTH-SHIP_SIZE),-SHIP_SIZE-i*VERTICAL_DIST,SHIP_SIZE,SHIP_SIZE,ENEMY_SPEED);
+void reset_enemi(world_t *world, unsigned int i, unsigned int type){
+    init_sprite(&(world->enemies[i]), generate_number(0,SCREEN_WIDTH-SHIP_SIZE), -SHIP_SIZE-i*VERTICAL_DIST, SHIP_SIZE, SHIP_SIZE, ENEMY_SPEED, type);
 }
 
 void ennemi_depasse_bas(world_t *world){
     for(int i=0; i<NB_ENEMIES; i++){
         if(world->enemies[i].y>SCREEN_HEIGHT){
             world->nb_ennemis_sortis ++;
-            reset_enemi(world, i);
+            reset_enemi(world, i, world->enemies[i].type);
             set_visible(&(world->enemies[i]));
         }
     }
-    world->nb_ennemis_sortis %= 5;
+    world->nb_ennemis_sortis %= NB_ENEMIES; // Nb d'ennemis qui retourne à 0 quand tous les ennemis sont sortis
 }
 
 
@@ -100,6 +101,7 @@ void handle_missiles_collide(sprite_t *sp2, sprite_t *sp1){
 
 void handle_vaisseau_collide(world_t* world){
     for(int i=0; i<NB_ENEMIES; i++){
+        // Si le vaisseau et l'ennemi entrent en collision ET si le vaiseau et l'ennemi sont vaisseau
         if(sprites_collide(&(world->vaisseau),&(world->enemies[i])) && !world->vaisseau.is_visible && !world->enemies[i].is_visible){
             (&(world->enemies[i]))->v=0;
             set_invisible(&(world->enemies[i]));
@@ -119,19 +121,22 @@ void init_data(world_t * world){
     world->score = 0;
     world->frame_count = 0;
     world->lives = 3;
+    world->pause = 0;
+
     //Initialisation du vaisseau
-    init_sprite(&(world->vaisseau), SCREEN_WIDTH/2 - SHIP_SIZE/2, SCREEN_HEIGHT - (int)(1.5*SHIP_SIZE), SHIP_SIZE, SHIP_SIZE, 0);
+    init_sprite(&(world->vaisseau), SCREEN_WIDTH/2 - SHIP_SIZE/2, SCREEN_HEIGHT - (int)(1.5*SHIP_SIZE), SHIP_SIZE, SHIP_SIZE, 0, 0);
+
     //initialisation du tableau des ennemis
     init_enemies(world);
 
-    //Initialisation du missile
-    init_sprite(&(world->missile), SCREEN_WIDTH/2, world->vaisseau.y, MISSILE_SIZE, MISSILE_SIZE, MISSILE_SPEED);
+    //Initialisation du missile du vaisseau
+    init_sprite(&(world->missile), SCREEN_WIDTH/2, world->vaisseau.y, MISSILE_SIZE, MISSILE_SIZE, MISSILE_SPEED, 1);
     set_invisible(&(world->missile));   
 }
 
 void init_enemies(world_t* world){
     for(int i=0;i<NB_ENEMIES;i++){
-        reset_enemi(world, i);
+        reset_enemi(world, i, 2);
     }
 }
 
@@ -149,7 +154,10 @@ int is_game_over(world_t *world){
 void update_enemies(world_t *world){
     for(int i = 0; i<NB_ENEMIES; i++){
         world->enemies[i].y+=world->enemies[i].v;
-        print_sprite(&(world->enemies[i]));
+
+        if(world->enemies[i].type == 2){
+            world->enemies[i].x = SDL_sin(world->enemies[i].y);
+        }
     }
 }
 
@@ -194,7 +202,6 @@ void update_data(world_t *world){
 
     //LES ennemiS se delpacENT
     update_enemies(world);
-    printf("Ennemis sortis : %d\n", world->nb_ennemis_sortis);
 
     // Si le missile est visible alors il avance.
     if(!world->missile.is_visible){
@@ -252,7 +259,8 @@ void handle_events(SDL_Event *event,world_t *world){
 
             //si la touche appuyée est echap
             if(event->key.keysym.sym == SDLK_ESCAPE){
-                world->gameover = 1;
+                world->pause += 1;  // On pase à l'etat de pause suivant 
+                world->pause %= 2;  // 0 ou 1
             }
         }
     }
