@@ -21,6 +21,7 @@ struct ressources_s{
     SDL_Texture* ennemi_casse_texture;    /*!< Texture liée à l'image de l'ennemi casse. */
     SDL_Texture* vaisseau_texture;  /*!< Texture liée à l'image du vaisseau. */
     SDL_Texture* missile_texture;   /*!< Texture liée à l'image du missile. */
+    SDL_Texture* tank_texture;      /*!< Texture liée à l'image du tank. */
     TTF_Font* font; /*!< Police d'ecriture. */
 };
 
@@ -42,10 +43,12 @@ void apply_sprite (SDL_Renderer *renderer, SDL_Texture *textures, sprite_t *spri
 /**
  * \brief Applique les textures des ennemis
  * \param renderer Le renderer
- * \param textures La texture à appliquer
+ * \param texture_ennemi La texture de l'ennemi classique
+ * \param texture_casse_ennemi La texture de l'ennemi casse
+ * \param tank_texture La texture du tank
  * \param enemies Le tableau d'ennemis
  */
-void apply_enemies(SDL_Renderer *renderer, SDL_Texture *texture_ennemi, SDL_Texture *texture_casse_ennemi, sprite_t *enemies);
+void apply_enemies(SDL_Renderer *renderer, SDL_Texture *texture_ennemi, SDL_Texture *texture_casse_ennemi, SDL_Texture *tank_texture, sprite_t *enemies);
 
 
 /**

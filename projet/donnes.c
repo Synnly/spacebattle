@@ -18,7 +18,7 @@ int generate_number(int a, int b){
     return rand()%(b-a)+a;
 }
 
-void init_sprite(sprite_t* sprite, int x, int y, unsigned int w, unsigned int h, int v, unsigned int type){
+void init_sprite(sprite_t* sprite, int x, int y, unsigned int w, unsigned int h, int v, unsigned int type, unsigned int lives){
     sprite->x = x;
     sprite->y = y;
     sprite->h = h;
@@ -26,6 +26,7 @@ void init_sprite(sprite_t* sprite, int x, int y, unsigned int w, unsigned int h,
     sprite->v = v;
     sprite->is_visible = 0; // Sprite de base visible
     sprite->type = type;
+    sprite->lives = lives;
 }
 
 
@@ -58,14 +59,24 @@ void vaisseau_depasse_bords(sprite_t *sprite){
 
 void reset_enemi(world_t *world, unsigned int i){
     unsigned int num_type = generate_number(1, 5);
-    unsigned int type;
-    if(num_type == 3){
-        type = 3;
+    unsigned int type=2;
+    unsigned int lives;
+    lives=ENEMY_LIFE;
+    switch(num_type){
+        case 3:{
+            type=3;
+            break;
+        }
+        case 4:{
+            type=4;
+            lives=TANK_LIFE;
+            break;
+        }
+        default:{
+            break;
+        }
     }
-    else{
-        type = 2;
-    }
-    init_sprite(&(world->enemies[i]), generate_number(0,SCREEN_WIDTH-SHIP_SIZE), -SHIP_SIZE-i*VERTICAL_DIST, SHIP_SIZE, SHIP_SIZE, ENEMY_SPEED, type);
+    init_sprite(&(world->enemies[i]), generate_number(0,SCREEN_WIDTH-SHIP_SIZE), -SHIP_SIZE-i*VERTICAL_DIST, SHIP_SIZE, SHIP_SIZE, ENEMY_SPEED, type,lives);
 }
 
 void ennemi_depasse_bas(world_t *world){
@@ -73,7 +84,6 @@ void ennemi_depasse_bas(world_t *world){
         if(world->enemies[i].y>SCREEN_HEIGHT){
             world->nb_ennemis_sortis ++;
             reset_enemi(world, i);
-            set_visible(&(world->enemies[i]));
         }
     }
     world->nb_ennemis_sortis %= NB_ENEMIES; // Nb d'ennemis qui retourne à 0 quand tous les ennemis sont sortis
@@ -88,7 +98,7 @@ int sprites_collide(sprite_t *sp2, sprite_t *sp1){
 
 void score(world_t* world){
     for(int i=0; i<NB_ENEMIES; i++){
-        if(sprites_collide(&(world->missile),&(world->enemies[i])) && !world->missile.is_visible && !world->enemies[i].is_visible){
+        if(sprites_collide(&(world->missile),&(world->enemies[i])) && !world->missile.is_visible && !world->enemies[i].is_visible && (world->enemies[i].lives)==1){
             world->score++;
         }
     }
@@ -102,8 +112,8 @@ void handle_missiles_collide(sprite_t *missile, sprite_t *ennemi){
     // Si le missile et l'ennemi entrent en collision ET si le missile et l'ennemi sont visibles
     if(sprites_collide(missile, ennemi) && !missile->is_visible && !ennemi->is_visible){
         missile->v = 0;
-        set_invisible(missile);
-        set_invisible(ennemi);
+        take_dmg(missile);
+        take_dmg(ennemi);
     }
 }
 
@@ -114,16 +124,17 @@ void handle_vaisseau_collide(world_t* world){
         if(sprites_collide(&(world->vaisseau),&(world->enemies[i])) && !world->vaisseau.is_visible && !world->enemies[i].is_visible){
 
             (&(world->enemies[i]))->v=0;
-            set_invisible(&(world->enemies[i]));
-            world->lives--;
-
-            if(world->lives==0){
-                set_invisible(&(world->vaisseau));
-            }
+            take_dmg(&(world->enemies[i]));
+            take_dmg(&(world->vaisseau));  
         }
     }
 }
 
+void take_dmg(sprite_t* sprite){
+    if(sprite->lives>=1){
+        sprite->lives--;
+    }
+}
 
 void init_data(world_t * world){
     world->gameover = 0;
@@ -131,18 +142,17 @@ void init_data(world_t * world){
     world->nb_ennemis_sortis = 0;
     world->score = 0;
     world->frame_count = 0;
-    world->lives = 3;
     world->pause = 0;
 
     //Initialisation du vaisseau
-    init_sprite(&(world->vaisseau), SCREEN_WIDTH/2 - SHIP_SIZE/2, SCREEN_HEIGHT - (int)(1.5*SHIP_SIZE), SHIP_SIZE, SHIP_SIZE, 0, 0);
+    init_sprite(&(world->vaisseau), SCREEN_WIDTH/2 - SHIP_SIZE/2, SCREEN_HEIGHT - (int)(1.5*SHIP_SIZE), SHIP_SIZE, SHIP_SIZE, 0, 0,PLAYER_LIFE);
 
     //initialisation du tableau des ennemis
     init_enemies(world);
 
     //Initialisation du missile du vaisseau
-    init_sprite(&(world->missile), SCREEN_WIDTH/2, world->vaisseau.y, MISSILE_SIZE, MISSILE_SIZE, MISSILE_SPEED, 1);
-    set_invisible(&(world->missile));   
+    init_sprite(&(world->missile), SCREEN_WIDTH/2, world->vaisseau.y, MISSILE_SIZE, MISSILE_SIZE, MISSILE_SPEED, 1,0);
+    
 }
 
 void init_enemies(world_t* world){
@@ -168,24 +178,14 @@ void update_enemies(world_t *world){
         world->enemies[i].y+=world->enemies[i].v;
 
         if(world->enemies[i].type == 3){
-            world->enemies[i].x = SDL_sin(0.05*world->enemies[i].y)*30+(SCREEN_WIDTH/2);
+            world->enemies[i].x = SDL_sin(0.05*world->enemies[i].y)*45+(SCREEN_WIDTH/2);
         }
     }
-}
-
-int all_enemies_visible(world_t* world){
-    int all_visible = 0;
-    for(int i = 0; i<NB_ENEMIES; i ++){
-        if(!world->enemies[i].is_visible){
-            all_visible = 1;
-        }
-    }
-    return all_visible;
 }
 
 void compute_game(world_t* world){
     /*Le joueur a perdu*/
-    if(world->vaisseau.is_visible || world->lives == 0){
+    if(world->vaisseau.lives == 0){
         world->etat=0;
         world->frame_count++;
     }
@@ -202,7 +202,25 @@ void compute_game(world_t* world){
     }
 }
 
+void compute_lives(sprite_t* sprite){
+    if(sprite->lives>0){
+        set_visible(sprite);
+    }else{
+        set_invisible(sprite);
+    }
+}
+
+void compute_sprites(world_t* world){
+    compute_lives(&(world->vaisseau));
+    compute_lives(&(world->missile));
+    for(int i=0;i<NB_ENEMIES;i++){
+        compute_lives(&(world->enemies[i]));
+    }
+}
+
 void update_data(world_t *world){
+
+    
 
     //Gestion des collisions entre vaisseau et ennemis
     handle_vaisseau_collide(world);
@@ -226,8 +244,13 @@ void update_data(world_t *world){
     /*Gestion de l'état du jeu*/
     compute_game(world);
 
+    //Gestion de la visiblité des sprites
+    compute_sprites(world);
+
     /*Gestion des collisions entre missile et ennemis*/
     score(world);
+
+    
 }
 
 
@@ -271,6 +294,7 @@ void handle_events(SDL_Event *event,world_t *world){
                 //si la touche appuyée est espace et que le vaisseau est visible
                 if(event->key.keysym.sym == SDLK_SPACE && world->vaisseau.is_visible==0){
                     avance_missile(world);
+                    world->missile.lives=1;
                 }
             }
             //si la touche appuyée est echap

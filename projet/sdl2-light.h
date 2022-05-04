@@ -2,6 +2,7 @@
 #define __SDL2_LIGHT__H__
 
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_audio.h>
 
 void clean_sdl(SDL_Renderer *renderer,SDL_Window *window);
 SDL_Texture *load_image(const char path[], SDL_Renderer *renderer);
