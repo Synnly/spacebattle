@@ -18,9 +18,16 @@ void apply_sprite (SDL_Renderer *renderer, SDL_Texture *ressources, sprite_t *sp
 }
 
 
-void apply_enemies(SDL_Renderer *renderer, SDL_Texture *ressources, sprite_t *enemies){
+void apply_enemies(SDL_Renderer *renderer, SDL_Texture *texture_ennemi, SDL_Texture *texture_ennemi_casse, sprite_t *enemies){
     for(int i=0; i<NB_ENEMIES; i++){
-        apply_sprite(renderer, ressources, &enemies[i]);
+
+        if(enemies[i].type == 3){
+            apply_sprite(renderer, texture_ennemi_casse, &enemies[i]);
+        }
+
+        else{
+            apply_sprite(renderer, texture_ennemi, &enemies[i]);
+        }
     }
 }
 
@@ -30,6 +37,7 @@ void clean_ressources(ressources_t *ressources){
     clean_texture(ressources->vaisseau_texture);
     clean_texture(ressources->missile_texture);
     clean_texture(ressources->ennemi_texture);
+    clean_texture(ressources->ennemi_casse_texture);
     clean_font(ressources->font);
 }
 
@@ -38,6 +46,7 @@ void init_ressources(SDL_Renderer *renderer, ressources_t *ressources){
     ressources->background = load_image( "ressources/space-background_skin_1.bmp",renderer);
     ressources->vaisseau_texture = load_image("ressources/spaceship_skin_1.bmp", renderer);
     ressources->ennemi_texture = load_image("ressources/enemy_skin_1.bmp", renderer);
+    ressources->ennemi_casse_texture = load_image("ressources/ennemi_casse.bmp", renderer);
     ressources->missile_texture = load_image("ressources/missile_skin_2.bmp", renderer);
     ressources->font = load_font("ressources/arial.ttf", FONT_SIZE);
 }
@@ -99,7 +108,7 @@ void refresh_graphics(SDL_Renderer *renderer, world_t *world, ressources_t *ress
     //application des ressources dans le renderer
     apply_background(renderer, ressources);
     apply_sprite(renderer, ressources->vaisseau_texture, &(world->vaisseau));
-    apply_enemies(renderer, ressources->ennemi_texture, (world->enemies));
+    apply_enemies(renderer, ressources->ennemi_texture, ressources->ennemi_casse_texture, (world->enemies));
     apply_sprite(renderer, ressources->missile_texture, &(world->missile));
 
     //Affichage de l'etat du jeu et du score

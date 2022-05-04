@@ -28,11 +28,12 @@ int main(int argc, char* args[]){
     init(&window,&renderer,&ressources,&world);
     
     while(!is_game_over(&world)){ //tant que le jeu n'est pas fini
-        
+
         //gestion des évènements
         handle_events(&event,&world);
 
         if(!world.pause){
+
             //mise à jour des données liée à la physique du monde
             update_data(&world);
         }

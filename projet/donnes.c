@@ -56,7 +56,15 @@ void vaisseau_depasse_bords(sprite_t *sprite){
     }
 }
 
-void reset_enemi(world_t *world, unsigned int i, unsigned int type){
+void reset_enemi(world_t *world, unsigned int i){
+    unsigned int num_type = generate_number(1, 5);
+    unsigned int type;
+    if(num_type == 3){
+        type = 3;
+    }
+    else{
+        type = 2;
+    }
     init_sprite(&(world->enemies[i]), generate_number(0,SCREEN_WIDTH-SHIP_SIZE), -SHIP_SIZE-i*VERTICAL_DIST, SHIP_SIZE, SHIP_SIZE, ENEMY_SPEED, type);
 }
 
@@ -64,7 +72,7 @@ void ennemi_depasse_bas(world_t *world){
     for(int i=0; i<NB_ENEMIES; i++){
         if(world->enemies[i].y>SCREEN_HEIGHT){
             world->nb_ennemis_sortis ++;
-            reset_enemi(world, i, world->enemies[i].type);
+            reset_enemi(world, i);
             set_visible(&(world->enemies[i]));
         }
     }
@@ -89,23 +97,26 @@ void score(world_t* world){
     }
 }
 
-void handle_missiles_collide(sprite_t *sp2, sprite_t *sp1){
-    // Si les deux sprites entrent en collision ET sont visibles
-    if(sprites_collide(sp2, sp1) && !sp2->is_visible && !sp1->is_visible){
-        sp2->v = 0;
-        sp1->v = 0;
-        set_invisible(sp2);
-        set_invisible(sp1);
+void handle_missiles_collide(sprite_t *missile, sprite_t *ennemi){
+
+    // Si le missile et l'ennemi entrent en collision ET si le missile et l'ennemi sont visibles
+    if(sprites_collide(missile, ennemi) && !missile->is_visible && !ennemi->is_visible){
+        missile->v = 0;
+        set_invisible(missile);
+        set_invisible(ennemi);
     }
 }
 
 void handle_vaisseau_collide(world_t* world){
     for(int i=0; i<NB_ENEMIES; i++){
-        // Si le vaisseau et l'ennemi entrent en collision ET si le vaiseau et l'ennemi sont vaisseau
+
+        // Si le vaisseau et l'ennemi entrent en collision ET si le vaiseau et l'ennemi sont visibles
         if(sprites_collide(&(world->vaisseau),&(world->enemies[i])) && !world->vaisseau.is_visible && !world->enemies[i].is_visible){
+
             (&(world->enemies[i]))->v=0;
             set_invisible(&(world->enemies[i]));
             world->lives--;
+
             if(world->lives==0){
                 set_invisible(&(world->vaisseau));
             }
@@ -135,8 +146,9 @@ void init_data(world_t * world){
 }
 
 void init_enemies(world_t* world){
+    unsigned int type;
     for(int i=0;i<NB_ENEMIES;i++){
-        reset_enemi(world, i, 2);
+        reset_enemi(world, i);
     }
 }
 
@@ -155,8 +167,8 @@ void update_enemies(world_t *world){
     for(int i = 0; i<NB_ENEMIES; i++){
         world->enemies[i].y+=world->enemies[i].v;
 
-        if(world->enemies[i].type == 2){
-            world->enemies[i].x = SDL_sin(world->enemies[i].y);
+        if(world->enemies[i].type == 3){
+            world->enemies[i].x = SDL_sin(0.05*world->enemies[i].y)*30+(SCREEN_WIDTH/2);
         }
     }
 }
@@ -197,7 +209,7 @@ void update_data(world_t *world){
 
     //Test de collision entre le missile et les ennemis
     for(int i=0;i<NB_ENEMIES;i++){
-     handle_missiles_collide(&(world->enemies[i]),&(world->missile));
+        handle_missiles_collide(&(world->missile), (&(world->enemies[i])));
     }
 
     //LES ennemiS se delpacENT
@@ -242,21 +254,25 @@ void handle_events(SDL_Event *event,world_t *world){
        
          //si une touche est appuyée
          if(event->type == SDL_KEYDOWN){
-            //si la touche appuyée est fleche gauche
-            if(event->key.keysym.sym == SDLK_LEFT){
-                world->vaisseau.x -= MOVING_STEP;
+
+             //Si le jeu n'est pas en pause
+             if(!world->pause){
+
+                //si la touche appuyée est fleche gauche
+                if(event->key.keysym.sym == SDLK_LEFT){
+                    world->vaisseau.x -= MOVING_STEP;
+                }
+
+                //si la touche appuyée est fleche droite
+                if(event->key.keysym.sym == SDLK_RIGHT){
+                    world->vaisseau.x += MOVING_STEP;
+                }
+
+                //si la touche appuyée est espace et que le vaisseau est visible
+                if(event->key.keysym.sym == SDLK_SPACE && world->vaisseau.is_visible==0){
+                    avance_missile(world);
+                }
             }
-
-            //si la touche appuyée est fleche droite
-            if(event->key.keysym.sym == SDLK_RIGHT){
-                world->vaisseau.x += MOVING_STEP;
-            }
-
-            //si la touche appuyée est espace et que le vaisseau est visible
-            if(event->key.keysym.sym == SDLK_SPACE && world->vaisseau.is_visible==0){
-                avance_missile(world);
-            } 
-
             //si la touche appuyée est echap
             if(event->key.keysym.sym == SDLK_ESCAPE){
                 world->pause += 1;  // On pase à l'etat de pause suivant 

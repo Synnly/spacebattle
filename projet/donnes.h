@@ -83,7 +83,7 @@ struct sprite_s {
     unsigned int w; /*!< Largeur du sprite */
     unsigned int v; /*!< Vitesse du sprite */
     unsigned int is_visible; /*!< Champ lié à la visibilité du sprite */
-    unsigned int type; /*< Champ lié au type de sprite ; 0: vaisseau, 1: missile du vaisseau, 2: ennemi classique */
+    unsigned int type; /*< Champ lié au type de sprite ; 0: vaisseau, 1: missile du vaisseau, 2: ennemi classique, 3: ennemi casse*/
 };
 
 /**
@@ -163,7 +163,7 @@ void vaisseau_depasse_bords(sprite_t *sprite);
  * \param wolrd Le monde
  * \param i L'indice du ieme enemi
  */ 
-void reset_enemi(world_t *world, unsigned int i, unsigned int type);
+void reset_enemi(world_t *world, unsigned int i);
 
 /**
  * \brief Verifie que l'ennemi n'est pas trop bas
@@ -188,10 +188,10 @@ void score(world_t* world);
 
 /**
  * \brief Gere les collisions entre les missiles et les ennemis
- * \param sp2 Deuxième sprite
- * \param sp1 Premier sprite
+ * \param sp2 Missile
+ * \param sp1 Ennemi
  */
-void handle_missiles_collide(sprite_t *sp2, sprite_t *sp1);
+void handle_missiles_collide(sprite_t *missile, sprite_t *ennemi);
 
 /**
  * \brief Gere les collisions entre le vaisseau et les ennemis
