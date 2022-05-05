@@ -12,35 +12,35 @@
 
 
 void apply_sprite (SDL_Renderer *renderer, SDL_Texture *ressources, sprite_t *sprite){
-    if(ressources != NULL && !(sprite->is_visible)){
-      apply_texture(ressources, renderer, sprite->x, sprite->y);
+    if(ressources != NULL && !getvisibility(sprite)){
+      apply_texture(ressources, renderer, getx(sprite), gety(sprite));
     }
 }
 
 
-void apply_enemies(SDL_Renderer *renderer, SDL_Texture *texture_ennemi, SDL_Texture *texture_ennemi_casse, SDL_Texture* tank_texture, SDL_Texture* ambulance_texture, SDL_Texture* grenouille_texture, sprite_t *enemies){
+void apply_enemies(SDL_Renderer *renderer, SDL_Texture *texture_ennemi, SDL_Texture *texture_ennemi_casse, SDL_Texture* tank_texture, SDL_Texture* ambulance_texture, SDL_Texture* grenouille_texture, world_t *world){
     for(int i=0; i<NB_ENEMIES; i++){
-        switch(enemies[i].type){
+        switch(gettype(getenemies(world, i))){
             case 3: {
-                apply_sprite(renderer, texture_ennemi_casse, &enemies[i]);
+                apply_sprite(renderer, texture_ennemi_casse, getenemies(world, i));
                 break;
             }
 
             case 4: {
-                apply_sprite(renderer, tank_texture, &enemies[i]);
+                apply_sprite(renderer, tank_texture, getenemies(world, i));
                 break;
             }
 
             case 5:{
-                apply_sprite(renderer, ambulance_texture, &enemies[i]);
+                apply_sprite(renderer, ambulance_texture, getenemies(world, i));
                 break;
             }
             case 6:{
-                apply_sprite(renderer, grenouille_texture, &enemies[i]);
+                apply_sprite(renderer, grenouille_texture, getenemies(world, i));
                 break;
             }
             default:{
-                apply_sprite(renderer, texture_ennemi, &enemies[i]);
+                apply_sprite(renderer, texture_ennemi, getenemies(world, i));
                 break;
             }
         }
@@ -82,7 +82,7 @@ void apply_background(SDL_Renderer *renderer, ressources_t *ressources){
 
 void afficher_score(SDL_Renderer *renderer, world_t *world, ressources_t *ressources){
     char *score_str = malloc(sizeof(char)*3);     //Score (max 999)
-    SDL_itoa(world->score, score_str, 10);      //Conversion du score en texte
+    SDL_itoa(getscore(world), score_str, 10);      //Conversion du score en texte
 
     int taille_txt = strlen("Score : ");
 
@@ -95,7 +95,7 @@ void afficher_score(SDL_Renderer *renderer, world_t *world, ressources_t *ressou
 
 void afficher_vies(SDL_Renderer *renderer, world_t *world, ressources_t *ressources){
     char *lives_str = malloc(sizeof(char)*3);     //Vies
-    SDL_itoa(world->vaisseau.lives, lives_str, 10);      //Conversion des vies en texte
+    SDL_itoa(getlives(getvaisseau(world)), lives_str, 10);      //Conversion des vies en texte
 
     int taille_txt = strlen("Vies : ");
 
@@ -109,7 +109,7 @@ void afficher_vies(SDL_Renderer *renderer, world_t *world, ressources_t *ressour
 
 void afficher_etat_jeu(SDL_Renderer *renderer, world_t *world, ressources_t *ressources){
     int posy = SCREEN_HEIGHT/2 - (FONT_SIZE*6)/2;
-    switch(world->etat){
+    switch(getetat(world)){
         case 0: {   //Defaite
             int posx = SCREEN_WIDTH/2 - (FONT_SIZE*3*strlen("PERDU"))/2;
             apply_text(renderer, posx, posy, FONT_SIZE*3*strlen("PERDU"), FONT_SIZE*6, "PERDU", ressources->font);
@@ -129,9 +129,9 @@ void refresh_graphics(SDL_Renderer *renderer, world_t *world, ressources_t *ress
     
     //application des ressources dans le renderer
     apply_background(renderer, ressources);
-    apply_sprite(renderer, ressources->vaisseau_texture, &(world->vaisseau));
-    apply_enemies(renderer, ressources->ennemi_texture, ressources->ennemi_casse_texture, ressources->tank_texture ,ressources->ambulance_texture, ressources->grenouille_texture,(world->enemies));
-    apply_sprite(renderer, ressources->missile_texture, &(world->missile));
+    apply_sprite(renderer, ressources->vaisseau_texture, getvaisseau(world));
+    apply_enemies(renderer, ressources->ennemi_texture, ressources->ennemi_casse_texture, ressources->tank_texture ,ressources->ambulance_texture, ressources->grenouille_texture, world);
+    apply_sprite(renderer, ressources->missile_texture, getmissile(world));
 
     //Affichage de l'etat du jeu et du score
     afficher_etat_jeu(renderer, world, ressources);

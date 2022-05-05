@@ -35,7 +35,7 @@ int main(int argc, char* args[]){
         //gestion des évènements
         handle_events(&event,&world);
 
-        if(!world.pause){
+        if(!getpause(&world)){
 
             //mise à jour des données liée à la physique du monde
             update_data(&world);

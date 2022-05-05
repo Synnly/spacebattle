@@ -13,13 +13,55 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-unsigned int getx(sprite_t *sprite){return sprite->x;}
+//Seter et geter de world_t
 
-unsigned int gety(sprite_t *sprite){return sprite->y;}
+unsigned int getscore(world_t *world){return world->score;}
+
+void setscore(world_t *world, unsigned int montant){world->score = montant;}
+
+sprite_t *getvaisseau(world_t *world){return &(world->vaisseau);}
+
+sprite_t *getmissile(world_t *world){return &(world->missile);}
+
+sprite_t *getenemies(world_t *world, unsigned int i){return &(world->enemies[i]);}
+
+void setgameover(world_t *world, unsigned int valetat){world->gameover = valetat;}
+
+int is_game_over(world_t *world){return world->gameover;}
+
+void setnb_ennemis_sortis(world_t *world, unsigned int montant){world->nb_ennemis_sortis = montant;}
+
+unsigned int getnb_ennemis_sortis(world_t *world){return world->nb_ennemis_sortis;}
+
+void setpause(world_t *world, unsigned int etat){world->pause = etat;}
+
+unsigned int getpause(world_t *world){return world->pause;}
+
+void setetat(world_t * world, unsigned int valetat){world->etat = valetat;}
+
+unsigned int getetat(world_t *world){return world->etat;}
+
+void setframecount(world_t *world, unsigned int amount){world->frame_count = amount;}
+
+unsigned int getframecount(world_t *world){return world->frame_count;}
+
+
+//Seter et geter de sprite_t
+int getx(sprite_t *sprite){return sprite->x;}
+
+int gety(sprite_t *sprite){return sprite->y;}
 
 void setx(sprite_t *sprite, unsigned int valx){sprite->x = valx;}
 
 void sety(sprite_t *sprite, unsigned int valy){sprite->y = valy;}
+
+unsigned int getwidth(sprite_t *sprite){return sprite->w;}
+
+unsigned int geth(sprite_t *sprite){return sprite->h;}
+
+void setw(sprite_t *sprite, unsigned int valw){sprite->w = valw;}
+
+void seth(sprite_t *sprite, unsigned int valh){sprite->h = valh;}
 
 unsigned int getv(sprite_t *sprite){return sprite->v;}
 
@@ -33,6 +75,12 @@ unsigned int getlives(sprite_t *sprite){return sprite->lives;}
 
 void setlives(sprite_t *sprite, unsigned int vallives){sprite->lives = vallives;}
 
+unsigned int getvisibility(sprite_t *sprite){return sprite->is_visible;}
+
+void set_visible(sprite_t *sprite){sprite->is_visible = 0;}
+
+void set_invisible(sprite_t *sprite){sprite->is_visible = 1;}
+
 
 /* Generation d'un nombre entier compris entre a et b */
 int generate_number(int a, int b){
@@ -40,41 +88,31 @@ int generate_number(int a, int b){
 }
 
 void init_sprite(sprite_t* sprite, int x, int y, unsigned int w, unsigned int h, int v, unsigned int type, unsigned int lives){
-    sprite->x = x;
-    sprite->y = y;
-    sprite->h = h;
-    sprite->w = w;
-    sprite->v = v;
-    sprite->is_visible = 0; // Sprite de base visible
-    sprite->type = type;
-    sprite->lives = lives;
+    setx(sprite, x);
+    sety(sprite, y);
+    setw(sprite, w);
+    seth(sprite, h);
+    setv(sprite, v);
+    set_visible(sprite); // Sprite de base visible
+    settype(sprite, type);
+    setlives(sprite, lives);
 }
 
 
 void print_sprite(sprite_t *sprite){
-    printf("Sprite : x,y = %d,%d | h,w = %d,%d\nv = %d\nis_visible = %s\n", sprite->x, sprite->y, sprite->h, sprite->w, sprite->v, (!sprite->is_visible?"oui":"non"));
-}
-
-
-void set_visible(sprite_t *sprite){
-    sprite->is_visible = 0;
-}
-
-
-void set_invisible(sprite_t *sprite){
-    sprite->is_visible = 1;
+    printf("Sprite : x,y = %d,%d | h,w = %d,%d\nv = %d\nis_visible = %s\n", getx(sprite), gety(sprite), geth(sprite), getwidth(sprite), getv(sprite), (!getvisibility(sprite)?"oui":"non"));
 }
 
 
 void vaisseau_depasse_bords(sprite_t *sprite){
     /*Bord gauche*/
-    if(sprite->x<0){
-        sprite->x = 0;
+    if(getx(sprite)<0){
+        setx(sprite, 0);
     }
 
     /*Bord droit*/
-    if(sprite->x>SCREEN_WIDTH-SHIP_SIZE){
-        sprite->x = SCREEN_WIDTH-SHIP_SIZE;
+    if(getx(sprite)>SCREEN_WIDTH-SHIP_SIZE){
+        setx(sprite, SCREEN_WIDTH-SHIP_SIZE);
     }
 }
 
@@ -108,63 +146,60 @@ void reset_enemi(world_t *world, unsigned int i){
             break;
         }
     }
-    init_sprite(&(world->enemies[i]), generate_number(0,SCREEN_WIDTH-SHIP_SIZE), -SHIP_SIZE-i*VERTICAL_DIST, SHIP_SIZE, SHIP_SIZE, ENEMY_SPEED, type,lives);
+    init_sprite(getenemies(world, i), generate_number(0,SCREEN_WIDTH-SHIP_SIZE), -SHIP_SIZE-i*VERTICAL_DIST, SHIP_SIZE, SHIP_SIZE, ENEMY_SPEED, type, lives);
 }
 
 void ennemi_depasse_bas(world_t *world){
     for(int i=0; i<NB_ENEMIES; i++){
-        if(world->enemies[i].y>SCREEN_HEIGHT){
-            world->nb_ennemis_sortis ++;
+        if(gety(getenemies(world, i))>SCREEN_HEIGHT){
+            setnb_ennemis_sortis(world, getnb_ennemis_sortis(world)+1);
             reset_enemi(world, i);
         }
     }
-    world->nb_ennemis_sortis %= NB_ENEMIES; // Nb d'ennemis qui retourne à 0 quand tous les ennemis sont sortis
+    setnb_ennemis_sortis(world, getnb_ennemis_sortis(world)%NB_ENEMIES); // Nb d'ennemis qui retourne à 0 quand tous les ennemis sont sortis
 }
 
 void missile_depasse_haut(world_t* world){
-    if((world->missile.y)<0){
-        take_dmg(&(world->missile));
+    if((gety(getmissile(world)))<0){
+        take_dmg(getmissile(world));
     }
 }
 
 
 int sprites_collide(sprite_t *sp2, sprite_t *sp1){
     // Calcul de la distance entre les deux sprites
-    double dist = sqrt(pow((sp2->x - sp1->x), 2) + pow((sp2->y - sp1->y), 2));
+    double dist = sqrt(pow((getx(sp2) - getx(sp1)), 2) + pow((gety(sp2) - gety(sp1)), 2));
     return SHIP_SIZE>dist;
 }
 
 void score(world_t* world){
     for(int i=0; i<NB_ENEMIES; i++){
-        if(sprites_collide(&(world->missile),&(world->enemies[i])) && !world->missile.is_visible && !world->enemies[i].is_visible && (world->enemies[i].lives)==1){
-            world->score++;
+        if(sprites_collide(getmissile(world),getenemies(world, i)) && !getvisibility(getmissile(world)) && !getvisibility(getenemies(world, i)) && getlives(getenemies(world, i))==1){
+            setscore(world, getscore(world)+1);
         }
     }
-    if(world->score==NB_ENEMIES){
-        world->score*=2;
+    if(getscore(world)==NB_ENEMIES){
+        setscore(world, getscore(world)*2);
     }
 }
 
 void handle_missiles_collide(world_t *world){
     for(int i=0; i<NB_ENEMIES; i++){
-        if(sprites_collide(&(world->missile), &(world->enemies[i])) && !world->missile.is_visible && !world->enemies[i].is_visible){
-            switch(world->enemies[i].type){
+        if(sprites_collide(getmissile(world), getenemies(world, i)) && !getvisibility(getmissile(world)) && !getvisibility(getenemies(world, i))){
+            setv(getmissile(world), 0);
+            take_dmg(getmissile(world));
+            switch(gettype(getenemies(world, i))){
                 case 5:{  
-                    world->missile.v = 0;
-                    take_dmg(&(world->missile));
-                    take_dmg(&(world->vaisseau));
+                    take_dmg(getvaisseau(world));
                     break;
                 }
 
                 case 6:{
-                    take_dmg(&(world->missile));
                     break;
                 }
 
                 default:{
-                    world->missile.v = 0;
-                    take_dmg(&(world->missile));
-                    take_dmg(&(world->enemies[i]));
+                    take_dmg(getenemies(world, i));
                     break;
                 }
             }
@@ -174,35 +209,35 @@ void handle_missiles_collide(world_t *world){
 
 void handle_vaisseau_collide(world_t* world){
     for(int i=0; i<NB_ENEMIES; i++){
-        int type = world->enemies[i].type;
+        int type = gettype(getenemies(world, i));
         // Si le vaisseau et l'ambulance entrent en collision ET si le vaiseau et l'ambulance sont visibles
-        if(sprites_collide(&(world->vaisseau),&(world->enemies[i])) && !world->vaisseau.is_visible && !world->enemies[i].is_visible){
+        if(sprites_collide(getvaisseau(world),getenemies(world, i)) && !getvisibility(getvaisseau(world)) && !getvisibility(getenemies(world, i))){
             switch(type){
                 case 5:{
                     for(int j=0; j<3;j++){
-                        take_dmg(&(world->enemies[i]));
+                        take_dmg(getenemies(world, i));
                     }
-                    if((world->vaisseau.lives)<3){
-                        heal(&(world->vaisseau), 1);  
+                    if(getlives(getvaisseau(world))<3){
+                        heal(getvaisseau(world), 1);  
                     }
                     break;
                 }
                 case 4:{
                     for(int j=0; j<3;j++){
-                        take_dmg(&(world->enemies[i]));
+                        take_dmg(getenemies(world, i));
                     }
-                    take_dmg(&(world->vaisseau));
+                    take_dmg(getvaisseau(world));
                     break;
                 }
                 case 6:{
-                    for(int j=0; j<(world->vaisseau.lives);j++){
-                        take_dmg(&(world->vaisseau));
+                    for(int j=0; j<(getlives(getvaisseau(world)));j++){
+                        take_dmg(getvaisseau(world));
                     }
                     break;
                 }
                 default: {
-                    take_dmg(&(world->enemies[i]));
-                    take_dmg(&(world->vaisseau));
+                    take_dmg(getenemies(world, i));
+                    take_dmg(getvaisseau(world));
                     break;  
                 }
             }
@@ -211,32 +246,30 @@ void handle_vaisseau_collide(world_t* world){
 }
 
 
-void heal(sprite_t *sprite, unsigned int montant){
-    sprite->lives+=montant;
-}
+void heal(sprite_t *sprite, unsigned int montant){ setlives(sprite, getlives(sprite)+montant); }
 
 void take_dmg(sprite_t* sprite){
-    if(sprite->lives>=1){
-        sprite->lives--;
+    if(getlives(sprite)>=1){
+        setlives(sprite, getlives(sprite)-1);
     }
 }
 
 void init_data(world_t * world){
-    world->gameover = 0;
-    world->etat = 3;
-    world->nb_ennemis_sortis = 0;
-    world->score = 0;
-    world->frame_count = 0;
-    world->pause = 0;
+    setgameover(world, 0);
+    setetat(world, 3);
+    setnb_ennemis_sortis(world, 0);
+    setscore(world, 0);
+    setframecount(world, 0);
+    setpause(world, 0);
 
     //Initialisation du vaisseau
-    init_sprite(&(world->vaisseau), SCREEN_WIDTH/2 - SHIP_SIZE/2, SCREEN_HEIGHT - (int)(1.5*SHIP_SIZE), SHIP_SIZE, SHIP_SIZE, 0, 0,PLAYER_LIFE);
+    init_sprite(getvaisseau(world), SCREEN_WIDTH/2 - SHIP_SIZE/2, SCREEN_HEIGHT - (int)(1.5*SHIP_SIZE), SHIP_SIZE, SHIP_SIZE, 0, 0,PLAYER_LIFE);
 
     //initialisation du tableau des ennemis
     init_enemies(world);
 
     //Initialisation du missile du vaisseau
-    init_sprite(&(world->missile), SCREEN_WIDTH/2, world->vaisseau.y, MISSILE_SIZE, MISSILE_SIZE, MISSILE_SPEED, 1,0);
+    init_sprite(getmissile(world), SCREEN_WIDTH/2, gety(getvaisseau(world)), MISSILE_SIZE, MISSILE_SIZE, MISSILE_SPEED, 1,0);
     
 }
 
@@ -253,42 +286,37 @@ void clean_data(world_t *world){
 }
 
 
-int is_game_over(world_t *world){
-    return world->gameover;
-}
-
-
 void update_enemies(world_t *world){
     for(int i = 0; i<NB_ENEMIES; i++){
-        world->enemies[i].y+=world->enemies[i].v;
+        sety(getenemies(world, i), gety(getenemies(world, i))+getv(getenemies(world, i)));
 
         if(world->enemies[i].type == 3){
-            world->enemies[i].x = SDL_sin(0.05*world->enemies[i].y)*45+(SCREEN_WIDTH/2);
+            setx(getenemies(world, i), getx(getenemies(world, i)) + (SDL_sin(0.05*gety(getenemies(world, i)))*45+(SCREEN_WIDTH/2)));
         }
     }
 }
 
 void compute_game(world_t* world){
     /*Le joueur a perdu*/
-    if(world->vaisseau.lives == 0){
-        world->etat=0;
-        world->frame_count++;
+    if(getlives(getvaisseau(world)) == 0){
+        setetat(world, 0);
+        setframecount(world, getframecount(world)+1);
     }
 
     /*Temps de latence avant la fermeture du jeu*/
-    if(world->frame_count>=FRAME_CLOSURE){
-        world->gameover=1;
+    if(getframecount(world)>=FRAME_CLOSURE){
+        setgameover(world, 1);
     }
 
     /*Jeu de base en cours*/
-    if(world->etat == 3){
+    if(getetat(world) == 3){
         /* Detection du depassement du bord bas par les ennemis */
         ennemi_depasse_bas(world);
     }
 }
 
 void compute_lives(sprite_t* sprite){
-    if(sprite->lives>0){
+    if(getlives(sprite)>0){
         set_visible(sprite);
     }else{
         set_invisible(sprite);
@@ -296,16 +324,14 @@ void compute_lives(sprite_t* sprite){
 }
 
 void compute_sprites(world_t* world){
-    compute_lives(&(world->vaisseau));
-    compute_lives(&(world->missile));
+    compute_lives(getvaisseau(world));
+    compute_lives(getmissile(world));
     for(int i=0;i<NB_ENEMIES;i++){
-        compute_lives(&(world->enemies[i]));
+        compute_lives(getenemies(world, i));
     }
 }
 
 void update_data(world_t *world){
-
-    
 
     //Gestion des collisions entre le vaisseau et les ennemis
     handle_vaisseau_collide(world);
@@ -317,12 +343,13 @@ void update_data(world_t *world){
     update_enemies(world);
 
     // Si le missile est visible alors il avance.
-    if(!world->missile.is_visible){
-        world->missile.y-=world->missile.v;
+    if(!getvisibility(getmissile(world))){
+        sety(getmissile(world), gety(getmissile(world)) - getv(getmissile(world)));
+        missile_depasse_haut(world);
     }
 
     /* Le vaisseau reste sur l'ecran */
-    vaisseau_depasse_bords(&(world->vaisseau));
+    vaisseau_depasse_bords(getvaisseau(world));
 
     /*Gestion de l'état du jeu*/
     compute_game(world);
@@ -332,19 +359,16 @@ void update_data(world_t *world){
 
     /*Gestion des collisions entre missile et ennemis*/
     score(world);
-
-    
 }
 
 
 void avance_missile(world_t *world){
-    set_visible(&(world->missile));
+    set_visible(getmissile(world));
 
     /* On place le missile au milieu au dessus du sprite du vaisseau */
-    world->missile.x = world->vaisseau.x + SHIP_SIZE/2 - MISSILE_SIZE/2;
-    world->missile.y = world->vaisseau.y;
-
-    world->missile.v=MISSILE_SPEED;
+    setx(getmissile(world), getx(getvaisseau(world)) + SHIP_SIZE/2 - MISSILE_SIZE/2);
+    sety(getmissile(world), gety(getvaisseau(world)));
+    setv(getmissile(world), MISSILE_SPEED);
 }
 
 
@@ -355,35 +379,35 @@ void handle_events(SDL_Event *event,world_t *world){
         //Si l'utilisateur a cliqué sur le X de la fenêtre
         if( event->type == SDL_QUIT ) {
             //On indique la fin du jeu
-            world->gameover = 1;
+            setgameover(world, 1);
         }
        
          //si une touche est appuyée
          if(event->type == SDL_KEYDOWN){
 
              //Si le jeu n'est pas en pause
-             if(!world->pause){
+             if(!getpause(world)){
 
                 //si la touche appuyée est fleche gauche
                 if(event->key.keysym.sym == SDLK_LEFT){
-                    world->vaisseau.x -= MOVING_STEP;
+                    setx(getvaisseau(world), getx(getvaisseau(world)) - MOVING_STEP);
                 }
 
                 //si la touche appuyée est fleche droite
                 if(event->key.keysym.sym == SDLK_RIGHT){
-                    world->vaisseau.x += MOVING_STEP;
+                    setx(getvaisseau(world), getx(getvaisseau(world)) + MOVING_STEP);
                 }
 
                 //si la touche appuyée est espace et que le vaisseau est visible
-                if(event->key.keysym.sym == SDLK_SPACE && world->vaisseau.is_visible==0){
+                if(event->key.keysym.sym == SDLK_SPACE && getvisibility(getvaisseau(world))==0){
                     avance_missile(world);
-                    world->missile.lives=1;
+                    setlives(getmissile(world), 1);
                 }
             }
             //si la touche appuyée est echap
             if(event->key.keysym.sym == SDLK_ESCAPE){
-                world->pause += 1;  // On pase à l'etat de pause suivant 
-                world->pause %= 2;  // 0 ou 1
+                setpause(world, getpause(world)+1);  // On pase à l'etat de pause suivant 
+                setpause(world, getpause(world)%2);  // 0 ou 1
             }
         }
     }

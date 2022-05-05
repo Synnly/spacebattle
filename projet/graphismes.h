@@ -50,7 +50,7 @@ void apply_sprite (SDL_Renderer *renderer, SDL_Texture *textures, sprite_t *spri
  * \param tank_texture La texture du tank
  * \param enemies Le tableau d'ennemis
  */
-void apply_enemies(SDL_Renderer *renderer, SDL_Texture *texture_ennemi, SDL_Texture *texture_casse_ennemi, SDL_Texture *tank_texture, SDL_Texture* ambulance_texture, SDL_Texture *grenouille_texture,sprite_t *enemies);
+void apply_enemies(SDL_Renderer *renderer, SDL_Texture *texture_ennemi, SDL_Texture *texture_casse_ennemi, SDL_Texture *tank_texture, SDL_Texture* ambulance_texture, SDL_Texture *grenouille_texture, world_t *world);
 
 
 /**

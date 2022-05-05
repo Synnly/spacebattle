@@ -38,7 +38,7 @@
 /**
  * \brief Vitesse du missile
 */
-#define MISSILE_SPEED 15
+#define MISSILE_SPEED 20
 
 
 /**
@@ -55,7 +55,7 @@
 /**
  * \brief Nombre d'ennemis
  */
-#define NB_ENEMIES 5
+#define NB_ENEMIES 10
 
 /**
  * \brief Vie d'un missile
@@ -136,18 +136,119 @@ struct world_s{
 typedef struct world_s world_t;
 
 /**
+ * \brief Retourne le score
+ * \param world Les données du jeu
+ * \return Le score
+ */
+unsigned int getscore(world_t *world);
+
+/**
+ * \brief Met le score
+ * \param world Les données du monde
+ * \param montant Le monatnt
+ */
+void setscore(world_t *world_t, unsigned int montant);
+
+/**
+ * \brief Retourne le vaisseau
+ * \param world Les données du monde
+ * \return Le vaisseau
+ */
+sprite_t *getvaisseau(world_t *world);
+
+/**
+ * \brief Retourne le missile
+ * \param world Les données du monde
+ * \return Le missile
+ */
+sprite_t *getmissile(world_t *world);
+
+/**
+ * \brief Retourne le ieme ennemi
+ * \param world Les données du monde
+ * \param i L'indice de l'ennemi
+ * \return Le ieme ennemi
+ */
+sprite_t *getenemies(world_t *world, unsigned int i);
+
+
+/**
+ * \brief Met l'etat du gameover
+ * \param world Les donnees du jeu
+ * \param etat L'etat du game over
+ */
+void setgameover(world_t *world, unsigned int valetat);
+
+/**
+ * \brief Met le nombre d'ennemis sortis
+ * \param world Les donnees du jeu
+ * \param montant Le nombre d'ennemis
+ */
+void setnb_ennemis_sortis(world_t *world, unsigned int montant);
+
+/**
+ * \brief Retourne le nombre d'ennemis sortis
+ * \param world Les donnees du jeu
+ * \return Le nombre d'ennemis sortis
+ */
+unsigned int getnb_ennemis_sortis(world_t *world);
+
+/**
+ * \brief Mets l'etat de la pause
+ * \param world Les donnees du jeu
+ * \param etat L'etat de la pause
+ */
+void setpause(world_t *world, unsigned int etat);
+
+/**
+ * \brief Retourne l'etat de la pause
+ * \param world Les donnees du jeu
+ * \return L'etat de la pause
+ */
+unsigned int getpause(world_t *world);
+
+/**
+ * \brief Met l'etat de la partie
+ * \param world Les donnees du jeu
+ * \param etat L'etat de la partie
+ */
+void setetat(world_t * world, unsigned int valetat);
+
+/**
+ * \brief Retourne l'etat de la partie
+ * \param world Les donnees du jeu
+ * \return L'etat de la partie
+ */
+unsigned int getetat(world_t *world);
+
+/**
+ * \brief Donne la valeur de framecount
+ * \param world Les donnees du jeu
+ * \param amount La valeur de framcount
+ */
+void setframecount(world_t *world, unsigned int amount);
+
+/**
+ * \brief Donne la valeur de framecount
+ * \param world Les donnees du jeu
+ * \return La valeur de framecount
+ */
+unsigned int getframecount(world_t *world);
+
+
+/**
  * \brief Retourne la coordonnée x d'un sprite
  * \param sprite Le sprite
  * \return La coordonnée x
  */
-unsigned int getx(sprite_t *sprite);
+int getx(sprite_t *sprite);
 
 /**
  * \brief Retourne la coordonnée y d'un sprite
  * \param sprite Le sprite
  * \return La coordonnée y
  */
-unsigned int gety(sprite_t *sprite);
+int gety(sprite_t *sprite);
 
 /**
  * \brief Met la coordonnée x du sprite
@@ -162,6 +263,34 @@ void setx(sprite_t *sprite, unsigned int valx);
  * \param y La coordonnée y
  */
 void sety(sprite_t *sprite, unsigned int valy);
+
+/**
+ * \brief Retourne la largeur d'un sprite
+ * \param sprite Le sprite
+ * \return Sa largeur
+ */
+unsigned int getwidth(sprite_t *sprite);
+
+/**
+ * \brief Retourne la hauteurd'un sprite
+ * \param sprite Le sprite
+ * \return Sa hauteur
+ */
+unsigned int geth(sprite_t *sprite);
+
+/**
+ * \brief Met la largeur du sprite
+ * \param sprite Le sprite
+ * \param w Sa largeur
+ */
+void setw(sprite_t *sprite, unsigned int valw);
+
+/**
+ * \brief Met la hauteur du sprite
+ * \param sprite Le sprite
+ * \param h Sa hauteur
+ */
+void seth(sprite_t *sprite, unsigned int valh);
 
 /**
  * \brief Retourne la vitesse d'un sprite
@@ -205,6 +334,13 @@ unsigned int getlives(sprite_t *sprite);
  */
 void setlives(sprite_t *sprite, unsigned int vallives);
 
+/**
+ * \brief Retourne la visibilité d'un sprite
+ * \param sprite Le sprite
+ * \return La visibilité du sprite
+ */
+unsigned int getvisibility(sprite_t *sprite);
+
 
 /**
  * \brief Fonction qui génère un nombre aléatoire entre a et b(non compris)
@@ -213,6 +349,7 @@ void setlives(sprite_t *sprite, unsigned int vallives);
  * \return un nombre aléatoire entre a et b
  */
 int generate_number(int a, int b);
+
 
 /**
  * \brief initialisation d'un sprite

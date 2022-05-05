@@ -16,7 +16,7 @@ void init_audio(audio_t *audio){
 
 
 void playpausemus(world_t *world){
-    if(world->pause){
+    if(getpause(world)){
         Mix_PauseMusic();
     }
     else{
@@ -33,7 +33,7 @@ void clean_audio(Mix_Music *musique){
 
 
 void music_loop(world_t *world, audio_t *audio){
-    if(world->gameover){
+    if(is_game_over(world)){
         clean_audio(audio->bgm);
     }
     else{
