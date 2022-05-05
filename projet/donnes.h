@@ -104,7 +104,7 @@ struct sprite_s {
     unsigned int w; /*!< Largeur du sprite */
     unsigned int v; /*!< Vitesse du sprite */
     unsigned int is_visible; /*!< Champ lié à la visibilité du sprite */
-    unsigned int type; /*< Champ lié au type de sprite ; 0: vaisseau, 1: missile du vaisseau, 2: ennemi classique, 3: ennemi casse, 4: ennemi tank*/
+    unsigned int type; /*< Champ lié au type de sprite ; 0: vaisseau, 1: missile du vaisseau, 2: ennemi classique, 3: ennemi casse, 4: ennemi tank, 5: ambulance*/
     unsigned int lives;/*!< Champ qui compte le nombre de vie(s) d'un sprite */
 };
 
@@ -213,13 +213,27 @@ void score(world_t* world);
  * \param sp2 Missile
  * \param sp1 Ennemi
  */
-void handle_missiles_collide(sprite_t *missile, sprite_t *ennemi);
+void handle_missiles_collide(world_t *world);
+
+/**
+ * \brief Gere les collisions entre les missile et l'ambulance et le vaisseau et l'ambulance
+ * \param world Les donnees du monde
+ */
+void handle_ambulance_collide(world_t* world);
 
 /**
  * \brief Gere les collisions entre le vaisseau et les ennemis
  * \param world Le monde du jeu
  */
 void handle_vaisseau_collide(world_t* world);
+
+/**
+ * \brief Donne un certain montant de points de vie au sprite
+ * \param sprite Le sprite
+ * \param montant Le montant de points de vie à donner
+ */
+void heal(sprite_t *sprite, unsigned int montant);
+
 
 /**
  * \brief Gère la prise de dégats du sprite

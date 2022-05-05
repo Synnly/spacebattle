@@ -58,7 +58,7 @@ void vaisseau_depasse_bords(sprite_t *sprite){
 }
 
 void reset_enemi(world_t *world, unsigned int i){
-    unsigned int num_type = generate_number(1, 5);
+    unsigned int num_type = generate_number(1, 8);
     unsigned int type=2;
     unsigned int lives;
     lives=ENEMY_LIFE;
@@ -70,6 +70,13 @@ void reset_enemi(world_t *world, unsigned int i){
         case 4:{
             type=4;
             lives=TANK_LIFE;
+            break;
+        }
+        case 5:{
+            type = 5;
+            /*L'ambulaces a autant de vie que le joueur car chaque coup sur l'ambulance enleve un point de vie
+            au vaisseau */
+            lives=PLAYER_LIFE;
             break;
         }
         default:{
@@ -107,27 +114,52 @@ void score(world_t* world){
     }
 }
 
-void handle_missiles_collide(sprite_t *missile, sprite_t *ennemi){
+void handle_missiles_collide(world_t *world){
+    for(int i=0; i<NB_ENEMIES; i++){
+        if(sprites_collide(&(world->missile), &(world->enemies[i])) && !world->missile.is_visible && !world->enemies[i].is_visible){
 
-    // Si le missile et l'ennemi entrent en collision ET si le missile et l'ennemi sont visibles
-    if(sprites_collide(missile, ennemi) && !missile->is_visible && !ennemi->is_visible){
-        missile->v = 0;
-        take_dmg(missile);
-        take_dmg(ennemi);
+            if(world->enemies[i].type==5){  
+                world->missile.v = 0;
+                take_dmg(&(world->missile));
+                take_dmg(&(world->vaisseau));
+            }
+    
+            else {
+                world->missile.v = 0;
+                take_dmg(&(world->missile));
+                take_dmg(&(world->enemies[i]));
+            }
+        }
     }
 }
 
 void handle_vaisseau_collide(world_t* world){
     for(int i=0; i<NB_ENEMIES; i++){
 
-        // Si le vaisseau et l'ennemi entrent en collision ET si le vaiseau et l'ennemi sont visibles
+        // Si le vaisseau et l'ambulance entrent en collision ET si le vaiseau et l'ambulance sont visibles
         if(sprites_collide(&(world->vaisseau),&(world->enemies[i])) && !world->vaisseau.is_visible && !world->enemies[i].is_visible){
 
-            (&(world->enemies[i]))->v=0;
-            take_dmg(&(world->enemies[i]));
-            take_dmg(&(world->vaisseau));  
+            if(world->enemies[i].type == 5){
+                world->enemies[i].v=0;
+                take_dmg(&(world->enemies[i]));
+                take_dmg(&(world->enemies[i]));
+                take_dmg(&(world->enemies[i]));
+                heal(&(world->vaisseau), 1);  
+            }
+
+            else {
+                (&(world->enemies[i]))->v=0;
+                take_dmg(&(world->enemies[i]));
+                take_dmg(&(world->vaisseau));  
+            }
+            
         }
     }
+}
+
+
+void heal(sprite_t *sprite, unsigned int montant){
+    sprite->lives+=montant;
 }
 
 void take_dmg(sprite_t* sprite){
@@ -222,13 +254,11 @@ void update_data(world_t *world){
 
     
 
-    //Gestion des collisions entre vaisseau et ennemis
+    //Gestion des collisions entre le vaisseau et les ennemis
     handle_vaisseau_collide(world);
 
     //Test de collision entre le missile et les ennemis
-    for(int i=0;i<NB_ENEMIES;i++){
-        handle_missiles_collide(&(world->missile), (&(world->enemies[i])));
-    }
+    handle_missiles_collide(world);
 
     //LES ennemiS se delpacENT
     update_enemies(world);

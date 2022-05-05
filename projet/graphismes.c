@@ -18,7 +18,7 @@ void apply_sprite (SDL_Renderer *renderer, SDL_Texture *ressources, sprite_t *sp
 }
 
 
-void apply_enemies(SDL_Renderer *renderer, SDL_Texture *texture_ennemi, SDL_Texture *texture_ennemi_casse, SDL_Texture* tank_texture , sprite_t *enemies){
+void apply_enemies(SDL_Renderer *renderer, SDL_Texture *texture_ennemi, SDL_Texture *texture_ennemi_casse, SDL_Texture* tank_texture, SDL_Texture* ambulance_texture, sprite_t *enemies){
     for(int i=0; i<NB_ENEMIES; i++){
         switch(enemies[i].type){
             case 3: {
@@ -28,6 +28,11 @@ void apply_enemies(SDL_Renderer *renderer, SDL_Texture *texture_ennemi, SDL_Text
 
             case 4: {
                 apply_sprite(renderer, tank_texture, &enemies[i]);
+                break;
+            }
+
+            case 5:{
+                apply_sprite(renderer, ambulance_texture, &enemies[i]);
                 break;
             }
 
@@ -47,6 +52,7 @@ void clean_ressources(ressources_t *ressources){
     clean_texture(ressources->ennemi_texture);
     clean_texture(ressources->ennemi_casse_texture);
     clean_texture(ressources->tank_texture);
+    clean_texture(ressources->ambulance_texture);
     clean_font(ressources->font);
 }
 
@@ -58,6 +64,7 @@ void init_ressources(SDL_Renderer *renderer, ressources_t *ressources){
     ressources->ennemi_casse_texture = load_image("ressources/ennemi_casse.bmp", renderer);
     ressources->tank_texture = load_image("ressources/tank.bmp", renderer);
     ressources->missile_texture = load_image("ressources/missile_skin_2.bmp", renderer);
+    ressources->ambulance_texture = load_image("ressources/ambulance.bmp", renderer);
     ressources->font = load_font("ressources/arial.ttf", FONT_SIZE);
 }
 
@@ -118,7 +125,7 @@ void refresh_graphics(SDL_Renderer *renderer, world_t *world, ressources_t *ress
     //application des ressources dans le renderer
     apply_background(renderer, ressources);
     apply_sprite(renderer, ressources->vaisseau_texture, &(world->vaisseau));
-    apply_enemies(renderer, ressources->ennemi_texture, ressources->ennemi_casse_texture, ressources->tank_texture ,(world->enemies));
+    apply_enemies(renderer, ressources->ennemi_texture, ressources->ennemi_casse_texture, ressources->tank_texture ,ressources->ambulance_texture, (world->enemies));
     apply_sprite(renderer, ressources->missile_texture, &(world->missile));
 
     //Affichage de l'etat du jeu et du score
