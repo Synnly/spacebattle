@@ -194,6 +194,12 @@ void reset_enemi(world_t *world, unsigned int i);
 void ennemi_depasse_bas(world_t* world);
 
 /**
+ * \brief Verifie que le missile ne dépasse pas l'écran
+ * \param world Le monde
+ */
+void missile_depasse_haut(world_t* world);
+
+/**
  * \brief Verifie si deux sprites entrent en collision
  * \param sp2 Deuxième sprite
  * \param sp1 Premier sprite

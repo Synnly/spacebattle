@@ -96,6 +96,12 @@ void ennemi_depasse_bas(world_t *world){
     world->nb_ennemis_sortis %= NB_ENEMIES; // Nb d'ennemis qui retourne à 0 quand tous les ennemis sont sortis
 }
 
+void missile_depasse_haut(world_t* world){
+    if((world->missile.y)<0){
+        take_dmg(&(world->missile));
+    }
+}
+
 
 int sprites_collide(sprite_t *sp2, sprite_t *sp1){
     // Calcul de la distance entre les deux sprites
@@ -135,24 +141,32 @@ void handle_missiles_collide(world_t *world){
 
 void handle_vaisseau_collide(world_t* world){
     for(int i=0; i<NB_ENEMIES; i++){
-
+        int type = world->enemies[i].type;
         // Si le vaisseau et l'ambulance entrent en collision ET si le vaiseau et l'ambulance sont visibles
         if(sprites_collide(&(world->vaisseau),&(world->enemies[i])) && !world->vaisseau.is_visible && !world->enemies[i].is_visible){
-
-            if(world->enemies[i].type == 5){
-                world->enemies[i].v=0;
-                take_dmg(&(world->enemies[i]));
-                take_dmg(&(world->enemies[i]));
-                take_dmg(&(world->enemies[i]));
-                heal(&(world->vaisseau), 1);  
+            switch(type){
+                case 5:{
+                    for(int j=0; j<3;j++){
+                        take_dmg(&(world->enemies[i]));
+                    }
+                    if((world->vaisseau.lives)<3){
+                        heal(&(world->vaisseau), 1);  
+                    }
+                    break;
+                }
+                case 4:{
+                    for(int j=0; j<3;j++){
+                        take_dmg(&(world->enemies[i]));
+                    }
+                    take_dmg(&(world->vaisseau));
+                    break;
+                }
+                default: {
+                    take_dmg(&(world->enemies[i]));
+                    take_dmg(&(world->vaisseau));
+                    break;  
+                }
             }
-
-            else {
-                (&(world->enemies[i]))->v=0;
-                take_dmg(&(world->enemies[i]));
-                take_dmg(&(world->vaisseau));  
-            }
-            
         }
     }
 }
@@ -332,6 +346,5 @@ void handle_events(SDL_Event *event,world_t *world){
                 world->pause += 1;  // On pase à l'etat de pause suivant 
                 world->pause %= 2;  // 0 ou 1
             }
-        }
     }
 }

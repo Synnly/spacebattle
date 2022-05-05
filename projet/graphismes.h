@@ -23,6 +23,7 @@ struct ressources_s{
     SDL_Texture* ambulance_texture; /*!< Texture liée à l'image de l'ambulance */
     SDL_Texture* vaisseau_texture;  /*!< Texture liée à l'image du vaisseau. */
     SDL_Texture* missile_texture;   /*!< Texture liée à l'image du missile. */
+    SDL_Texture* grenouille_texure; /*!< Texture liée à l'image de la grenouille */
     TTF_Font* font; /*!< Police d'ecriture. */
 };
 
