@@ -104,7 +104,7 @@ struct sprite_s {
     unsigned int w; /*!< Largeur du sprite */
     unsigned int v; /*!< Vitesse du sprite */
     unsigned int is_visible; /*!< Champ lié à la visibilité du sprite */
-    unsigned int type; /*< Champ lié au type de sprite ; 0: vaisseau, 1: missile du vaisseau, 2: ennemi classique, 3: ennemi casse, 4: ennemi tank, 5: ambulance*/
+    unsigned int type; /*< Champ lié au type de sprite ; 0: vaisseau, 1: missile du vaisseau, 2: ennemi classique, 3: ennemi casse, 4: ennemi tank, 5: ambulance, 6: Grenouille*/
     unsigned int lives;/*!< Champ qui compte le nombre de vie(s) d'un sprite */
 };
 
@@ -134,6 +134,77 @@ struct world_s{
  * \brief Type qui correspond aux données du monde
  */
 typedef struct world_s world_t;
+
+/**
+ * \brief Retourne la coordonnée x d'un sprite
+ * \param sprite Le sprite
+ * \return La coordonnée x
+ */
+unsigned int getx(sprite_t *sprite);
+
+/**
+ * \brief Retourne la coordonnée y d'un sprite
+ * \param sprite Le sprite
+ * \return La coordonnée y
+ */
+unsigned int gety(sprite_t *sprite);
+
+/**
+ * \brief Met la coordonnée x du sprite
+ * \param sprite Le sprite
+ * \param x La coordonnée x
+ */
+void setx(sprite_t *sprite, unsigned int valx);
+
+/**
+ * \brief Met la coordonnée y du sprite
+ * \param sprite Le sprite
+ * \param y La coordonnée y
+ */
+void sety(sprite_t *sprite, unsigned int valy);
+
+/**
+ * \brief Retourne la vitesse d'un sprite
+ * \param sprite Le sprite
+ * \return La vitesse
+ */
+unsigned int getv(sprite_t * sprite);
+
+/**
+ * \brief Met la vitesse du sprite
+ * \param sprite Le sprite
+ * \param x La vitesse
+ */
+void setv(sprite_t * sprite, unsigned int valv);
+
+/**
+ * \brief Retourne le type d'un sprite
+ * \param sprite Le sprite
+ * \return Le type du sprite
+ */
+unsigned int gettype(sprite_t *sprite);
+
+/**
+ * \brief Met le type du sprite
+ * \param sprite Le sprite
+ * \param type Le type
+ */
+void settype(sprite_t *sprite, unsigned int valtype);
+
+/**
+ * \brief Retourne les points de vie d'un sprite
+ * \param sprite Le sprite
+ * \return Ses points de vie
+ */
+unsigned int getlives(sprite_t *sprite);
+
+/**
+ * \brief Met le nombre de poinst de vie du sprite
+ * \param sprite Le sprite
+ * \param x Le nombre de points de vie
+ */
+void setlives(sprite_t *sprite, unsigned int vallives);
+
 
 /**
  * \brief Fonction qui génère un nombre aléatoire entre a et b(non compris)

@@ -23,7 +23,7 @@ struct ressources_s{
     SDL_Texture* ambulance_texture; /*!< Texture liée à l'image de l'ambulance */
     SDL_Texture* vaisseau_texture;  /*!< Texture liée à l'image du vaisseau. */
     SDL_Texture* missile_texture;   /*!< Texture liée à l'image du missile. */
-    SDL_Texture* grenouille_texure; /*!< Texture liée à l'image de la grenouille */
+    SDL_Texture* grenouille_texture; /*!< Texture liée à l'image de la grenouille */
     TTF_Font* font; /*!< Police d'ecriture. */
 };
 
@@ -50,7 +50,7 @@ void apply_sprite (SDL_Renderer *renderer, SDL_Texture *textures, sprite_t *spri
  * \param tank_texture La texture du tank
  * \param enemies Le tableau d'ennemis
  */
-void apply_enemies(SDL_Renderer *renderer, SDL_Texture *texture_ennemi, SDL_Texture *texture_casse_ennemi, SDL_Texture *tank_texture, SDL_Texture* ambulance_texture, sprite_t *enemies);
+void apply_enemies(SDL_Renderer *renderer, SDL_Texture *texture_ennemi, SDL_Texture *texture_casse_ennemi, SDL_Texture *tank_texture, SDL_Texture* ambulance_texture, SDL_Texture *grenouille_texture,sprite_t *enemies);
 
 
 /**

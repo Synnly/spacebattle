@@ -13,6 +13,27 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+unsigned int getx(sprite_t *sprite){return sprite->x;}
+
+unsigned int gety(sprite_t *sprite){return sprite->y;}
+
+void setx(sprite_t *sprite, unsigned int valx){sprite->x = valx;}
+
+void sety(sprite_t *sprite, unsigned int valy){sprite->y = valy;}
+
+unsigned int getv(sprite_t *sprite){return sprite->v;}
+
+void setv(sprite_t *sprite, unsigned int valv){sprite->v = valv;}
+
+unsigned int gettype(sprite_t *sprite){return sprite->type;}
+
+void settype(sprite_t *sprite, unsigned int valtype){sprite->type = valtype;}
+
+unsigned int getlives(sprite_t *sprite){return sprite->lives;}
+
+void setlives(sprite_t *sprite, unsigned int vallives){sprite->lives = vallives;}
+
+
 /* Generation d'un nombre entier compris entre a et b */
 int generate_number(int a, int b){
     return rand()%(b-a)+a;
@@ -79,6 +100,10 @@ void reset_enemi(world_t *world, unsigned int i){
             lives=PLAYER_LIFE;
             break;
         }
+        case 6:{
+            type=6;
+            break;
+        }
         default:{
             break;
         }
@@ -123,17 +148,25 @@ void score(world_t* world){
 void handle_missiles_collide(world_t *world){
     for(int i=0; i<NB_ENEMIES; i++){
         if(sprites_collide(&(world->missile), &(world->enemies[i])) && !world->missile.is_visible && !world->enemies[i].is_visible){
+            switch(world->enemies[i].type){
+                case 5:{  
+                    world->missile.v = 0;
+                    take_dmg(&(world->missile));
+                    take_dmg(&(world->vaisseau));
+                    break;
+                }
 
-            if(world->enemies[i].type==5){  
-                world->missile.v = 0;
-                take_dmg(&(world->missile));
-                take_dmg(&(world->vaisseau));
-            }
-    
-            else {
-                world->missile.v = 0;
-                take_dmg(&(world->missile));
-                take_dmg(&(world->enemies[i]));
+                case 6:{
+                    take_dmg(&(world->missile));
+                    break;
+                }
+
+                default:{
+                    world->missile.v = 0;
+                    take_dmg(&(world->missile));
+                    take_dmg(&(world->enemies[i]));
+                    break;
+                }
             }
         }
     }
@@ -159,6 +192,12 @@ void handle_vaisseau_collide(world_t* world){
                         take_dmg(&(world->enemies[i]));
                     }
                     take_dmg(&(world->vaisseau));
+                    break;
+                }
+                case 6:{
+                    for(int j=0; j<(world->vaisseau.lives);j++){
+                        take_dmg(&(world->vaisseau));
+                    }
                     break;
                 }
                 default: {
@@ -346,5 +385,6 @@ void handle_events(SDL_Event *event,world_t *world){
                 world->pause += 1;  // On pase à l'etat de pause suivant 
                 world->pause %= 2;  // 0 ou 1
             }
+        }
     }
 }
