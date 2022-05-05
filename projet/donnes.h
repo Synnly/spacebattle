@@ -136,6 +136,77 @@ struct world_s{
 typedef struct world_s world_t;
 
 /**
+ * \brief Retourne la coordonnée x d'un sprite
+ * \param sprite Le sprite
+ * \return La coordonnée x
+ */
+unsigned int getx(sprite_t *sprite);
+
+/**
+ * \brief Retourne la coordonnée y d'un sprite
+ * \param sprite Le sprite
+ * \return La coordonnée y
+ */
+unsigned int gety(sprite_t *sprite);
+
+/**
+ * \brief Met la coordonnée x du sprite
+ * \param sprite Le sprite
+ * \param x La coordonnée x
+ */
+void setx(sprite_t *sprite, unsigned int valx);
+
+/**
+ * \brief Met la coordonnée y du sprite
+ * \param sprite Le sprite
+ * \param y La coordonnée y
+ */
+void sety(sprite_t *sprite, unsigned int valy);
+
+/**
+ * \brief Retourne la vitesse d'un sprite
+ * \param sprite Le sprite
+ * \return La vitesse
+ */
+unsigned int getv(sprite_t * sprite);
+
+/**
+ * \brief Met la vitesse du sprite
+ * \param sprite Le sprite
+ * \param x La vitesse
+ */
+void setv(sprite_t * sprite, unsigned int valv);
+
+/**
+ * \brief Retourne le type d'un sprite
+ * \param sprite Le sprite
+ * \return Le type du sprite
+ */
+unsigned int gettype(sprite_t *sprite);
+
+/**
+ * \brief Met le type du sprite
+ * \param sprite Le sprite
+ * \param type Le type
+ */
+void settype(sprite_t *sprite, unsigned int valtype);
+
+/**
+ * \brief Retourne les points de vie d'un sprite
+ * \param sprite Le sprite
+ * \return Ses points de vie
+ */
+unsigned int getlives(sprite_t *sprite);
+
+/**
+ * \brief Met le nombre de poinst de vie du sprite
+ * \param sprite Le sprite
+ * \param x Le nombre de points de vie
+ */
+void setlives(sprite_t *sprite, unsigned int vallives);
+
+
+/**
  * \brief Fonction qui génère un nombre aléatoire entre a et b(non compris)
  * \param a borne a
  * \param b borne b

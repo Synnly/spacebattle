@@ -13,6 +13,27 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+unsigned int getx(sprite_t *sprite){return sprite->x;}
+
+unsigned int gety(sprite_t *sprite){return sprite->y;}
+
+void setx(sprite_t *sprite, unsigned int valx){sprite->x = valx;}
+
+void sety(sprite_t *sprite, unsigned int valy){sprite->y = valy;}
+
+unsigned int getv(sprite_t *sprite){return sprite->v;}
+
+void setv(sprite_t *sprite, unsigned int valv){sprite->v = valv;}
+
+unsigned int gettype(sprite_t *sprite){return sprite->type;}
+
+void settype(sprite_t *sprite, unsigned int valtype){sprite->type = valtype;}
+
+unsigned int getlives(sprite_t *sprite){return sprite->lives;}
+
+void setlives(sprite_t *sprite, unsigned int vallives){sprite->lives = vallives;}
+
+
 /* Generation d'un nombre entier compris entre a et b */
 int generate_number(int a, int b){
     return rand()%(b-a)+a;
