@@ -8,16 +8,16 @@
 #include "donnes.h"
 #include <stdio.h>
 
-void test_init_sprite_param(int x, int y, int w, int h, int v){
+void test_init_sprite_param(int x, int y, unsigned int w, unsigned int h, int v, unsigned int type){
     sprite_t sprite1;
-    init_sprite(&sprite1, x, y, w, h, v);
+    init_sprite(&sprite1, x, y, w, h, v, type);
     print_sprite(&sprite1);
     printf("\n");
 }
 
 void test_init_sprite(){
     for(int i = 0; i<=10; i++){
-        test_init_sprite_param(i, 2*i, 3*i, 4*i, 5*i);
+        test_init_sprite_param(i, 2*i, 3*i, 4*i, 5*i, 2);
     }
 }
 
@@ -33,7 +33,7 @@ void test_vaisseau_depasse_bords(){
 
     // Bord gauche
     for(int i = -100; i<401; i+=100){
-        init_sprite(&sprite, i, 50, 32, 32, 0);
+        init_sprite(&sprite, i, 50, 32, 32, 0, 0);
         test_vaisseau_depasse_bords_param(&sprite);
     }
 }
@@ -69,8 +69,8 @@ void test_sprites_collide(){
     sprite_t sprite2;
     for(int i = 32; i<=62; i+=30){
         for(int j = 22; j<=62; j+=20){
-            init_sprite(&sprite1, i, i, 32, 32, 0);
-            init_sprite(&sprite2, j, j, 32, 32, 0);
+            init_sprite(&sprite1, i, i, 32, 32, 0, 0);
+            init_sprite(&sprite2, j, j, 32, 32, 0, 2);
             test_sprites_collide_param(&sprite1, &sprite2);
         }
     }
@@ -92,21 +92,20 @@ void test_handle_missiles_collide(){
     sprite_t sprite2;
     for(int i = 20; i<62; i+=30){
         for(int visible = 0; visible<=1; visible++){
-            init_sprite(&sprite1, i, 50, 32, 32, 5);
-            if(visible){set_invisible(&sprite1);};
-            init_sprite(&sprite2, 62, 50, 32, 32, 5);
+            init_sprite(&sprite1, i, 50, 32, 32, 5, 1);
+            init_sprite(&sprite2, 62, 50, 32, 32, 5, 2);
             test_handle_missiles_collide_param(&sprite1, &sprite2);
         }
     }
 }
 
-void test_handle_vaisseau_collide_param(world_t* world){
+/* void test_handle_vaisseau_collide_param(world_t* world){
 
 }
 
 void test_handle_vaisseau_collide(){
     world_t world
-}
+} */
 
 void test_init_enemies_param(world_t* world){
     for(int i=0;i<NB_ENEMIES;i++){
@@ -161,7 +160,7 @@ int main(int argc, char* argv[]){
         test_sprites_collide();
         break;  
     case 5:
-        test_handle_sprites_collide();
+        test_handle_missiles_collide();
         break; 
     case 6:
         test_init_enemies();

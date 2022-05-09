@@ -1,0 +1,8 @@
+#!/bin/sh
+cd /home/profil/lagarde48u/Espace-Etudiant/projet/methodo2022-ispi-tp-3.1-fernandes_dos_santos-lagarde/projet
+cd /home/profil/fernan243u/Bureau/methodo2022-ispi-tp-3.1-fernandes_dos_santos-lagarde/projet$ 
+cd /home/synnly/Bureau/methodo2022-ispi-tp-3.1-fernandes_dos_santos-lagarde/projet
+make clean
+clear
+make
+./spacebattle

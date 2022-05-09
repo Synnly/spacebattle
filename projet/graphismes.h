@@ -17,9 +17,14 @@
 */
 struct ressources_s{
     SDL_Texture* background; /*!< Texture liée à l'image du fond de l'écran. */
-    SDL_Texture* ennemi_texture;    /*!< Texture liée à l'image de l'ennemi. */
+    SDL_Texture* ennemi_texture;    /*!< Texture liée à l'image de l'ennemi classique. */
+    SDL_Texture* ennemi_casse_texture;    /*!< Texture liée à l'image de l'ennemi casse. */
+    SDL_Texture* tank_texture;      /*!< Texture liée à l'image du tank. */
+    SDL_Texture* ambulance_texture; /*!< Texture liée à l'image de l'ambulance */
     SDL_Texture* vaisseau_texture;  /*!< Texture liée à l'image du vaisseau. */
     SDL_Texture* missile_texture;   /*!< Texture liée à l'image du missile. */
+    SDL_Texture* grenouille_texture; /*!< Texture liée à l'image de la grenouille */
+    SDL_Texture* screamer_texture; /*!< Texture liée à l'image du screamer */
     TTF_Font* font; /*!< Police d'ecriture. */
 };
 
@@ -41,10 +46,12 @@ void apply_sprite (SDL_Renderer *renderer, SDL_Texture *textures, sprite_t *spri
 /**
  * \brief Applique les textures des ennemis
  * \param renderer Le renderer
- * \param textures La texture à appliquer
+ * \param texture_ennemi La texture de l'ennemi classique
+ * \param texture_casse_ennemi La texture de l'ennemi casse
+ * \param tank_texture La texture du tank
  * \param enemies Le tableau d'ennemis
  */
-void apply_enemies(SDL_Renderer *renderer, SDL_Texture *textures, sprite_t *enemies);
+void apply_enemies(SDL_Renderer *renderer, SDL_Texture *texture_ennemi, SDL_Texture *texture_casse_ennemi, SDL_Texture *tank_texture, SDL_Texture* ambulance_texture, SDL_Texture *grenouille_texture, world_t *world);
 
 
 /**
@@ -79,7 +86,7 @@ void apply_background(SDL_Renderer *renderer, ressources_t *textures);
 void afficher_score(SDL_Renderer *renderer, world_t *world, ressources_t *ressources);
 
 /**
- * \brief Affiche le score sur l'ecran
+ * \brief Affiche les vies sur l'ecran
  * \param renderer Le renderer
  * \param world Les donnees du monde
  * \param ressources Les ressources du jeu
