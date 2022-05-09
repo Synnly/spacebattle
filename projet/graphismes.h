@@ -24,7 +24,10 @@ struct ressources_s{
     SDL_Texture* vaisseau_texture;  /*!< Texture liée à l'image du vaisseau. */
     SDL_Texture* missile_texture;   /*!< Texture liée à l'image du missile. */
     SDL_Texture* grenouille_texture; /*!< Texture liée à l'image de la grenouille */
+<<<<<<< HEAD
     SDL_Texture* screamer_texture; /*!< Texture liée à l'image du screamer */
+=======
+>>>>>>> be3da6556fd71f44d0b45faaa0160707acedafcc
     TTF_Font* font; /*!< Police d'ecriture. */
 };
 

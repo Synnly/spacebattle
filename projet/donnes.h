@@ -93,6 +93,7 @@
  */
 #define FONT_SIZE 14
 
+
 /**
  * \brief Type du vaisseau
  */
@@ -180,9 +181,14 @@ struct world_s{
     int nb_ennemis_sortis;  /*!< Champ qui compte le nombre d'ennemis qui sont sortis de l'ecran par la bordure du bas */
     unsigned int score;     /*!< Champ qui compte le score */
     unsigned int pause;     /*!< Champ indiquant si le jeu est en pause */
+<<<<<<< HEAD
     unsigned int etat;      /*!< 0 : le joueur a perdu, 1 : le compte a rebours avant la fermeture du jeu est lancé, 2 : Le jeu est en cours, */
     unsigned int frame_count;   /*!< Champ qui compte le nombre d'images avant la fermeture du jeu */
     sprite_t screamer; /*!< Champ lié au screamer */
+=======
+    unsigned int etat;      /*!< 0 : le joueur a perdu, 1 : le joueur a gagné et a tué tous les ennemis, 2 : le joueur a gagné mais n'a pas tué tous les ennemis, 3 : le jeu est en cours, */
+    unsigned int frame_count;   /*!< Champ qui compte le nombre d'images avant la fermeture du jeu */
+>>>>>>> be3da6556fd71f44d0b45faaa0160707acedafcc
    
 };
 
@@ -291,6 +297,7 @@ void setframecount(world_t *world, unsigned int amount);
  */
 unsigned int getframecount(world_t *world);
 
+<<<<<<< HEAD
 /**
  * \brief Donne le sprite du screamer
  * \param world Les donnees du jeu
@@ -298,6 +305,8 @@ unsigned int getframecount(world_t *world);
  */
 sprite_t* getscreamer(world_t* world);
 
+=======
+>>>>>>> be3da6556fd71f44d0b45faaa0160707acedafcc
 
 /**
  * \brief Retourne la coordonnée x d'un sprite
