@@ -53,9 +53,9 @@ int getx(sprite_t *sprite){return sprite->x;}
 
 int gety(sprite_t *sprite){return sprite->y;}
 
-void setx(sprite_t *sprite, unsigned int valx){sprite->x = valx;}
+void setx(sprite_t *sprite, int valx){sprite->x = valx;}
 
-void sety(sprite_t *sprite, unsigned int valy){sprite->y = valy;}
+void sety(sprite_t *sprite, int valy){sprite->y = valy;}
 
 unsigned int getwidth(sprite_t *sprite){return sprite->w;}
 
@@ -167,7 +167,7 @@ int sprites_collide(sprite_t *sp2, sprite_t *sp1){
 
 void score(world_t* world){
     for(int i=0; i<NB_ENEMIES; i++){
-        if(sprites_collide(getmissile(world),getenemies(world, i)) && !getvisibility(getmissile(world)) && !getvisibility(getenemies(world, i)) && getlives(getenemies(world, i))==1){
+        if(sprites_collide(getmissile(world),getenemies(world, i)) && !getvisibility(getmissile(world)) && !getvisibility(getenemies(world, i)) && getlives(getenemies(world, i))==1 && gettype(getenemies(world,i))!=6){
             setscore(world, getscore(world)+1);
         }
     }
@@ -222,7 +222,7 @@ void handle_vaisseau_collide(world_t* world){
                         take_dmg(getenemies(world, i));
                     }
                     if(getlives(getvaisseau(world))<3){
-                        heal(getvaisseau(world), 1);  
+                        heal(getvaisseau(world));  
                     }
                     break;
                 }
@@ -237,7 +237,7 @@ void handle_vaisseau_collide(world_t* world){
                     for(int j=0; j<(getlives(getvaisseau(world)));j++){
                         take_dmg(getvaisseau(world));
                     }
-                    heal(getscreamer(world),1);
+                    heal(getscreamer(world));
                     break;
                 }
                 default: {
@@ -251,7 +251,11 @@ void handle_vaisseau_collide(world_t* world){
 }
 
 
-void heal(sprite_t *sprite, unsigned int montant){ setlives(sprite, getlives(sprite)+montant); }
+void heal(sprite_t *sprite){
+    if(getlives(sprite)<PLAYER_LIFE){
+        setlives(sprite, getlives(sprite)+1);
+    }
+}
 
 void take_dmg(sprite_t* sprite){
     if(getlives(sprite)>=1){

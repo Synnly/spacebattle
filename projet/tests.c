@@ -8,24 +8,24 @@
 #include "donnes.h"
 #include <stdio.h>
 
-void test_init_sprite_param(int x, int y, unsigned int w, unsigned int h, int v, unsigned int type){
+void test_init_sprite_param(int x, int y, unsigned int w, unsigned int h, int v, unsigned int type, unsigned int lives){
     sprite_t sprite1;
-    init_sprite(&sprite1, x, y, w, h, v, type);
+    init_sprite(&sprite1, x, y, w, h, v, type, lives);
     print_sprite(&sprite1);
     printf("\n");
 }
 
 void test_init_sprite(){
     for(int i = 0; i<=10; i++){
-        test_init_sprite_param(i, 2*i, 3*i, 4*i, 5*i, 2);
+        test_init_sprite_param(i, 2*i, 3*i, 4*i, 5*i, 2, 3);
     }
 }
 
 
 void test_vaisseau_depasse_bords_param(sprite_t *sprite){
-    printf("Avant : x, y = %d, %d | Apres : x, y = ", sprite->x, sprite->y);
+    printf("Avant : x, y = %d, %d | Apres : x, y = ", getx(sprite), gety(sprite));
     vaisseau_depasse_bords(sprite);
-    printf("%d, %d\n", sprite->x, sprite->y); 
+    printf("%d, %d\n", getx(sprite), gety(sprite)); 
 }
 
 void test_vaisseau_depasse_bords(){
@@ -33,7 +33,7 @@ void test_vaisseau_depasse_bords(){
 
     // Bord gauche
     for(int i = -100; i<401; i+=100){
-        init_sprite(&sprite, i, 50, 32, 32, 0, 0);
+        init_sprite(&sprite, i, 50, 32, 32, 0, 0,3);
         test_vaisseau_depasse_bords_param(&sprite);
     }
 }
@@ -42,25 +42,26 @@ void test_vaisseau_depasse_bords(){
 void test_ennemi_depasse_bas_param(world_t *world){
     ennemi_depasse_bas(world);
     for(int i = 0; i<5; i++){
-        printf("Ennemi %d x, y = %d, %d est visible : %s\n", i+1, world->enemies[i].x, world->enemies[i].y, (world->enemies[i].is_visible?"faux":"vrai"));
+        printf("Ennemi %d x, y = %d, %d est visible : %s\n", i+1, getx(getenemies(world,i)), gety(getenemies(world,i)), (getvisibility(getenemies(world,i)))?"faux":"vrai");
     }
 }
 
 void test_ennemi_depasse_bas(){
     world_t world;
     init_data(&world);
-    world.enemies[0].y = -200;
-    world.enemies[1].y = 0;
-    world.enemies[2].y = 100;
-    world.enemies[3].y = 300;
-    world.enemies[4].y = 600;
+    sety(getenemies(&world,0),-200);
+    sety(getenemies(&world,1),0);
+    sety(getenemies(&world,2),100);
+    sety(getenemies(&world,3),300);
+    sety(getenemies(&world,4),600);
     ennemi_depasse_bas(&world);
-    test_ennemi_depasse_bas_param(&world); 
+    test_ennemi_depasse_bas_param(&world);
+    printf("\n");
 }
 
 
 void test_sprites_collide_param(sprite_t *sprite1, sprite_t *sprite2){
-    printf("Le sprite 1 (%d, %d) et le sprite 2 (%d, %d) %s en collision\n", sprite1->x, sprite1->y, sprite2->x, sprite2->y, sprites_collide(sprite2, sprite1)?"sont":"ne sont pas");
+    printf("Le sprite 1 (%d, %d) et le sprite 2 (%d, %d) %s en collision\n", getx(sprite1), gety(sprite1), getx(sprite2), gety(sprite2), sprites_collide(sprite2, sprite1)?"sont":"ne sont pas");
 }
 
 
@@ -69,43 +70,39 @@ void test_sprites_collide(){
     sprite_t sprite2;
     for(int i = 32; i<=62; i+=30){
         for(int j = 22; j<=62; j+=20){
-            init_sprite(&sprite1, i, i, 32, 32, 0, 0);
-            init_sprite(&sprite2, j, j, 32, 32, 0, 2);
+            init_sprite(&sprite1, i, i, 32, 32, 0, 0,2);
+            init_sprite(&sprite2, j, j, 32, 32, 0, 2,2);
             test_sprites_collide_param(&sprite1, &sprite2);
         }
     }
 }
 
 
-void test_handle_missiles_collide_param(sprite_t *sprite1, sprite_t *sprite2){
+/*void test_handle_missiles_collide_param(world_t* world){
     printf("----------Avant----------\n");
-    printf("Le sprite 1 (%d, %d, v = %d) et sprite 2 (%d, %d, v = %d) %s en collision\n", sprite1->x, sprite1->y, sprite1->v, sprite2->x, sprite2->y, sprite2->v, sprites_collide(sprite2, sprite1)?"sont":"ne sont pas");
-    handle_missiles_collide(sprite1, sprite2);
+    printf("Le missile (%d, %d, v = %d) et un ennemi (%d, %d, v = %d) %s en collision\n", getx(getmissile(world)), gety(getmissile(world)), getv(getmissile(world)), getx(getenemies(world,0)), gety(getenemies(world,0)), getv(getenemies(world,0)), sprites_collide(getenemies(world,0),getmissile(world))?"sont":"ne sont pas");
+    handle_missiles_collide(world);
     printf("----------Apres----------\n");
-    printf("Le sprite 1 (%d, %d, v = %d) et sprite 2 (%d, %d, v = %d) %s en collision\n", sprite1->x, sprite1->y, sprite1->v, sprite2->x, sprite2->y, sprite2->v, sprites_collide(sprite2, sprite1)?"sont":"ne sont pas");
+    printf("Le missile (%d, %d, v = %d) et un ennemi (%d, %d, v = %d) %s en collision\n", getx(getmissile(world)),gety(getmissile(world)), getv(getmissile(world)), getx(getenemies(world,0)), gety(getenemies(world,0)), getv(getenemies(world,0)), sprites_collide(getenemies(world,0),getmissile(world))?"sont":"ne sont pas");
     printf("\n");
 }
 
 
 void test_handle_missiles_collide(){
-    sprite_t sprite1;
-    sprite_t sprite2;
-    for(int i = 20; i<62; i+=30){
-        for(int visible = 0; visible<=1; visible++){
-            init_sprite(&sprite1, i, 50, 32, 32, 5, 1);
-            init_sprite(&sprite2, 62, 50, 32, 32, 5, 2);
-            test_handle_missiles_collide_param(&sprite1, &sprite2);
-        }
-    }
+    world_t world;
+    init_data(&world);
+    setx(getmissile(world),50);
+    sety(getmissile(world),200);
+    set_visible(getmissile(world));
+    // Test pour l'ennemi classique
+    setx(getenemies(world,0),50);
+    sety(getenemies(world,0),200);
+    settype(getenemies(world,0),2);
+    test_handle_missiles_collide_param(&world);
 }
+*/
 
-/* void test_handle_vaisseau_collide_param(world_t* world){
 
-}
-
-void test_handle_vaisseau_collide(){
-    world_t world
-} */
 
 void test_init_enemies_param(world_t* world){
     for(int i=0;i<NB_ENEMIES;i++){
@@ -140,36 +137,151 @@ void test_update_enemies(){
     init_enemies(&world);
     test_update_enemies_param(&world);
 }
+/*----------------------------------------------------------------------------------*/
+void test_handle_vaisseau_collide_param(world_t* world){
+    printf("Avant :");
+    print_sprite(getvaisseau(world));
+    for(int i=0; i<5; i++){print_sprite(getenemies(world, i));}
+    handle_vaisseau_collide(world);
+    printf("AprÃ¨s :");
+    print_sprite(getvaisseau(world));
+    for(int i=0; i<5; i++){print_sprite(getenemies(world, i));}
+}
 
+/* void test_handle_vaisseau_collide(){
+    world_t world;
+    init_data(&world);
+
+} */
+
+
+void test_heal_param(sprite_t *sprite){
+    printf("Avant : Vies : %d\n", getlives(sprite));
+    heal(sprite);
+    printf("Apres : vies : %d\n", getlives(sprite));
+}
+
+void test_heal(){
+    world_t world;
+    init_data(&world);
+    test_heal_param(getvaisseau(&world));
+    setlives(getvaisseau(&world), 0);
+    test_heal_param(getvaisseau(&world));
+    printf("\n");
+}
+
+
+void test_take_dmg_param(sprite_t *sprite){
+    printf("Avant : Vies : %d\n", getlives(sprite));
+    take_dmg(sprite);
+    printf("Apres : vies : %d\n", getlives(sprite));
+}
+
+void test_take_dmg(){
+    world_t world;
+    init_data(&world);
+    test_take_dmg_param(getvaisseau(&world));
+    setlives(getvaisseau(&world), 0);
+    test_take_dmg_param(getvaisseau(&world));
+    printf("\n");
+}
+
+
+void test_update_enemies_param(world_t *world){
+    printf("Avant :\n");
+    for(int i=0; i<5; i++){print_sprite(getenemies(world, i));}
+    update_enemies(world);
+    printf("Apres :\n");
+    for(int i=0; i<5; i++){print_sprite(getenemies(world, i));}
+}
+
+void test_update_enemies(){
+    world_t world;
+    init_data(&world);
+    test_update_enemies_param(&world);
+    printf("\n");
+}
+
+
+void test_compute_game_param(world_t *world){
+    printf("Avant : Vies : %d, Etat du jeu : %d\n", getlives(getvaisseau(world)), getetat(world));
+    setlives(getvaisseau(world), 0);
+    compute_game(world);
+    printf("Apres : Vies : %d, Etat du jeu : %d\n", getlives(getvaisseau(world)), getetat(world));
+}
+
+void test_compute_game(){
+    world_t world;
+    init_data(&world);
+    test_compute_game_param(&world);
+    printf("\n");
+}
+
+
+void test_compute_lives_param(sprite_t *sprite){
+    printf("Avant : ");
+    print_sprite(sprite);
+    setlives(sprite, 0);
+    compute_lives(sprite);
+    printf("Apres : ");
+    print_sprite(sprite);
+}
+
+void test_compute_lives(){
+    world_t world;
+    init_data(&world);
+    test_compute_lives_param(getvaisseau(&world));
+    printf("\n");
+}
+
+
+void test_avance_missile_param(world_t *world){
+    printf("Avant : ");
+    print_sprite(getmissile(world));
+    printf("Apres : ");
+    avance_missile(world);
+    print_sprite(getmissile(world));
+}
+
+void test_avance_missile(){
+    world_t world;
+    init_data(&world);
+    test_avance_missile_param(&world);
+    printf("\n");
+}
 int main(int argc, char* argv[]){
-    int choix;
-    printf("Choisir le test :\n1. test_init_sprite\n2. test_vaisseau_depasse_bords\n3. test_ennemi_depasse_bas\n4. test_sprites_collide\n5. test_handle_sprites_collide\n6. test_init_enemies\n7. test_update_enemies\n> ");
-    scanf("%d", &choix);
+    printf("test_init_sprite\n")
+    test_init_sprite();
+    
+    printf("test_vaisseau_depasse_bords\n")
+    test_vaisseau_depasse_bords();
 
-    switch (choix){
-    case 1:
-        test_init_sprite();
-        break;
-    case 2:
-        test_vaisseau_depasse_bords();
-        break;
-    case 3:
-        test_ennemi_depasse_bas();
-        break; 
-    case 4:
-        test_sprites_collide();
-        break;  
-    case 5:
-        test_handle_missiles_collide();
-        break; 
-    case 6:
-        test_init_enemies();
-        break;
-    case 7:
-        test_update_enemies();
-        break;
-    default:
-        break;
-    }
+    printf("test_ennemi_depasse_bas\n")
+    test_ennemi_depasse_bas();
+
+    printf("test_sprites_collide\n")
+    test_sprites_collide();
+
+    printf("test_handle_missiles_collide\n")
+    test_handle_missiles_collide();
+
+    printf("test_init_enemies\n")
+    test_init_enemies();
+
+    printf("test_update_enemies\n")
+    test_update_enemies();
+
+    printf("test_heal\n");
+    test_heal();
+    printf("test_take_dmg\n");
+    test_take_dmg();
+    printf("test_update_enemies\n");
+    test_update_enemies();
+    printf("test_compute_game\n");
+    test_compute_game();
+    printf("test_compute_lives\n");
+    test_compute_lives();
+    printf("test_avance_missile\n");
+    test_avance_missile();
     return EXIT_SUCCESS;
 }

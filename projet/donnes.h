@@ -107,7 +107,7 @@
 /**
  * \brief Type de l'ennemi classique
  */
-#define VAISSEAU_TYPE 2
+#define ENNEMI_TYPE 2
 
 /**
  * \brief Type du vaisseau cassé
@@ -319,14 +319,14 @@ int gety(sprite_t *sprite);
  * \param sprite Le sprite
  * \param x La coordonnée x
  */
-void setx(sprite_t *sprite, unsigned int valx);
+void setx(sprite_t *sprite, int valx);
 
 /**
  * \brief Met la coordonnée y du sprite
  * \param sprite Le sprite
  * \param y La coordonnée y
  */
-void sety(sprite_t *sprite, unsigned int valy);
+void sety(sprite_t *sprite, int valy);
 
 /**
  * \brief Retourne la largeur d'un sprite
@@ -512,11 +512,10 @@ void handle_ambulance_collide(world_t* world);
 void handle_vaisseau_collide(world_t* world);
 
 /**
- * \brief Donne un certain montant de points de vie au sprite
+ * \brief Donne un point de vie au sprite
  * \param sprite Le sprite
- * \param montant Le montant de points de vie à donner
  */
-void heal(sprite_t *sprite, unsigned int montant);
+void heal(sprite_t *sprite);
 
 
 /**
