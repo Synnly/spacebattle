@@ -45,11 +45,8 @@ void setframecount(world_t *world, unsigned int amount){world->frame_count = amo
 
 unsigned int getframecount(world_t *world){return world->frame_count;}
 
-<<<<<<< HEAD
 sprite_t* getscreamer(world_t* world){return &(world->screamer);}
 
-=======
->>>>>>> be3da6556fd71f44d0b45faaa0160707acedafcc
 
 //Seter et geter de sprite_t
 int getx(sprite_t *sprite){return sprite->x;}
@@ -98,11 +95,7 @@ void init_sprite(sprite_t* sprite, int x, int y, unsigned int w, unsigned int h,
     setw(sprite, w);
     seth(sprite, h);
     setv(sprite, v);
-<<<<<<< HEAD
     //set_visible(sprite); // Sprite de base visible
-=======
-    set_visible(sprite); // Sprite de base visible
->>>>>>> be3da6556fd71f44d0b45faaa0160707acedafcc
     settype(sprite, type);
     setlives(sprite, lives);
 }
@@ -126,55 +119,26 @@ void vaisseau_depasse_bords(sprite_t *sprite){
 }
 
 void reset_enemi(world_t *world, unsigned int i){
-<<<<<<< HEAD
     unsigned int num_type = proba_spawn();
     unsigned int lives;
     lives=ENEMY_LIFE;
     switch(num_type){
         case 4:{
-=======
-    unsigned int num_type = generate_number(1, 8);
-    unsigned int type=2;
-    unsigned int lives;
-    lives=ENEMY_LIFE;
-    switch(num_type){
-        case 3:{
-            type=3;
-            break;
-        }
-        case 4:{
-            type=4;
->>>>>>> be3da6556fd71f44d0b45faaa0160707acedafcc
             lives=TANK_LIFE;
             break;
         }
         case 5:{
-<<<<<<< HEAD
-=======
-            type = 5;
->>>>>>> be3da6556fd71f44d0b45faaa0160707acedafcc
             /*L'ambulaces a autant de vie que le joueur car chaque coup sur l'ambulance enleve un point de vie
             au vaisseau */
             lives=PLAYER_LIFE;
             break;
         }
-<<<<<<< HEAD
-=======
-        case 6:{
-            type=6;
-            break;
-        }
->>>>>>> be3da6556fd71f44d0b45faaa0160707acedafcc
         default:{
             break;
         }
     }
-<<<<<<< HEAD
     
     init_sprite(getenemies(world, i), generate_number(0,SCREEN_WIDTH-SHIP_SIZE), -SHIP_SIZE-i*VERTICAL_DIST, SHIP_SIZE, SHIP_SIZE, ENEMY_SPEED, num_type, lives);
-=======
-    init_sprite(getenemies(world, i), generate_number(0,SCREEN_WIDTH-SHIP_SIZE), -SHIP_SIZE-i*VERTICAL_DIST, SHIP_SIZE, SHIP_SIZE, ENEMY_SPEED, type, lives);
->>>>>>> be3da6556fd71f44d0b45faaa0160707acedafcc
 }
 
 
@@ -212,11 +176,9 @@ void score(world_t* world){
     }
 }
 
-<<<<<<< HEAD
 
 unsigned int proba_spawn(){
     unsigned int num_type = generate_number(0, 99);
-    printf("%d\n", num_type);
     if(num_type<19){return 3;}
     else if(num_type>=19 && num_type<39){return 4;}
     else if(num_type>=39 && num_type<49){return 5;}
@@ -225,28 +187,18 @@ unsigned int proba_spawn(){
 }
 
 
-=======
->>>>>>> be3da6556fd71f44d0b45faaa0160707acedafcc
 void handle_missiles_collide(world_t *world){
     for(int i=0; i<NB_ENEMIES; i++){
         if(sprites_collide(getmissile(world), getenemies(world, i)) && !getvisibility(getmissile(world)) && !getvisibility(getenemies(world, i))){
             setv(getmissile(world), 0);
             take_dmg(getmissile(world));
             switch(gettype(getenemies(world, i))){
-<<<<<<< HEAD
                 case AMBULANCE_TYPE:{  
-=======
-                case 5:{  
->>>>>>> be3da6556fd71f44d0b45faaa0160707acedafcc
                     take_dmg(getvaisseau(world));
                     break;
                 }
 
-<<<<<<< HEAD
                 case GRENOUILLE_TYPE:{
-=======
-                case 6:{
->>>>>>> be3da6556fd71f44d0b45faaa0160707acedafcc
                     break;
                 }
 
@@ -265,11 +217,7 @@ void handle_vaisseau_collide(world_t* world){
         // Si le vaisseau et l'ambulance entrent en collision ET si le vaiseau et l'ambulance sont visibles
         if(sprites_collide(getvaisseau(world),getenemies(world, i)) && !getvisibility(getvaisseau(world)) && !getvisibility(getenemies(world, i))){
             switch(type){
-<<<<<<< HEAD
                 case AMBULANCE_TYPE:{
-=======
-                case 5:{
->>>>>>> be3da6556fd71f44d0b45faaa0160707acedafcc
                     for(int j=0; j<3;j++){
                         take_dmg(getenemies(world, i));
                     }
@@ -278,30 +226,18 @@ void handle_vaisseau_collide(world_t* world){
                     }
                     break;
                 }
-<<<<<<< HEAD
                 case TANK_TYPE:{
-=======
-                case 4:{
->>>>>>> be3da6556fd71f44d0b45faaa0160707acedafcc
                     for(int j=0; j<3;j++){
                         take_dmg(getenemies(world, i));
                     }
                     take_dmg(getvaisseau(world));
                     break;
                 }
-<<<<<<< HEAD
                 case GRENOUILLE_TYPE:{
                     for(int j=0; j<(getlives(getvaisseau(world)));j++){
                         take_dmg(getvaisseau(world));
                     }
                     heal(getscreamer(world),1);
-                    print_sprite(getscreamer(world));
-=======
-                case 6:{
-                    for(int j=0; j<(getlives(getvaisseau(world)));j++){
-                        take_dmg(getvaisseau(world));
-                    }
->>>>>>> be3da6556fd71f44d0b45faaa0160707acedafcc
                     break;
                 }
                 default: {
@@ -325,35 +261,21 @@ void take_dmg(sprite_t* sprite){
 
 void init_data(world_t * world){
     setgameover(world, 0);
-<<<<<<< HEAD
     setetat(world, ENCOURS_ETAT);
-=======
-    setetat(world, 3);
->>>>>>> be3da6556fd71f44d0b45faaa0160707acedafcc
     setnb_ennemis_sortis(world, 0);
     setscore(world, 0);
     setframecount(world, 0);
     setpause(world, 0);
-<<<<<<< HEAD
     init_sprite(getscreamer(world),0,0,SCREEN_WIDTH,SCREEN_HEIGHT,0,SCREAMER_TYPE,0);
 
     //Initialisation du vaisseau
     init_sprite(getvaisseau(world), SCREEN_WIDTH/2 - SHIP_SIZE/2, SCREEN_HEIGHT - (int)(1.5*SHIP_SIZE), SHIP_SIZE, SHIP_SIZE, 0, VAISSEAU_TYPE,PLAYER_LIFE);
-=======
-
-    //Initialisation du vaisseau
-    init_sprite(getvaisseau(world), SCREEN_WIDTH/2 - SHIP_SIZE/2, SCREEN_HEIGHT - (int)(1.5*SHIP_SIZE), SHIP_SIZE, SHIP_SIZE, 0, 0,PLAYER_LIFE);
->>>>>>> be3da6556fd71f44d0b45faaa0160707acedafcc
 
     //initialisation du tableau des ennemis
     init_enemies(world);
 
     //Initialisation du missile du vaisseau
-<<<<<<< HEAD
     init_sprite(getmissile(world), SCREEN_WIDTH/2, gety(getvaisseau(world)), MISSILE_SIZE, MISSILE_SIZE, MISSILE_SPEED, MISSILE_TYPE,0);
-=======
-    init_sprite(getmissile(world), SCREEN_WIDTH/2, gety(getvaisseau(world)), MISSILE_SIZE, MISSILE_SIZE, MISSILE_SPEED, 1,0);
->>>>>>> be3da6556fd71f44d0b45faaa0160707acedafcc
     
 }
 
@@ -374,13 +296,8 @@ void update_enemies(world_t *world){
     for(int i = 0; i<NB_ENEMIES; i++){
         sety(getenemies(world, i), gety(getenemies(world, i))+getv(getenemies(world, i)));
 
-<<<<<<< HEAD
         if(gettype(getenemies(world,i)) == CASSE_TYPE){
             setx(getenemies(world, i),(SDL_sin(0.05*gety(getenemies(world, i)))*45+(SCREEN_WIDTH/2)));
-=======
-        if(world->enemies[i].type == 3){
-            setx(getenemies(world, i), getx(getenemies(world, i)) + (SDL_sin(0.05*gety(getenemies(world, i)))*45+(SCREEN_WIDTH/2)));
->>>>>>> be3da6556fd71f44d0b45faaa0160707acedafcc
         }
     }
 }
@@ -388,29 +305,17 @@ void update_enemies(world_t *world){
 void compute_game(world_t* world){
     /*Le joueur a perdu*/
     if(getlives(getvaisseau(world)) == 0){
-<<<<<<< HEAD
         setetat(world, DEFAITE_ETAT);
-=======
-        setetat(world, 0);
->>>>>>> be3da6556fd71f44d0b45faaa0160707acedafcc
         setframecount(world, getframecount(world)+1);
     }
 
     /*Temps de latence avant la fermeture du jeu*/
     if(getframecount(world)>=FRAME_CLOSURE){
-<<<<<<< HEAD
         setgameover(world, COMPTE_ETAT);
     }
 
     /*Jeu de base en cours*/
     if(getetat(world) == ENCOURS_ETAT){
-=======
-        setgameover(world, 1);
-    }
-
-    /*Jeu de base en cours*/
-    if(getetat(world) == 3){
->>>>>>> be3da6556fd71f44d0b45faaa0160707acedafcc
         /* Detection du depassement du bord bas par les ennemis */
         ennemi_depasse_bas(world);
     }
@@ -430,10 +335,7 @@ void compute_sprites(world_t* world){
     for(int i=0;i<NB_ENEMIES;i++){
         compute_lives(getenemies(world, i));
     }
-<<<<<<< HEAD
     compute_lives(getscreamer(world));
-=======
->>>>>>> be3da6556fd71f44d0b45faaa0160707acedafcc
 }
 
 void update_data(world_t *world){
