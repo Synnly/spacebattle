@@ -423,6 +423,8 @@ int generate_number(int a, int b);
  * \param w Largeur du sprite
  * \param h Hauteur du sprite
  * \param v Vitesse du sprite
+ * \param type Type du sprite
+ * \param lives Vies du sprite
  */
 void init_sprite(sprite_t* sprite, int x, int y, unsigned int w, unsigned int h, int v, unsigned int type, unsigned int lives);
 

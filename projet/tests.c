@@ -77,13 +77,86 @@ void test_sprites_collide(){
     }
 }
 
-
-/*void test_handle_missiles_collide_param(world_t* world){
+void test_reset_enemi_param(world_t* world){
     printf("----------Avant----------\n");
-    printf("Le missile (%d, %d, v = %d) et un ennemi (%d, %d, v = %d) %s en collision\n", getx(getmissile(world)), gety(getmissile(world)), getv(getmissile(world)), getx(getenemies(world,0)), gety(getenemies(world,0)), getv(getenemies(world,0)), sprites_collide(getenemies(world,0),getmissile(world))?"sont":"ne sont pas");
+    print_sprite(getenemies(world,0));
+    reset_enemi(world,0);
+    printf("----------Apres----------\n");
+    print_sprite(getenemies(world,0));
+    printf("\n");
+}
+
+void test_reset_enemi(){
+    world_t world;
+    init_data(&world);
+    setx(getenemies(&world,0),50);
+    sety(getenemies(&world,0),SCREEN_HEIGHT*2);
+    test_reset_enemi_param(&world);
+}
+
+void test_missile_depasse_haut_param(world_t* world){
+    printf("----------Avant----------\n");
+    print_sprite(getmissile(world));
+    missile_depasse_haut(world);
+    printf("----------Apres----------\n");
+    print_sprite(getmissile(world));
+    printf("\n");
+}
+
+void test_missile_depasse_haut(){
+    world_t world;
+    init_data(&world);
+    setx(getmissile(&world),50);
+    sety(getmissile(&world),-100);
+    setlives(getmissile(&world),1);
+    test_missile_depasse_haut_param(&world);
+}
+
+void test_score_param(world_t* world){
+    printf("----------Avant----------\n");
+    printf("Score = %d\n",getscore(world));
+    score(world);
+    printf("----------Apres----------\n");
+    printf("Score = %d\n",getscore(world));
+
+}
+
+void test_score(){
+    world_t world;
+    init_data(&world);
+
+    setx(getmissile(&world), 50);
+    sety(getmissile(&world), 50);
+    setx(getenemies(&world, 0), 32);
+    sety(getenemies(&world, 0), 32);
+
+    for(int i=2; i<7; i++){
+        printf("\n------Type = %d------\n", i);
+        settype(getenemies(&world, 0), i);
+        setlives(getvaisseau(&world), 3);
+        set_visible(getmissile(&world));
+        set_visible(getenemies(&world, 0));
+
+        if(i==AMBULANCE_TYPE || i==TANK_TYPE){setlives(getenemies(&world, 0), TANK_LIFE);}
+        else{setlives(getenemies(&world, 0), ENEMY_LIFE);}
+
+        test_score_param(&world);
+
+        setlives(getenemies(&world, 0), 0);
+        test_score_param(&world);
+    }
+    printf("\n");
+}
+
+
+void test_handle_missiles_collide_param(world_t* world){
+    printf("----------Avant----------\n");
+    printf("Le missile (%d, %d, v = %d, vies = %d) et un ennemi (%d, %d, v = %d, vies = %d) %s en collision\n", getx(getmissile(world)), gety(getmissile(world)), getv(getmissile(world)),getlives(getmissile(world)), getx(getenemies(world,0)), gety(getenemies(world,0)), getv(getenemies(world,0)),getlives(getenemies(world,0)), sprites_collide(getenemies(world,0),getmissile(world))?"sont":"ne sont pas");
+    printf("Le missile (%d, %d, v = %d, vies = %d) et un ennemi (%d, %d, v = %d, vies = %d) %s en collision\n", getx(getmissile(world)), gety(getmissile(world)), getv(getmissile(world)),getlives(getmissile(world)), getx(getenemies(world,1)), gety(getenemies(world,1)), getv(getenemies(world,1)),getlives(getenemies(world,1)), sprites_collide(getenemies(world,1),getmissile(world))?"sont":"ne sont pas");
     handle_missiles_collide(world);
     printf("----------Apres----------\n");
-    printf("Le missile (%d, %d, v = %d) et un ennemi (%d, %d, v = %d) %s en collision\n", getx(getmissile(world)),gety(getmissile(world)), getv(getmissile(world)), getx(getenemies(world,0)), gety(getenemies(world,0)), getv(getenemies(world,0)), sprites_collide(getenemies(world,0),getmissile(world))?"sont":"ne sont pas");
+    printf("Le missile (%d, %d, v = %d, vies = %d) et un ennemi (%d, %d, v = %d, vies = %d) %s en collision\n", getx(getmissile(world)), gety(getmissile(world)), getv(getmissile(world)),getlives(getmissile(world)), getx(getenemies(world,0)), gety(getenemies(world,0)), getv(getenemies(world,0)),getlives(getenemies(world,0)), sprites_collide(getenemies(world,0),getmissile(world))?"sont":"ne sont pas");
+    printf("Le missile (%d, %d, v = %d, vies = %d) et un ennemi (%d, %d, v = %d, vies = %d) %s en collision\n", getx(getmissile(world)), gety(getmissile(world)), getv(getmissile(world)),getlives(getmissile(world)), getx(getenemies(world,1)), gety(getenemies(world,1)), getv(getenemies(world,1)),getlives(getenemies(world,1)), sprites_collide(getenemies(world,1),getmissile(world))?"sont":"ne sont pas");
     printf("\n");
 }
 
@@ -91,16 +164,23 @@ void test_sprites_collide(){
 void test_handle_missiles_collide(){
     world_t world;
     init_data(&world);
-    setx(getmissile(world),50);
-    sety(getmissile(world),200);
-    set_visible(getmissile(world));
-    // Test pour l'ennemi classique
-    setx(getenemies(world,0),50);
-    sety(getenemies(world,0),200);
-    settype(getenemies(world,0),2);
-    test_handle_missiles_collide_param(&world);
+    setx(getmissile(&world),50);
+    sety(getmissile(&world),200);
+    set_visible(getmissile(&world));
+    setlives(getmissile(&world),1);
+    for(int i=2;i<=6;i++){
+        setx(getenemies(&world,0),50);
+        sety(getenemies(&world,0),200);
+        settype(getenemies(&world,0),i);
+        setlives(getenemies(&world,0),1);
+        setx(getenemies(&world,1),50);
+        sety(getenemies(&world,1),200);
+        settype(getenemies(&world,1),i);
+        setlives(getenemies(&world,1),0);
+        test_handle_missiles_collide_param(&world);
+    }
 }
-*/
+
 
 
 
@@ -265,8 +345,17 @@ int main(int argc, char* argv[]){
     printf("test_sprites_collide\n");
     test_sprites_collide();
 
-    /* printf("test_handle_missiles_collide\n");
-    test_handle_missiles_collide(); */
+    printf("test_reset_enemi\n");
+    test_reset_enemi();
+
+    printf("test_score");
+    test_score();
+
+    printf("test_missile_depasse_haut\n");
+    test_missile_depasse_haut();
+
+    printf("test_handle_missiles_collide\n");
+    test_handle_missiles_collide();
 
     printf("test_init_enemies\n");
     test_init_enemies();

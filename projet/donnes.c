@@ -102,7 +102,7 @@ void init_sprite(sprite_t* sprite, int x, int y, unsigned int w, unsigned int h,
 
 
 void print_sprite(sprite_t *sprite){
-    printf("Sprite : x,y = %d,%d | h,w = %d,%d\nv = %d\nis_visible = %s\n", getx(sprite), gety(sprite), geth(sprite), getwidth(sprite), getv(sprite), (!getvisibility(sprite)?"oui":"non"));
+    printf("Sprite : x,y = %d,%d | h,w = %d,%d\nv = %d\nis_visible = %s\nType=%d\nVies=%d\n", getx(sprite), gety(sprite), geth(sprite), getwidth(sprite), getv(sprite), (!getvisibility(sprite)?"oui":"non"),gettype(sprite),getlives(sprite));
 }
 
 
