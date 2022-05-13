@@ -118,41 +118,43 @@ void test_init_enemies(){
     test_init_enemies_param(&world);
 }
 
-
-void test_update_enemies_param(world_t *world){
-    for(int i = 0; i<NB_ENEMIES; i++){
-        printf("----------Avant----------\n");
-        print_sprite(&(world->enemies[i]));
-
-        printf("----------Après----------\n");
-        update_enemies(world);
-        print_sprite(&(world->enemies[i]));
-        printf("\n");
-    }
-    fflush(stdout);
-}
-
-void test_update_enemies(){
-    world_t world;
-    init_enemies(&world);
-    test_update_enemies_param(&world);
-}
 /*----------------------------------------------------------------------------------*/
 void test_handle_vaisseau_collide_param(world_t* world){
     printf("Avant :");
     print_sprite(getvaisseau(world));
     for(int i=0; i<5; i++){print_sprite(getenemies(world, i));}
     handle_vaisseau_collide(world);
-    printf("AprÃ¨s :");
+    printf("Apres :");
     print_sprite(getvaisseau(world));
     for(int i=0; i<5; i++){print_sprite(getenemies(world, i));}
 }
 
-/* void test_handle_vaisseau_collide(){
+void test_handle_vaisseau_collide(){
     world_t world;
     init_data(&world);
 
-} */
+    setx(getvaisseau(&world), 50);
+    sety(getvaisseau(&world), 50);
+    setx(getenemies(&world, 0), 32);
+    sety(getenemies(&world, 0), 32);
+
+    for(int i=2; i<7; i++){
+        printf("\n------Type = %d------\n", i);
+        settype(getenemies(&world, 0), i);
+        setlives(getvaisseau(&world), 3);
+        set_visible(getvaisseau(&world));
+        set_visible(getenemies(&world, 0));
+
+        if(i==AMBULANCE_TYPE || i==TANK_TYPE){setlives(getenemies(&world, 0), TANK_LIFE);}
+        else{setlives(getenemies(&world, 0), ENEMY_LIFE);}
+
+        test_handle_vaisseau_collide_param(&world);
+
+        setlives(getenemies(&world, 0), 0);
+        test_handle_vaisseau_collide_param(&world);
+    }
+    printf("\n");
+}
 
 
 void test_heal_param(sprite_t *sprite){
@@ -249,38 +251,47 @@ void test_avance_missile(){
     test_avance_missile_param(&world);
     printf("\n");
 }
+
 int main(int argc, char* argv[]){
-    printf("test_init_sprite\n")
+    printf("test_init_sprite\n");
     test_init_sprite();
     
-    printf("test_vaisseau_depasse_bords\n")
+    printf("test_vaisseau_depasse_bords\n");
     test_vaisseau_depasse_bords();
 
-    printf("test_ennemi_depasse_bas\n")
+    printf("test_ennemi_depasse_bas\n");
     test_ennemi_depasse_bas();
 
-    printf("test_sprites_collide\n")
+    printf("test_sprites_collide\n");
     test_sprites_collide();
 
-    printf("test_handle_missiles_collide\n")
-    test_handle_missiles_collide();
+    /* printf("test_handle_missiles_collide\n");
+    test_handle_missiles_collide(); */
 
-    printf("test_init_enemies\n")
+    printf("test_init_enemies\n");
     test_init_enemies();
 
-    printf("test_update_enemies\n")
+    printf("test_handle_vaisseau_collide\n");
+    test_handle_vaisseau_collide();
+
+    printf("test_update_enemies\n");
     test_update_enemies();
 
     printf("test_heal\n");
     test_heal();
+
     printf("test_take_dmg\n");
     test_take_dmg();
+
     printf("test_update_enemies\n");
     test_update_enemies();
+
     printf("test_compute_game\n");
     test_compute_game();
+
     printf("test_compute_lives\n");
     test_compute_lives();
+
     printf("test_avance_missile\n");
     test_avance_missile();
     return EXIT_SUCCESS;

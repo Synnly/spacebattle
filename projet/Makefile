@@ -25,4 +25,4 @@ clean:
 	rm -rf latex html
 
 test: $(OBJTEST)
-	gcc $(CFLAGS) $(OBJTEST) $(LDFLAGS) -o $@
+	gcc $(CFLAGS) $(OBJTEST) $(LDFLAGS) -o $@ -Wall

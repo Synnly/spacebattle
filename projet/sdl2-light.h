@@ -14,3 +14,5 @@ void update_screen(SDL_Renderer *renderer);
 void pause(int time);
 
 #endif
+
+/*Modification à la con parceque git a décidé de me faire chier.*/

@@ -123,11 +123,11 @@ void reset_enemi(world_t *world, unsigned int i){
     unsigned int lives;
     lives=ENEMY_LIFE;
     switch(num_type){
-        case 4:{
+        case TANK_TYPE:{
             lives=TANK_LIFE;
             break;
         }
-        case 5:{
+        case AMBULANCE_TYPE:{
             /*L'ambulaces a autant de vie que le joueur car chaque coup sur l'ambulance enleve un point de vie
             au vaisseau */
             lives=PLAYER_LIFE;
@@ -179,11 +179,11 @@ void score(world_t* world){
 
 unsigned int proba_spawn(){
     unsigned int num_type = generate_number(0, 99);
-    if(num_type<19){return 3;}
-    else if(num_type>=19 && num_type<39){return 4;}
-    else if(num_type>=39 && num_type<49){return 5;}
-    else if(num_type>=89 && num_type<100){return 6;}
-    else{return 2;}
+    if(num_type<19){return CASSE_TYPE;}
+    else if(num_type>=19 && num_type<39){return TANK_TYPE;}
+    else if(num_type>=39 && num_type<49){return AMBULANCE_TYPE;}
+    else if(num_type>=89 && num_type<100){return GRENOUILLE_TYPE;}
+    else{return ENNEMI_TYPE;}
 }
 
 
@@ -221,7 +221,7 @@ void handle_vaisseau_collide(world_t* world){
                     for(int j=0; j<3;j++){
                         take_dmg(getenemies(world, i));
                     }
-                    if(getlives(getvaisseau(world))<3){
+                    if(getlives(getvaisseau(world))<PLAYER_LIFE){
                         heal(getvaisseau(world));  
                     }
                     break;
@@ -288,11 +288,6 @@ void init_enemies(world_t* world){
     for(int i=0;i<NB_ENEMIES;i++){
         reset_enemi(world, i);
     }
-}
-
-
-void clean_data(world_t *world){
-    /* utile uniquement si vous avez fait de l'allocation dynamique (malloc); la fonction ici doit permettre de libérer la mémoire (free) */
 }
 
 
@@ -370,8 +365,6 @@ void update_data(world_t *world){
 
     /*Gestion des collisions entre missile et ennemis*/
     score(world);
-
-    
 }
 
 

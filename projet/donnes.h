@@ -500,12 +500,6 @@ unsigned int proba_spawn();
 void handle_missiles_collide(world_t *world);
 
 /**
- * \brief Gere les collisions entre les missile et l'ambulance et le vaisseau et l'ambulance
- * \param world Les donnees du monde
- */
-void handle_ambulance_collide(world_t* world);
-
-/**
  * \brief Gere les collisions entre le vaisseau et les ennemis
  * \param world Le monde du jeu
  */
@@ -538,19 +532,11 @@ void init_enemies(world_t* world);
 
 
 /**
- * \brief La fonction nettoie les données du monde
- * \param world les données du monde
- */
-void clean_data(world_t *world);
-
-
-/**
  * \brief La fonction indique si le jeu est fini en fonction des données du monde
  * \param world les données du monde
  * \return 1 si le jeu est fini, 0 sinon
  */
 int is_game_over(world_t *world);
-
 
 
 /**

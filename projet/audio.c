@@ -11,6 +11,7 @@
 void init_audio(audio_t *audio){
     Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, MIX_DEFAULT_CHANNELS, 4096);
     audio->bgm = Mix_LoadMUS("ressources/240 bits per mile.wav");
+    Mix_VolumeMusic(64);
     Mix_PlayMusic(audio->bgm, -1);
 }
 

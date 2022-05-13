@@ -17,9 +17,9 @@
 * \param world le monde
 */
 void clean(SDL_Window *window, SDL_Renderer * renderer, ressources_t *ressources, world_t * world){
-    clean_data(world);
     clean_ressources(ressources);
     clean_sdl(renderer,window);
+    
 }
 
 
