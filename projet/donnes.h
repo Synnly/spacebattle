@@ -493,6 +493,22 @@ void score(world_t* world);
  */
 unsigned int proba_spawn();
 
+/**
+ * \brief Retourne si le missile est en collsion avec le ieme ennemi 
+ * \param world Les donnes du monde 
+ * \param i L'indice de l'ennemi
+ * \return 1 en cas de collision, 0 sinon
+ */
+int missile_collide(world_t *world, int i);
+
+/**
+ * \brief Retourne si le vaisseau est en collsion avec le ieme ennemi 
+ * \param world Les donnes du monde 
+ * \param i L'indice de l'ennemi
+ * \return 1 en cas de collision, 0 sinon
+ */
+int vaisseau_collide(world_t * world, int i);
+
 
 /**
  * \brief Gere les collisions entre les missiles et les ennemis

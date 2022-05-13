@@ -29,6 +29,7 @@ int main(int argc, char* args[]){
     //initialisation du jeu
     init(&window,&renderer,&ressources,&world);
     init_audio(&audio);
+    init_sfx(&audio);
     
     while(!is_game_over(&world)){ //tant que le jeu n'est pas fini
 

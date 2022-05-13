@@ -187,9 +187,18 @@ unsigned int proba_spawn(){
 }
 
 
+int missile_collide(world_t *world, int i){
+    return sprites_collide(getmissile(world), getenemies(world, i)) && !getvisibility(getmissile(world)) && !getvisibility(getenemies(world, i));
+}
+
+int vaisseau_collide(world_t * world, int i){
+    return sprites_collide(getvaisseau(world),getenemies(world, i)) && !getvisibility(getvaisseau(world)) && !getvisibility(getenemies(world, i));
+}
+
+
 void handle_missiles_collide(world_t *world){
     for(int i=0; i<NB_ENEMIES; i++){
-        if(sprites_collide(getmissile(world), getenemies(world, i)) && !getvisibility(getmissile(world)) && !getvisibility(getenemies(world, i))){
+        if(missile_collide(world, i)){
             setv(getmissile(world), 0);
             take_dmg(getmissile(world));
             switch(gettype(getenemies(world, i))){
@@ -215,7 +224,7 @@ void handle_vaisseau_collide(world_t* world){
     for(int i=0; i<NB_ENEMIES; i++){
         int type = gettype(getenemies(world, i));
         // Si le vaisseau et l'ambulance entrent en collision ET si le vaiseau et l'ambulance sont visibles
-        if(sprites_collide(getvaisseau(world),getenemies(world, i)) && !getvisibility(getvaisseau(world)) && !getvisibility(getenemies(world, i))){
+        if(vaisseau_collide(world, i)){
             switch(type){
                 case AMBULANCE_TYPE:{
                     for(int j=0; j<3;j++){
