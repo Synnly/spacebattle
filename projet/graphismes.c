@@ -101,9 +101,12 @@ void afficher_vies(SDL_Renderer *renderer, world_t *world, ressources_t *ressour
 
     int taille_txt = strlen("Vies : ");
 
+    
+
     //Affichage
     apply_text(renderer, 20, 40, taille_txt*(FONT_SIZE), FONT_SIZE*2, "Vies : ", ressources->font);
     apply_text(renderer, 20 + taille_txt*(FONT_SIZE), 40, (FONT_SIZE)*strlen(lives_str), FONT_SIZE*2, lives_str, ressources->font);
+
 
     free(lives_str);
 }
@@ -111,16 +114,36 @@ void afficher_vies(SDL_Renderer *renderer, world_t *world, ressources_t *ressour
 
 void afficher_etat_jeu(SDL_Renderer *renderer, world_t *world, ressources_t *ressources){
     int posy = SCREEN_HEIGHT/2 - (FONT_SIZE*6)/2;
-    switch(getetat(world)){
-        case DEFAITE_ETAT: {   //Defaite
-            int posx = SCREEN_WIDTH/2 - (FONT_SIZE*3*strlen("PERDU"))/2;
-            apply_text(renderer, posx, posy, FONT_SIZE*3*strlen("PERDU"), FONT_SIZE*6, "PERDU", ressources->font);
-        }
-
-        default :
-            afficher_score(renderer, world, ressources);
-            afficher_vies(renderer, world, ressources);
+    if(getetat(world)== DEFAITE_ETAT){   //Defaite
+        int posx = SCREEN_WIDTH/2 - (FONT_SIZE*3*strlen("PERDU"))/2;
+        apply_text(renderer, posx, posy, FONT_SIZE*3*strlen("PERDU"), FONT_SIZE*6, "PERDU", ressources->font);
     }
+    else if(getetat(world)== REPLAY_ETAT){
+        int posx = SCREEN_WIDTH/2 - (FONT_SIZE*2*strlen("Press R to"))/2;
+        apply_text(renderer, posx, posy, FONT_SIZE*2*strlen("Press R to"), FONT_SIZE*4, "Press R to", ressources->font);
+
+        int posx1 = SCREEN_WIDTH/2 - (FONT_SIZE*2*strlen("continue"))/2;
+        posy+=FONT_SIZE*4;
+        apply_text(renderer, posx1, posy, FONT_SIZE*2*strlen("continue"), FONT_SIZE*4, "continue", ressources->font);
+
+        afficher_temps_restant(renderer,world,ressources);
+    }
+    else{
+        afficher_score(renderer, world, ressources);
+        afficher_vies(renderer, world, ressources);
+    }
+}
+
+void afficher_temps_restant(SDL_Renderer *renderer, world_t *world, ressources_t *ressources){
+    char *duree_str = malloc(sizeof(char)*2);     //Duree
+    SDL_itoa(10-getframecount(world)/100, duree_str, 10);      //Conversion de la duree en chaine de caracteres
+
+    int taille_txt = strlen(duree_str);
+    int posy = SCREEN_HEIGHT/2 - (FONT_SIZE*16)/2;
+    int posx = SCREEN_WIDTH/2 - (FONT_SIZE*3*taille_txt)/2;
+    apply_text(renderer, posx, posy, FONT_SIZE*3*taille_txt, FONT_SIZE*6, duree_str, ressources->font);
+        
+
 }
 
 

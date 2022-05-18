@@ -101,6 +101,14 @@ void afficher_vies(SDL_Renderer *renderer, world_t *world, ressources_t *ressour
  */
 void afficher_etat_jeu(SDL_Renderer *renderer, world_t *world, ressources_t *ressources);
 
+/**
+ * \brief Affiche le temps restant pour le replay
+ * \param renderer Le renderer
+ * \param world Les données du monde
+ * \param ressources Les ressources du jeu
+ */
+void afficher_temps_restant(SDL_Renderer *renderer, world_t *world, ressources_t *ressources);
+
 
 /**
  * \brief La fonction rafraichit l'écran en fonction de l'état des données du monde

@@ -247,6 +247,7 @@ void handle_vaisseau_collide(world_t* world){
                         take_dmg(getvaisseau(world));
                     }
                     heal(getscreamer(world));
+                    setframecount(world,FRAME_REPLAY);
                     break;
                 }
                 default: {
@@ -311,16 +312,23 @@ void update_enemies(world_t *world){
 }
 
 void compute_game(world_t* world){
-    /*Le joueur a perdu*/
-    if(getlives(getvaisseau(world)) == 0){
-        setetat(world, DEFAITE_ETAT);
+    /*Le joueur a perdu mais replay possible */
+    if(getlives(getvaisseau(world)) == 0 && !getetat(world)==DEFAITE_ETAT){
+        setetat(world, REPLAY_ETAT);
         setframecount(world, getframecount(world)+1);
     }
 
-    /*Temps de latence avant la fermeture du jeu*/
+    /*Fermeture du jeu*/
     if(getframecount(world)>=FRAME_CLOSURE){
-        setgameover(world, COMPTE_ETAT);
+        setgameover(world, FINI);
     }
+
+    /* Temps de latence avant la fermeture du jeu */
+    if(getframecount(world)>=FRAME_REPLAY && getframecount(world)<FRAME_CLOSURE){
+        setetat(world,DEFAITE_ETAT);
+        setframecount(world, getframecount(world)+1);
+    }
+    
 
     /*Jeu de base en cours*/
     if(getetat(world) == ENCOURS_ETAT){
@@ -404,12 +412,12 @@ void handle_events(SDL_Event *event,world_t *world){
              if(!getpause(world)){
 
                 //si la touche appuyée est fleche gauche
-                if(event->key.keysym.sym == SDLK_LEFT){
+                if(event->key.keysym.sym == SDLK_LEFT || event->key.keysym.sym == SDLK_q){
                     setx(getvaisseau(world), getx(getvaisseau(world)) - MOVING_STEP);
                 }
 
                 //si la touche appuyée est fleche droite
-                if(event->key.keysym.sym == SDLK_RIGHT){
+                if(event->key.keysym.sym == SDLK_RIGHT || event->key.keysym.sym == SDLK_d){
                     setx(getvaisseau(world), getx(getvaisseau(world)) + MOVING_STEP);
                 }
 
@@ -418,9 +426,13 @@ void handle_events(SDL_Event *event,world_t *world){
                     avance_missile(world);
                     setlives(getmissile(world), 1);
                 }
+                // Gestion du replay
+                if(getetat(world)==REPLAY_ETAT && event->key.keysym.sym == SDLK_r){
+                    init_data(world);
+                }
             }
             //si la touche appuyée est echap
-            if(event->key.keysym.sym == SDLK_ESCAPE){
+            if(event->key.keysym.sym == SDLK_ESCAPE && !getetat(world)==REPLAY_ETAT){
                 setpause(world, getpause(world)+1);  // On pase à l'etat de pause suivant 
                 setpause(world, getpause(world)%2);  // 0 ou 1
             }

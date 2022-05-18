@@ -85,7 +85,12 @@
 /**
  * \brief Nombre d'images avant la fermeture du jeu
  */
-#define FRAME_CLOSURE 300
+#define FRAME_CLOSURE 1400
+
+/**
+ * \brief Nombre d'images avant la fin du replay
+ */
+#define FRAME_REPLAY 1000
 
 
 /**
@@ -140,14 +145,19 @@
 #define DEFAITE_ETAT 0
 
 /**
- * \brief Etat du jeu lorsque le compte a rebours est en cours
- */
-#define COMPTE_ETAT 1
-
-/**
  * \brief Etat du jeu lorsque le jeu est en cours
  */
 #define ENCOURS_ETAT 2
+
+/**
+ * \brief Etat du jeu lorsque le replay est possible
+ */
+#define REPLAY_ETAT 3
+
+/**
+ * \brief Fin du jeu
+ */
+#define FINI 1
 
 
 /**
@@ -181,7 +191,7 @@ struct world_s{
     int nb_ennemis_sortis;  /*!< Champ qui compte le nombre d'ennemis qui sont sortis de l'ecran par la bordure du bas */
     unsigned int score;     /*!< Champ qui compte le score */
     unsigned int pause;     /*!< Champ indiquant si le jeu est en pause */
-    unsigned int etat;      /*!< 0 : le joueur a perdu, 1 : le compte a rebours avant la fermeture du jeu est lancé, 2 : Le jeu est en cours, */
+    unsigned int etat;      /*!< 0 : le joueur a perdu, 1 : le compte a rebours avant la fermeture du jeu est lancé, 2 : Le jeu est en cours, 3 : replay possible */
     unsigned int frame_count;   /*!< Champ qui compte le nombre d'images avant la fermeture du jeu */
     sprite_t screamer; /*!< Champ lié au screamer */
    
