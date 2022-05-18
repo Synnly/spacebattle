@@ -10,7 +10,7 @@
 #include "donnes.h"
 #include "graphismes.h"
 #include "initialisation.h"
-//#include "audio.h"
+#include "audio.h"
 #include <time.h>
 
 /**
@@ -19,7 +19,7 @@
 int main(int argc, char* args[]){
     SDL_Event event;
     world_t world;
-    //audio_t audio;
+    audio_t audio;
     ressources_t ressources;
     SDL_Renderer *renderer;
     SDL_Window *window;
@@ -27,9 +27,8 @@ int main(int argc, char* args[]){
     srand(time(NULL));
 
     //initialisation du jeu
-    init(&window,&renderer,&ressources,&world);
-    //init_audio(&audio);
-    //init_sfx(&audio);
+    init(&window,&renderer,&ressources,&world, &audio);
+    
     
     while(!is_game_over(&world)){ //tant que le jeu n'est pas fini
 
@@ -42,7 +41,7 @@ int main(int argc, char* args[]){
             update_data(&world);
         }
 
-        //music_loop(&world, &audio);
+        music_loop(&world, &audio);
 
         //rafraichissement de l'écran
         refresh_graphics(renderer,&world,&ressources);
@@ -52,7 +51,7 @@ int main(int argc, char* args[]){
     }
     
     //nettoyage final
-    //clean audio
+    clean_audio(&audio);
     clean(window,renderer,&ressources,&world);
     
     return 0;

@@ -7,6 +7,7 @@
 
 #include "donnes.h"
 #include "graphismes.h"
+#include "audio.h"
 
 
 /**
@@ -28,11 +29,13 @@ void clean(SDL_Window *window, SDL_Renderer * renderer, ressources_t *ressources
  * \param window la fenêtre du jeu
  * \param renderer le renderer
  * \param ressources les ressources
- * \param wordl le monde
+ * \param world le monde
  */
-void init(SDL_Window **window, SDL_Renderer ** renderer, ressources_t *ressources, world_t * world){
+void init(SDL_Window **window, SDL_Renderer ** renderer, ressources_t *ressources, world_t * world, audio_t *audio){
     init_sdl(window,renderer,SCREEN_WIDTH, SCREEN_HEIGHT);
     init_data(world);
     init_ttf();
     init_ressources(*renderer, ressources);
+    init_audio(audio);
+    init_sfx(audio);
 }

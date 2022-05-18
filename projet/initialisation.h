@@ -10,16 +10,18 @@
 
 #include "donnes.h"
 #include "graphismes.h"
+#include "audio.h"
 
 
 /**
- * \brief fonction qui initialise le jeu: initialisation de la partie graphique (SDL), chargement des ressources, initialisation des données
+ * \brief fonction qui initialise le jeu: initialisation de la partie graphique (SDL), chargement des ressources, initialisation des données et de l'audio
  * \param window la fenêtre du jeu
  * \param renderer le renderer
  * \param ressources les ressources
- * \param wordl le monde
+ * \param world le monde
+ * \param audio les donnes audio
  */
-void init(SDL_Window **window, SDL_Renderer ** renderer, ressources_t *ressources, world_t * world);
+void init(SDL_Window **window, SDL_Renderer ** renderer, ressources_t *ressources, world_t * world, audio_t *audio);
 
 /**
 * \brief fonction qui nettoie le jeu: nettoyage de la partie graphique (SDL), nettoyage des ressources, nettoyage des données

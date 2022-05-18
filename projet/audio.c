@@ -17,13 +17,13 @@ void init_audio(audio_t *audio){
 
 
 void init_sfx(audio_t *audio){
-    printf("%d\n", Mix_AllocateChannels(8));
     audio->sfx_boom = Mix_LoadWAV("ressources/audio/boom.wav");
     audio->sfx_hit = Mix_LoadWAV("ressources/audio/hit.wav");
     audio->sfx_shoot = Mix_LoadWAV("ressources/audio/shoot.wav");
     audio->sfx_pause = Mix_LoadWAV("ressources/audio/pause.wav");
     audio->sfx_heal = Mix_LoadWAV("ressources/audio/heal.wav");
     audio->sfx_flop = Mix_LoadWAV("ressources/audio/flop.wav");
+    audio->sfx_thud = Mix_LoadWAV("ressources/audio/thud.wav");
 
     audio->boom_is_playing = 0;
     audio->hit_is_playing = 0;
@@ -31,6 +31,7 @@ void init_sfx(audio_t *audio){
     audio->pause_is_playing = 0;
     audio->heal_is_playing = 0;
     audio->flop_is_playing = 0;
+    audio->thud_is_playing = 0;
 
     Mix_VolumeChunk(audio->sfx_boom, 80);
     Mix_VolumeChunk(audio->sfx_hit, 40);
@@ -38,6 +39,7 @@ void init_sfx(audio_t *audio){
     Mix_VolumeChunk(audio->sfx_pause, 64);
     Mix_VolumeChunk(audio->sfx_heal, 64);
     Mix_VolumeChunk(audio->sfx_flop, 128);
+    Mix_VolumeChunk(audio->sfx_thud, 128);
 }
 
 void play_boom(audio_t *audio, world_t *world){
@@ -109,6 +111,20 @@ void play_flop(audio_t *audio, world_t *world){
     }
 }
 
+void play_thud(audio_t *audio, world_t *world){
+    audio->thud_is_playing = 0;
+    for(int i=0; i<NB_ENEMIES; i++){
+
+        if(vaisseau_collide(world, i) && gettype(getenemies(world, i))==GRENOUILLE_TYPE && audio->thud_is_playing==0){
+            audio->thud_is_playing = 1;
+
+            if(Mix_PlayChannel(7, audio->sfx_thud, 0)==-1) {
+                printf("Mix_PlayChannel: %s\n",Mix_GetError());
+            }
+        }
+    }
+}
+
 void playpausemus(audio_t *audio, world_t *world){
     if(getpause(world)){
 
@@ -131,6 +147,11 @@ void playpausemus(audio_t *audio, world_t *world){
     } 
 }
 
+void stop_audio(audio_t * audio, world_t *world){
+    if(getetat(world)==DEFAITE_ETAT){
+        Mix_HaltMusic();
+    }
+}
 
 void clean_audio(audio_t *audio){
     Mix_FreeMusic(audio->bgm);
@@ -153,11 +174,13 @@ void music_loop(world_t *world, audio_t *audio){
     }
 
     else{
+        stop_audio(audio, world);
         playpausemus(audio, world);
         play_boom(audio, world);
         play_shoot(audio, world);
         play_hit(audio, world);
         play_heal(audio, world);
         play_flop(audio, world);
+        play_thud(audio, world);
     }
 }

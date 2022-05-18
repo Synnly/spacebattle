@@ -432,7 +432,7 @@ void handle_events(SDL_Event *event,world_t *world){
                 }
             }
             //si la touche appuyée est echap
-            if(event->key.keysym.sym == SDLK_ESCAPE && !getetat(world)==REPLAY_ETAT){
+            if(event->key.keysym.sym == SDLK_ESCAPE && !(getetat(world)==REPLAY_ETAT)){
                 setpause(world, getpause(world)+1);  // On pase à l'etat de pause suivant 
                 setpause(world, getpause(world)%2);  // 0 ou 1
             }

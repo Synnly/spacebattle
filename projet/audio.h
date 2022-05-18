@@ -23,12 +23,14 @@ struct audio_s {
     Mix_Chunk *sfx_pause;             /*!< Champ lié au bruitage de la pause */
     Mix_Chunk *sfx_heal;             /*!< Champ lié au bruitage du soin */
     Mix_Chunk *sfx_flop;             /*!< Champ lié au bruitage du flop */
+    Mix_Chunk *sfx_thud;             /*!< Champ lié au bruitage du thud */
     unsigned int boom_is_playing;   /*!< Champ lié à l'etat de lecture du bruitage de l'explosion */
     unsigned int hit_is_playing;    /*!< Champ lié à l'etat de lecture du bruitage du coup */
     unsigned int shoot_is_playing;  /*!< Champ lié à l'etat de lecture du bruitage du tir */
     unsigned int pause_is_playing;   /*!< Champ lié à l'etat de lecture du bruitage de l'explosion */
     unsigned int heal_is_playing;    /*!< Champ lié à l'etat de lecture du bruitage du coup */
     unsigned int flop_is_playing;    /*!< Champ lié à l'etat de lecture du bruitage du flop*/
+    unsigned int thud_is_playing;    /*!< Champ lié à l'etat de lecture du bruitage du thud*/
 };
 
 
@@ -85,11 +87,18 @@ void play_shoot(audio_t *audio, world_t *world);
 void play_heal(audio_t *audio, world_t *world);
 
 /**
- * \brief Joue le bruitage du soin
+ * \brief Joue le bruitage du flop
  * \param audio Les donnes audio
  * \param world Les donnes du monde
  */
 void play_flop(audio_t *audio, world_t *world);
+
+/**
+ * \brief Joue le bruitage du thud
+ * \param audio Les donnes audio
+ * \param world Les donnes du monde
+ */
+void play_thud(audio_t *audio, world_t *world);
 
 /**
  * \brief Gere la lecture et la fermeture de la musique
@@ -97,6 +106,13 @@ void play_flop(audio_t *audio, world_t *world);
  * \param audio Les donnes audio
  */
 void music_loop(world_t *world, audio_t *audio);
+
+/**
+ * \brief Arrete tous les sons en cours sauf celui du thud
+ * \param world Les donnes du monde
+ * \param audio Les donnes audio
+ */
+void stop_audio(audio_t * audio, world_t *world);
 
 /**
  * \brief Arrete la musique et ferme le module audio

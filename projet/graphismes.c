@@ -63,15 +63,15 @@ void clean_ressources(ressources_t *ressources){
 
 
 void init_ressources(SDL_Renderer *renderer, ressources_t *ressources){
-    ressources->background = load_image( "ressources/space-background_skin_1.bmp",renderer);
-    ressources->vaisseau_texture = load_image("ressources/spaceship_skin_1.bmp", renderer);
-    ressources->ennemi_texture = load_image("ressources/enemy_skin_1.bmp", renderer);
-    ressources->ennemi_casse_texture = load_image("ressources/spaceinvader.bmp", renderer);
-    ressources->tank_texture = load_image("ressources/tank.bmp", renderer);
-    ressources->missile_texture = load_image("ressources/missile_skin_2.bmp", renderer);
-    ressources->ambulance_texture = load_image("ressources/ambulance.bmp", renderer);
-    ressources->grenouille_texture = load_image("ressources/grenouille.bmp", renderer);
-    ressources->screamer_texture = load_image("ressources/screamerhonte.bmp", renderer);
+    ressources->background = load_image( "ressources/images/space-background_skin_1.bmp",renderer);
+    ressources->vaisseau_texture = load_image("ressources/images/spaceship_skin_1.bmp", renderer);
+    ressources->ennemi_texture = load_image("ressources/images/enemy_skin_1.bmp", renderer);
+    ressources->ennemi_casse_texture = load_image("ressources/images/spaceinvader.bmp", renderer);
+    ressources->tank_texture = load_image("ressources/images/tank.bmp", renderer);
+    ressources->missile_texture = load_image("ressources/images/missile_skin_2.bmp", renderer);
+    ressources->ambulance_texture = load_image("ressources/images/ambulance.bmp", renderer);
+    ressources->grenouille_texture = load_image("ressources/images/grenouille.bmp", renderer);
+    ressources->screamer_texture = load_image("ressources/images/screamerhonte.bmp", renderer);
     ressources->font = load_font("ressources/arial.ttf", FONT_SIZE);
 }
 
