@@ -17,7 +17,8 @@
 * \param ressources les ressources
 * \param world le monde
 */
-void clean(SDL_Window *window, SDL_Renderer * renderer, ressources_t *ressources, world_t * world){
+void clean(SDL_Window *window, SDL_Renderer * renderer, ressources_t *ressources, world_t * world, audio_t *audio){
+    clean_audio(audio);
     clean_ressources(ressources);
     clean_sdl(renderer,window);
     

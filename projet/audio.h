@@ -109,10 +109,9 @@ void music_loop(world_t *world, audio_t *audio);
 
 /**
  * \brief Arrete tous les sons en cours sauf celui du thud
- * \param world Les donnes du monde
  * \param audio Les donnes audio
  */
-void stop_audio(audio_t * audio, world_t *world);
+void stop_audio(audio_t * audio);
 
 /**
  * \brief Arrete la musique et ferme le module audio

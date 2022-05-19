@@ -51,8 +51,7 @@ int main(int argc, char* args[]){
     }
     
     //nettoyage final
-    clean_audio(&audio);
-    clean(window,renderer,&ressources,&world);
+    clean(window,renderer,&ressources,&world, &audio);
     
     return 0;
 }

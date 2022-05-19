@@ -147,13 +147,16 @@ void playpausemus(audio_t *audio, world_t *world){
     } 
 }
 
-void stop_audio(audio_t * audio, world_t *world){
-    if(getetat(world)==DEFAITE_ETAT){
-        Mix_HaltMusic();
+void stop_audio(audio_t * audio){
+    Mix_HaltMusic();
+    for(int i = 0; i<8; i++){
+        Mix_HaltChannel(i);
     }
 }
 
 void clean_audio(audio_t *audio){
+    
+    stop_audio(audio);
     Mix_FreeMusic(audio->bgm);
 
     Mix_FreeChunk(audio->sfx_boom);
@@ -162,25 +165,17 @@ void clean_audio(audio_t *audio){
     Mix_FreeChunk(audio->sfx_pause);
     Mix_FreeChunk(audio->sfx_heal);
     Mix_FreeChunk(audio->sfx_flop);
-
+    Mix_FreeChunk(audio->sfx_thud);
     Mix_CloseAudio();
-    Mix_Quit();
 }
 
 
 void music_loop(world_t *world, audio_t *audio){
-    if(is_game_over(world)){
-        clean_audio(audio);
-    }
-
-    else{
-        stop_audio(audio, world);
-        playpausemus(audio, world);
-        play_boom(audio, world);
-        play_shoot(audio, world);
-        play_hit(audio, world);
-        play_heal(audio, world);
-        play_flop(audio, world);
-        play_thud(audio, world);
-    }
+    playpausemus(audio, world);
+    play_boom(audio, world);
+    play_shoot(audio, world);
+    play_hit(audio, world);
+    play_heal(audio, world);
+    play_flop(audio, world);
+    play_thud(audio, world);
 }
